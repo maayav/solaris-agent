@@ -1,0 +1,48 @@
+{
+  "source": "PayloadsAllTheThings",
+  "exploit_type": "encoding_transformations",
+  "original_category": "Encoding Transformations",
+  "payloads": [
+    {
+      "category": "Unicode Normalization",
+      "escalation": "baseline",
+      "lines": [
+        "import unicodedata",
+        "string = \"ᴾᵃʸˡᵒᵃᵈˢ𝓐𝓵𝓵𝕋𝕙𝕖𝒯𝒽𝒾𝓃ℊ𝓈\"",
+        "print ('NFC: ' + unicodedata.normalize('NFC', string))",
+        "print ('NFD: ' + unicodedata.normalize('NFD', string))",
+        "print ('NFKC: ' + unicodedata.normalize('NFKC', string))",
+        "print ('NFKD: ' + unicodedata.normalize('NFKD', string))"
+      ]
+    },
+    {
+      "category": "Punycode",
+      "escalation": "baseline",
+      "lines": [
+        "SELECT 'a' = 'ᵃ';",
+        "+-------------+",
+        "| 'a' = 'ᵃ'   |",
+        "+-------------+",
+        "|           1 |",
+        "+-------------+",
+        "SELECT 'a' = 'ᵃ' COLLATE utf8mb4_0900_as_cs;",
+        "+----------------------------------------+",
+        "| 'a' = 'ᵃ' COLLATE utf8mb4_0900_as_cs   |",
+        "+----------------------------------------+",
+        "|                                      0 |",
+        "+----------------------------------------+"
+      ]
+    },
+    {
+      "category": "Base64",
+      "escalation": "baseline",
+      "lines": [
+        "echo -n admin | base64",
+        "YWRtaW4=",
+        "echo -n YWRtaW4= | base64 -d",
+        "admin"
+      ]
+    }
+  ],
+  "converted_at": "2026-04-03T07:48:28.869Z"
+}

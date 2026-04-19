@@ -1,0 +1,19 @@
+{
+  "source": "PayloadsAllTheThings",
+  "exploit_type": "insecure_direct_object_references",
+  "original_category": "Insecure Direct Object References",
+  "payloads": [
+    {
+      "category": "Methodology",
+      "escalation": "baseline",
+      "lines": [
+        "<?php",
+        "$user_id = $_GET['user_id'];",
+        "$user_info = get_user_info($user_id);",
+        "...",
+        "https://example.com/profile?user_id=124"
+      ]
+    }
+  ],
+  "converted_at": "2026-04-03T07:48:28.873Z"
+}

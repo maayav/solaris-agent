@@ -1,0 +1,1 @@
+/run/media/peburu/BIG DRIVE/Backup/Projects/Prawin/solaris/solaris-agent/agent-swarm/payloads/SecLists/Discovery/DNS/subdomains-top1mil.txt

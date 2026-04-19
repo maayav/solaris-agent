@@ -1,0 +1,197 @@
+[
+  {
+    "model": "z-ai/glm-4.5-air:free",
+    "provider": "openrouter",
+    "testsPassed": 4,
+    "testsFailed": 1,
+    "avgLatency": 43989,
+    "validJsonRate": 80,
+    "skipped": 1,
+    "results": [
+      {
+        "model": "z-ai/glm-4.5-air:free",
+        "provider": "openrouter",
+        "testName": "exploit_nmap_command",
+        "latency": 21952,
+        "response": "```json\n{\n  \"command\": \"nmap -sV -sC -p- -oA 192.168.1.0_scan 192.168.1.0/24\",\n  \"description\": \"Full port scan with service detection\",\n  \"args\": [\"-sV\", \"-sC\", \"-p-\", \"-oA\"]\n}\n```",
+        "validJson": true,
+        "error": ""
+      },
+      {
+        "model": "z-ai/glm-4.5-air:free",
+        "provider": "openrouter",
+        "testName": "exploit_gobuster_command",
+        "latency": 37909,
+        "response": "```json\n{\n  \"command\": \"gobuster dir -u http://target.local -w /usr/share/wordlists/dirb/common.txt -o gobuster_results.txt\",\n  \"description\": \"Directory enumeration\",\n  \"args\": [\"dir\", \"-u\", \"-w\", \"-o\"]\n}\n```",
+        "validJson": true,
+        "error": ""
+      },
+      {
+        "model": "z-ai/glm-4.5-air:free",
+        "provider": "openrouter",
+        "testName": "exploit_ffuf_command",
+        "latency": 26241,
+        "response": "```json\n{\n  \"command\": \"ffuf -u 'http://target.local/FUZZ' -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -o ffuf_dir_results.json -of json\",\n  \"description\": \"Directory fuzzing\",\n  \"args\": [\"-u\", \"-w\", \"-o\", \"-of\"]\n}\n```",
+        "validJson": true,
+        "error": ""
+      },
+      {
+        "model": "z-ai/glm-4.5-air:free",
+        "provider": "openrouter",
+        "testName": "mission_plan_json",
+        "latency": 79350,
+        "response": "Here's a JSON mission plan with example content for a Mars soil sampling mission:\n\n```json\n{\n  \"mission_id\": \"test-001\",\n  \"objectives\": [\n    \"Collect soil samples from two distinct locations\",\n    \"Document sampling sites with high-resolution imagery\",\n    \"Analyze soil composition using onboard spectrometer\"\n  ],\n  \"phases\": [\n    {\n      \"name\": \"Site Navigation\",\n      \"tools\": [\"Navigation System\", \"Terrain Scanner\"],\n      \"commands\": [\n        \"Scan terrain for optimal sampling sites\",\n        \"Plot course to first location\",\n        \"Deploy stabilizers\"\n      ]\n    },\n    {\n      \"name\": \"Sample Collection\",\n      \"tools\": [\"Robotic Arm\", \"Drill\", \"Sample Container\"],\n      \"commands\": [\n        \"Position drill at target location\",\n        \"Drill to depth of 5cm\",\n        \"Collect soil sample\",\n        \"Seal container\"\n      ]\n    },\n    {\n      \"name\": \"Documentation\",\n      \"tools\": [\"High-Res Camera\", \"Spectrometer\"],\n      \"commands\": [\n        \"Capture panoramic imagery\",\n        \"Perform spectral analysis\",\n        \"Transmit data to Earth\"\n      ]\n    },\n    {\n      \"name\": \"Site Relocation\",\n      \"tools\": [\"Navigation System\", \"Wheels\"],\n      \"commands\": [\n        \"Retract stabilizers\",\n        \"Navigate to second location\",\n        \"Deploy stabilizers\"\n      ]\n    },\n    {\n      \"name\": \"Repeat Sampling\",\n      \"tools\": [\"Robotic Arm\", \"Drill\", \"Sample Container\"],\n      \"commands\": [\n        \"Drill at second location\",\n        \"Collect additional sample\",\n        \"Seal container\"\n      ]\n    }\n  ],\n  \"expected_duration\": \"2h\"\n}\n```\n\n**Key Components Explained:**\n1. **Mission ID**: Unique identifier for tracking\n2. **Objectives**: Clear goals the mission aims to achieve\n3. **Phases**: Sequential operational stages:\n   - Each phase has specific tools and commands\n   - Logical progression from navigation → sampling → documentation\n   - Includes both primary sampling and repeat operations\n4. **Duration**: Total estimated mission time (2 hours)\n\n**Mission Flow:**\n1. Navigate to first sampling site\n2. Collect initial soil sample\n3. Document site with imagery and analysis\n4. Move to second location\n5. Collect additional sample\n6. Complete within 2-hour window\n\nThis structure allows for clear execution tracking and can be modified for different mission types by updating objectives, phases, tools, and commands.",
+        "validJson": false,
+        "error": "SyntaxError: JSON Parse error: Unexpected identifier \"Here\""
+      },
+      {
+        "model": "z-ai/glm-4.5-air:free",
+        "provider": "openrouter",
+        "testName": "finding_json",
+        "latency": 0,
+        "response": "",
+        "validJson": false,
+        "error": "Error: OpenRouter 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"z-ai/glm-4.5-air:free is temporarily rate-limited upstream. Please retry shortly, or add your own key"
+      },
+      {
+        "model": "z-ai/glm-4.5-air:free",
+        "provider": "openrouter",
+        "testName": "code_review_json",
+        "latency": 54493,
+        "response": "```json\n{\n  \"vulnerability\": \"SQL Injection\",\n  \"severity\": \"critical\",\n  \"location\": \"line 2\",\n  \"exploit\": \"id=1 OR 1=1\",\n  \"fix\": \"Use prepared statements\"\n}\n```",
+        "validJson": true,
+        "error": ""
+      }
+    ]
+  },
+  {
+    "model": "nvidia/nemotron-3-nano-30b-a3b:free",
+    "provider": "openrouter",
+    "testsPassed": 6,
+    "testsFailed": 0,
+    "avgLatency": 3696,
+    "validJsonRate": 100,
+    "skipped": 0,
+    "results": [
+      {
+        "model": "nvidia/nemotron-3-nano-30b-a3b:free",
+        "provider": "openrouter",
+        "testName": "exploit_nmap_command",
+        "latency": 4869,
+        "response": "{\n  \"command\": \"nmap -sS -p- -oN 192.168.1.0_scan 192.168.1.0/24\",\n  \"description\": \"Full TCP SYN scan of all ports on the 192.168.1.0/24 network\",\n  \"args\": [\"-sS\", \"-p-\", \"-oN\"]\n}",
+        "validJson": true,
+        "error": ""
+      },
+      {
+        "model": "nvidia/nemotron-3-nano-30b-a3b:free",
+        "provider": "openrouter",
+        "testName": "exploit_gobuster_command",
+        "latency": 3845,
+        "response": "{\n  \"command\": \"gobuster dir -u http://target.local -w /usr/share/wordlists/dirb/common.txt -o gobuster_results.txt\",\n  \"description\": \"Directory enumeration\",\n  \"args\": [\n    \"dir\",\n    \"-u\",\n    \"-w\",\n    \"-o\"\n  ]\n}",
+        "validJson": true,
+        "error": ""
+      },
+      {
+        "model": "nvidia/nemotron-3-nano-30b-a3b:free",
+        "provider": "openrouter",
+        "testName": "exploit_ffuf_command",
+        "latency": 3376,
+        "response": "{\n  \"command\": \"ffuf -u http://target.com/FUZZ -w /usr/share/wordlists/dirb/common.txt -mc 200 -o results.json -of json\",\n  \"description\": \"Directory fuzzing\",\n  \"args\": [\n    \"-u\",\n    \"-w\",\n    \"/usr/share/wordlists/dirb/common.txt\",\n    \"-mc\",\n    \"200\",\n    \"-o\",\n    \"results.json\",\n    \"-of\",\n    \"json\"\n  ]\n}",
+        "validJson": true,
+        "error": ""
+      },
+      {
+        "model": "nvidia/nemotron-3-nano-30b-a3b:free",
+        "provider": "openrouter",
+        "testName": "mission_plan_json",
+        "latency": 4426,
+        "response": "```json\n{\n  \"mission_id\": \"test-001\",\n  \"objectives\": [\n    \"Deploy reconnaissance drones\",\n    \"Map terrain features\",\n    \"Identify safe landing zones\",\n    \"Transmit real-time data to command\"\n  ],\n  \"phases\": [\n    {\n      \"name\": \"Phase 1: Initial Survey\",\n      \"tools\": [\n        \"Drone X1\",\n        \"LiDAR Scanner\",\n        \"GPS Module\"\n      ],\n      \"commands\": [\n        \"Launch drones at 09:00\",\n        \"Execute grid scan pattern\",\n        \"Collect high-resolution terrain data\",\n        \"Upload data to central server\"\n      ]\n    },\n    {\n      \"name\": \"Phase 2: Data Analysis\",\n      \"tools\": [\n        \"AI Analysis Suite\",\n        \"Data Visualization Dashboard\"\n      ],\n      \"commands\": [\n        \"Process LiDAR point cloud\",\n        \"Generate terrain heatmap\",\n        \"Highlight potential landing zones\",\n        \"Export report to PDF\"\n      ]\n    }\n  ],\n  \"expected_duration\": \"2h\"\n}\n```",
+        "validJson": true,
+        "error": ""
+      },
+      {
+        "model": "nvidia/nemotron-3-nano-30b-a3b:free",
+        "provider": "openrouter",
+        "testName": "finding_json",
+        "latency": 3627,
+        "response": "```json\n{\n  \"finding_id\": \"auto-001\",\n  \"severity\": \"medium\",\n  \"title\": \"SSH Service Detected\",\n  \"description\": \"SSH service is running on port 22, which may be exposed to unauthorized access.\",\n  \"evidence\": {\n    \"port\": 22,\n    \"service\": \"ssh\",\n    \"version\": \"\"\n  },\n  \"recommendations\": [\n    \"Restrict SSH access to trusted IP addresses using firewall rules.\",\n    \"Prefer key‑based authentication over password authentication.\",\n    \"Consider moving SSH to a non‑standard port or using a VPN for added security.\",\n    \"Regularly update the SSH daemon and monitor for security patches.\"\n  ]\n}\n```",
+        "validJson": true,
+        "error": ""
+      },
+      {
+        "model": "nvidia/nemotron-3-nano-30b-a3b:free",
+        "provider": "openrouter",
+        "testName": "code_review_json",
+        "latency": 2033,
+        "response": "{\n \"vulnerability\": \"SQL Injection\",\n  \"severity\": \"critical\",\n  \"location\": \"line 2\",\n  \"exploit\": \"id=1 OR 1=1\",\n  \"fix\": \"Use prepared statements\"\n}",
+        "validJson": true,
+        "error": ""
+      }
+    ]
+  },
+  {
+    "model": "phi-3-mini-128k-instruct-q4_K_M",
+    "provider": "ollama",
+    "testsPassed": 0,
+    "testsFailed": 6,
+    "avgLatency": 0,
+    "validJsonRate": 0,
+    "skipped": 0,
+    "results": [
+      {
+        "model": "phi-3-mini-128k-instruct-q4_K_M",
+        "provider": "ollama",
+        "testName": "exploit_nmap_command",
+        "latency": 0,
+        "response": "",
+        "validJson": false,
+        "error": "Error: Ollama 404: {\"error\":\"model 'phi-3-mini-128k-instruct-q4_K_M' not found\"}"
+      },
+      {
+        "model": "phi-3-mini-128k-instruct-q4_K_M",
+        "provider": "ollama",
+        "testName": "exploit_gobuster_command",
+        "latency": 0,
+        "response": "",
+        "validJson": false,
+        "error": "Error: Ollama 404: {\"error\":\"model 'phi-3-mini-128k-instruct-q4_K_M' not found\"}"
+      },
+      {
+        "model": "phi-3-mini-128k-instruct-q4_K_M",
+        "provider": "ollama",
+        "testName": "exploit_ffuf_command",
+        "latency": 0,
+        "response": "",
+        "validJson": false,
+        "error": "Error: Ollama 404: {\"error\":\"model 'phi-3-mini-128k-instruct-q4_K_M' not found\"}"
+      },
+      {
+        "model": "phi-3-mini-128k-instruct-q4_K_M",
+        "provider": "ollama",
+        "testName": "mission_plan_json",
+        "latency": 0,
+        "response": "",
+        "validJson": false,
+        "error": "Error: Ollama 404: {\"error\":\"model 'phi-3-mini-128k-instruct-q4_K_M' not found\"}"
+      },
+      {
+        "model": "phi-3-mini-128k-instruct-q4_K_M",
+        "provider": "ollama",
+        "testName": "finding_json",
+        "latency": 0,
+        "response": "",
+        "validJson": false,
+        "error": "Error: Ollama 404: {\"error\":\"model 'phi-3-mini-128k-instruct-q4_K_M' not found\"}"
+      },
+      {
+        "model": "phi-3-mini-128k-instruct-q4_K_M",
+        "provider": "ollama",
+        "testName": "code_review_json",
+        "latency": 0,
+        "response": "",
+        "validJson": false,
+        "error": "Error: Ollama 404: {\"error\":\"model 'phi-3-mini-128k-instruct-q4_K_M' not found\"}"
+      }
+    ]
+  }
+]

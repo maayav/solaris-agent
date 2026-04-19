@@ -1,0 +1,21 @@
+FROM python:3.11-slim
+
+RUN apt-get update && apt-get install -y \
+    curl \
+    nmap \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN pip install --no-cache-dir \
+    sqlmap \
+    jwt_tool \
+    ffuf \
+    && ln -s /usr/local/bin/sqlmap.py /usr/local/bin/sqlmap \
+    && ln -s /usr/local/bin/ffuf /usr/local/bin/ffuf
+
+WORKDIR /workspace
+
+ENV PYTHONUNBUFFERED=1
+ENV TERM=xterm
+
+CMD ["bash"]

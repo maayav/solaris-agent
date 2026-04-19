@@ -1,0 +1,26 @@
+{
+  "source": "SecLists",
+  "type": "wordlist",
+  "name": "IBMMQSeries-channels",
+  "payloads": [
+    {
+      "category": "IBMMQSeries-channels",
+      "escalation": "baseline",
+      "lines": [
+        "DEV.ADMIN.SVRCONN",
+        "DEV.APP.SVRCONN",
+        "SYSTEM.ADMIN.SVRCONN",
+        "SYSTEM.AUTO.RECEIVER",
+        "SYSTEM.AUTO.SVRCONN",
+        "SYSTEM.DEF.CLUSRCVR",
+        "SYSTEM.DEF.CLUSSDR",
+        "SYSTEM.DEF.RECEIVER",
+        "SYSTEM.DEF.REQUESTER",
+        "SYSTEM.DEF.SENDER",
+        "SYSTEM.DEF.SERVER",
+        "SYSTEM.DEF.SVRCONN"
+      ]
+    }
+  ],
+  "converted_at": "2026-04-03T07:48:28.888Z"
+}

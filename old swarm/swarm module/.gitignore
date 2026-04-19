@@ -1,0 +1,228 @@
+# =============================================================================
+# VibeCheck - Red Team + Blue Team Security Platform
+# Git Ignore File
+# =============================================================================
+
+# =============================================================================
+# Python
+# =============================================================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+pip-log.txt
+pip-delete-this-directory.txt
+*.manifest
+*.spec
+.python-version
+venv/
+ENV/
+env/
+.venv
+Pipfile.lock
+poetry.lock
+
+# =============================================================================
+# Node.js / JavaScript
+# =============================================================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+.yarn
+.pnp.*
+.next/
+.nuxt/
+dist/
+build/
+coverage/
+*.tsbuildinfo
+
+# =============================================================================
+# Environment & Secrets
+# =============================================================================
+.env
+.env.local
+.env.*.local
+.env.development
+.env.test
+.env.production
+!.env.example
+!.env.example.*
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+secrets.json
+secrets.yaml
+secrets.yml
+config.local.json
+
+# =============================================================================
+# IDE & Editors
+# =============================================================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+*.sublime-workspace
+*.sublime-project
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# =============================================================================
+# Logs & Databases
+# =============================================================================
+*.log
+logs/
+log/
+*.sql
+*.sqlite
+*.sqlite3
+*.db
+
+# =============================================================================
+# Docker
+# =============================================================================
+.dockerignore
+Dockerfile.*
+!Dockerfile
+!Dockerfile.sandbox
+docker-compose.override.yml
+
+# =============================================================================
+# Project Specific - VibeCheck
+# =============================================================================
+
+# Generated Reports
+reports/*.json
+reports/*.txt
+reports/*.html
+reports/*.pdf
+!reports/.gitkeep
+
+# Mission Outputs
+missions/
+mission_logs/
+*.mission.json
+
+# Sandbox & Runtime Data
+tmp/
+temp/
+*.tmp
+/tmp/
+/temp/
+
+# Redis Dump
+dump.rdb
+*.rdb
+appendonly.aof
+
+# Qdrant Vector DB Data
+qdrant_storage/
+storage/
+
+# FalkorDB Data
+falkordb_data/
+*.falkordb
+
+# Scan Results
+scan_results/
+scan_outputs/
+*.scan.json
+nuclei-results.json
+
+# Downloaded Repositories
+repos/
+cloned_repos/
+
+# =============================================================================
+# Testing & Coverage
+# =============================================================================
+.coverage
+.pytest_cache/
+.tox/
+.nox/
+htmlcov/
+.coverage.*
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+
+# =============================================================================
+# Documentation Build
+# =============================================================================
+site/
+docs/_build/
+docs/build/
+*.doctree
+
+# =============================================================================
+# OS Generated
+# =============================================================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# =============================================================================
+# Backup Files
+# =============================================================================
+*.bak
+*.backup
+*.orig
+*.save
+*.old
+*~
+*.copy
+*.tmp
+
+# =============================================================================
+# Misc
+# =============================================================================
+*.pid
+*.seed
+*.pid.lock
+.cache
+.parcel-cache
+.eslintcache
+.stylelintcache
+*.map
+*.min.js
+*.min.css

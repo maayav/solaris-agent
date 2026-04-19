@@ -1,0 +1,14 @@
+[ railway ]
+  builder = "bun"
+
+[ deploy ]
+  numReplicas = 1
+  restartPolicyType = "ON_FAILURE"
+  restartPolicyMaxRetries = 10
+
+[ deploy.healthcheck]
+  path = "/health"
+  port = 8000
+
+[ env ]
+  NODE_ENV = "production"

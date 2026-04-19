@@ -1,0 +1,16 @@
+{
+  "source": "PayloadsAllTheThings",
+  "exploit_type": "tabnabbing",
+  "original_category": "Tabnabbing",
+  "payloads": [
+    {
+      "category": "Discover",
+      "escalation": "baseline",
+      "lines": [
+        "<a href=\"...\" target=\"_blank\" rel=\"\">",
+        "<a href=\"...\" target=\"_blank\">"
+      ]
+    }
+  ],
+  "converted_at": "2026-04-03T07:48:28.864Z"
+}

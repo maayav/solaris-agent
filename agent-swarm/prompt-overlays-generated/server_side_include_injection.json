@@ -1,0 +1,15 @@
+{
+  "source": "PayloadsAllTheThings",
+  "exploit_type": "server_side_include_injection",
+  "original_category": "Server Side Include Injection",
+  "payloads": [
+    {
+      "category": "Edge Side Inclusion",
+      "escalation": "baseline",
+      "lines": [
+        "Surrogate-Control: content=\"ESI/1.0\""
+      ]
+    }
+  ],
+  "converted_at": "2026-04-03T07:48:28.861Z"
+}

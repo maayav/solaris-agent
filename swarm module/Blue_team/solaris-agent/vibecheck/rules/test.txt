@@ -1,0 +1,106 @@
+rules:
+  - id: taint-express-sqli
+    mode: taint
+    pattern-sources:
+      - pattern: req.params.$X
+      - pattern: req.query.$X
+      - pattern: req.body.$X
+      - pattern: req.headers[$X]
+    pattern-sinks:
+      - pattern: $DB.query($SINK, ...)
+      - pattern: $DB.execute($SINK, ...)
+      - pattern: sequelize.query($SINK, ...)
+      - pattern: knex.raw($SINK, ...)
+    message: "Possible SQL injection: user input flows into raw query"
+    languages: [javascript, typescript]
+    severity: ERROR
+
+  - id: taint-express-xss
+    mode: taint
+    pattern-sources:
+      - pattern: req.params.$X
+      - pattern: req.query.$X
+      - pattern: req.body.$X
+    pattern-sinks:
+      - pattern: res.send($SINK)
+      - pattern: res.write($SINK)
+      - pattern: res.end($SINK)
+      - pattern: innerHTML = $SINK
+    message: "Possible XSS: user input flows into response without sanitization"
+    languages: [javascript, typescript]
+    severity: ERROR
+
+  - id: taint-express-path-traversal
+    mode: taint
+    pattern-sources:
+      - pattern: req.params.$X
+      - pattern: req.query.$X
+      - pattern: req.body.$X
+    pattern-sinks:
+      - pattern: fs.readFile($SINK, ...)
+      - pattern: fs.readFileSync($SINK, ...)
+      - pattern: fs.writeFile($SINK, ...)
+      - pattern: path.join(..., $SINK, ...)
+      - pattern: require($SINK)
+    message: "Possible path traversal: user input flows into file system call"
+    languages: [javascript, typescript]
+    severity: ERROR
+
+  - id: taint-express-cmdi
+    mode: taint
+    pattern-sources:
+      - pattern: req.params.$X
+      - pattern: req.query.$X
+      - pattern: req.body.$X
+    pattern-sinks:
+      - pattern: exec($SINK, ...)
+      - pattern: execSync($SINK, ...)
+      - pattern: spawn($SINK, ...)
+      - pattern: child_process.exec($SINK, ...)
+    message: "Possible command injection: user input flows into shell execution"
+    languages: [javascript, typescript]
+    severity: ERROR
+
+  - id: taint-express-open-redirect
+    mode: taint
+    pattern-sources:
+      - pattern: req.params.$X
+      - pattern: req.query.$X
+      - pattern: req.body.$X
+    pattern-sinks:
+      - pattern: res.redirect($SINK)
+      - pattern: res.location($SINK)
+    message: "Possible open redirect: user input used in redirect"
+    languages: [javascript, typescript]
+    severity: WARNING
+
+  - id: taint-express-nosqli
+    mode: taint
+    pattern-sources:
+      - pattern: req.params.$X
+      - pattern: req.query.$X
+      - pattern: req.body.$X
+    pattern-sinks:
+      - pattern: $MODEL.find($SINK)
+      - pattern: $MODEL.findOne($SINK)
+      - pattern: $MODEL.findAll($SINK)
+      - pattern: $MODEL.where($SINK)
+    message: "Possible NoSQL injection: user input flows into ORM query"
+    languages: [javascript, typescript]
+    severity: ERROR
+
+  - id: taint-express-ssrf
+    mode: taint
+    pattern-sources:
+      - pattern: req.params.$X
+      - pattern: req.query.$X
+      - pattern: req.body.$X
+    pattern-sinks:
+      - pattern: fetch($SINK, ...)
+      - pattern: axios.get($SINK, ...)
+      - pattern: axios.post($SINK, ...)
+      - pattern: http.get($SINK, ...)
+      - pattern: request($SINK, ...)
+    message: "Possible SSRF: user input flows into outbound HTTP request"
+    languages: [javascript, typescript]
+    severity: ERROR

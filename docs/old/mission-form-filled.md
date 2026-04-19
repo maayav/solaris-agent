@@ -1,0 +1,141 @@
+- generic [ref=e3]:
+  - navigation [ref=e9]:
+    - generic [ref=e10]:
+      - button "VibeCheck" [ref=e11]:
+        - img [ref=e12]
+        - generic [ref=e14]: VibeCheck
+      - generic [ref=e15]:
+        - button "Dashboard" [ref=e16]
+        - button "Pipeline" [ref=e17]:
+          - img [ref=e18]
+          - text: Pipeline
+        - button "Team Chat" [ref=e22]:
+          - img [ref=e23]
+          - text: Team Chat
+        - button "Swarm" [ref=e25]:
+          - img [ref=e26]
+          - text: Swarm
+        - button "About" [ref=e31]
+    - generic [ref=e32]:
+      - link "GitHub" [ref=e33] [cursor=pointer]:
+        - /url: "#"
+        - img [ref=e34]
+        - text: GitHub
+      - button "Start Scanning" [ref=e37]
+  - generic [ref=e503]:
+    - generic [ref=e504]:
+      - banner [ref=e505]:
+        - generic [ref=e507]:
+          - text: Vibe
+          - emphasis [ref=e508]: Check
+        - generic [ref=e512]: POLLING
+        - generic [ref=e516]: MISSION ACTIVE
+        - generic [ref=e518]:
+          - text: ID
+          - generic [ref=e519]: eab6aba0
+        - generic [ref=e521]:
+          - text: TARGET
+          - generic [ref=e522]: http://localhost:42122
+        - generic [ref=e523]:
+          - generic [ref=e524]:
+            - generic [ref=e525]: "12"
+            - generic [ref=e526]: AGENTS
+          - generic [ref=e527]:
+            - generic [ref=e528]: "0"
+            - generic [ref=e529]: FINDINGS
+          - generic [ref=e530]:
+            - generic [ref=e531]: "0"
+            - generic [ref=e532]: CONFIRMED
+          - generic [ref=e533]: ELAPSED 00:00:34
+          - button "+ NEW MISSION" [ref=e534]
+      - generic [ref=e535]:
+        - generic [ref=e536]:
+          - generic:
+            - generic: COMMANDER
+            - generic: ALPHA RECON
+            - generic: GAMMA EXPLOIT
+            - generic: CRITIC
+            - generic: SANDBOX
+            - generic: SUPABASE BRIDGE
+          - generic [ref=e538]:
+            - generic [ref=e540]: RECON
+            - generic [ref=e542]: WEAPONIZE
+            - generic [ref=e544]: EXPLOIT
+            - generic [ref=e546]: POST-EXPLOIT
+            - generic [ref=e548]: REPORT
+          - generic:
+            - generic:
+              - text: Alpha Recon
+              - generic: →
+              - text: vibecheck-sandbox
+            - generic:
+              - text: Alpha Recon
+              - generic: →
+              - text: vibecheck-sandbox
+            - generic:
+              - text: Critic Agent
+              - generic: →
+              - text: vibecheck-sandbox
+            - generic:
+              - text: Alpha Recon
+              - generic: →
+              - text: vibecheck-sandbox
+          - generic: drag — scroll — click
+        - generic [ref=e550]:
+          - generic [ref=e552]:
+            - generic [ref=e553]: Inspector
+            - generic [ref=e555]: red-cmd
+          - paragraph [ref=e559]:
+            - text: Select a node
+            - text: to inspect the agent
+      - generic [ref=e560]:
+        - generic [ref=e562]:
+          - generic [ref=e563]:
+            - generic [ref=e568]: vibecheck-sandbox — privileged / host network
+            - button "▶" [ref=e569]
+            - generic [ref=e570]: 0 exec
+          - generic [ref=e572]: Waiting for mission events...
+        - generic [ref=e574]:
+          - generic [ref=e575]: Findings Report
+          - generic [ref=e576]:
+            - generic [ref=e577]:
+              - generic [ref=e578]: "0"
+              - generic [ref=e579]: HIGH
+            - generic [ref=e580]:
+              - generic [ref=e581]: "0"
+              - generic [ref=e582]: TOTAL
+            - generic [ref=e583]:
+              - generic [ref=e584]: "0"
+              - generic [ref=e585]: CONFIRMED
+            - button "▶" [ref=e586]
+            - button "⛶" [ref=e587]
+    - generic [ref=e590]:
+      - generic [ref=e591]:
+        - generic [ref=e592]: New Mission
+        - button "✕" [ref=e593]
+      - generic [ref=e594]:
+        - generic [ref=e595]:
+          - generic [ref=e596]: MISSION TYPE
+          - generic [ref=e597]:
+            - button "LIVE TARGET Real-time security assessment of a live target" [ref=e598]:
+              - generic [ref=e599]: LIVE TARGET
+              - generic [ref=e600]: Real-time security assessment of a live target
+            - button "STATIC SCAN Analysis of static resources and configurations" [ref=e601]:
+              - generic [ref=e602]: STATIC SCAN
+              - generic [ref=e603]: Analysis of static resources and configurations
+            - button "REPOSITORY Deploy and test from GitHub repository" [ref=e604]:
+              - generic [ref=e605]: REPOSITORY
+              - generic [ref=e606]: Deploy and test from GitHub repository
+        - generic [ref=e607]:
+          - generic [ref=e608]: TARGET DOMAIN
+          - textbox "example.com (domain where deployed app will run)" [ref=e619]: localhost
+        - generic [ref=e620]:
+          - generic [ref=e621]: GITHUB REPOSITORY
+          - textbox "https://github.com/user/repo.git" [active] [ref=e622]: https://github.com/vulnerables/node-dvwa.git
+          - generic [ref=e623]: Repository will be automatically cloned, built, and deployed in Docker
+        - generic [ref=e610]:
+          - generic [ref=e611]: OBJECTIVE
+          - textbox "Describe what the swarm should accomplish..." [ref=e612]: "Execute a comprehensive security audit including: 1) Map attack surface, 2) Test for SQL injection, XSS, IDOR, auth bypass, 3) Attempt token hijacking and session manipulation, 4) Hunt for sensitive data exposure"
+        - generic [ref=e616]:
+          - button "CANCEL" [ref=e617]
+          - button "START MISSION" [ref=e618] [cursor=pointer]

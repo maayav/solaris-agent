@@ -1,0 +1,91 @@
+export type SwarmEventType =
+  | "finding_written"
+  | "finding_validated"
+  | "finding_rejected"
+  | "credential_found"
+  | "credential_promoted"
+  | "mission_queued"
+  | "mission_verified"
+  | "mission_authorized"
+  | "mission_ready"
+  | "mission_rejected"
+  | "exploit_completed"
+  | "exploit_failed"
+  | "enrichment_requested"
+  | "enrichment_complete"
+  | "rce_confirmed"
+  | "swarm_complete"
+  | "brief_ready"
+  | "waf_duel_started"
+  | "waf_duel_complete"
+  | "handoff_requested"
+  | "specialist_activated"
+  | "specialist_complete"
+  | "belief_updated"
+  | "validation_probe_requested"
+  | "validation_probe_complete"
+  | "recon_complete"
+  | "scan_initiated"
+  | "port_discovered"
+  | "service_identified"
+  | "endpoint_discovered"
+  | "component_detected"
+  | "chain_planned"
+  | "chain_extended"
+  | "failure_analysis_complete"
+  | "retry_recommended"
+  | "abandon_recommended"
+  | "post_exploit_candidate"
+  | "report_generated";
+
+export interface SwarmEvent {
+  id: string;
+  type: SwarmEventType;
+  payload: Record<string, unknown>;
+  consumed: boolean;
+  consumed_by?: string;
+  consumed_at?: number;
+  created_at: number;
+  created_by: string;
+}
+
+export const EventTTL: Record<SwarmEventType, number | null> = {
+  swarm_complete: null,
+  finding_validated: 3600000,
+  mission_authorized: 3600000,
+  exploit_completed: 3600000,
+  exploit_failed: 86400000,
+  brief_ready: 1800000,
+  finding_written: 600000,
+  finding_rejected: 600000,
+  credential_found: 600000,
+  credential_promoted: 600000,
+  mission_queued: 600000,
+  mission_verified: 600000,
+  mission_ready: 600000,
+  mission_rejected: 600000,
+  enrichment_requested: 600000,
+  enrichment_complete: 600000,
+  rce_confirmed: 600000,
+  waf_duel_started: 600000,
+  waf_duel_complete: 600000,
+  handoff_requested: 600000,
+  specialist_activated: 600000,
+  specialist_complete: 600000,
+  belief_updated: 600000,
+  validation_probe_requested: 600000,
+  validation_probe_complete: 600000,
+  recon_complete: 600000,
+  scan_initiated: 600000,
+  port_discovered: 600000,
+  service_identified: 600000,
+  endpoint_discovered: 600000,
+  component_detected: 600000,
+  chain_planned: 600000,
+  chain_extended: 600000,
+  failure_analysis_complete: 600000,
+  retry_recommended: 600000,
+  abandon_recommended: 600000,
+  post_exploit_candidate: 600000,
+  report_generated: 600000,
+};

@@ -1,0 +1,174 @@
+{
+  "description": "Ground truth expected findings for toy-vulnerable-app. Format: per-stage expected findings.",
+  "stages": {
+    "semgrep": {
+      "rules": ["express-taint.yaml", "express-idor.yaml"],
+      "expected_findings": [
+        {
+          "rule_id": "express-idor",
+          "file": "src/routes/orders.ts",
+          "line": 8,
+          "message": "Insecure IDOR: user-controlled orderId used directly in database query",
+          "severity": "HIGH",
+          "confidence": "HIGH",
+          "type": "IDOR"
+        },
+        {
+          "rule_id": "express-idor",
+          "file": "src/routes/orders.ts",
+          "line": 14,
+          "message": "Insecure IDOR: params.id used directly without ownership check",
+          "severity": "HIGH",
+          "confidence": "MEDIUM",
+          "type": "IDOR"
+        }
+      ]
+    },
+    "semantic_lifting": {
+      "expected_findings": [
+        {
+          "file": "src/routes/auth.ts",
+          "line": 5,
+          "type": "MISSING_AUTH",
+          "message": "POST /admin/delete-user has no authentication middleware",
+          "severity": "CRITICAL",
+          "confidence": 0.85,
+          "detail": "route /admin/delete-user directly calls db.user.delete without any auth check"
+        },
+        {
+          "file": "src/routes/login.ts",
+          "line": 5,
+          "type": "MISSING_RATE_LIMIT",
+          "message": "POST /login has no rate limiting — susceptible to credential stuffing",
+          "severity": "MEDIUM",
+          "confidence": 0.90,
+          "detail": "route /login performs password comparison with no rate limit or account lockout"
+        }
+      ]
+    },
+    "secrets_scanner": {
+      "expected_findings": [
+        {
+          "file": "src/config/secrets.ts",
+          "line": 2,
+          "type": "HARDCODED_SECRET",
+          "secret_type": "AWS_ACCESS_KEY",
+          "pattern": "AKIA[0-9A-Z]{16}",
+          "severity": "CRITICAL",
+          "confidence": 0.99
+        },
+        {
+          "file": "src/config/secrets.ts",
+          "line": 3,
+          "type": "HARDCODED_SECRET",
+          "secret_type": "AWS_SECRET_KEY",
+          "pattern": "AES\\|.*KEY",
+          "severity": "CRITICAL",
+          "confidence": 0.99
+        },
+        {
+          "file": "src/config/secrets.ts",
+          "line": 4,
+          "type": "HARDCODED_SECRET",
+          "secret_type": "JWT_SECRET",
+          "pattern": "JWT_SECRET",
+          "severity": "HIGH",
+          "confidence": 0.95
+        },
+        {
+          "file": "src/config/secrets.ts",
+          "line": 5,
+          "type": "HARDCODED_SECRET",
+          "secret_type": "STRIPE_SECRET_KEY",
+          "pattern": "sk_live_[a-zA-Z0-9]+",
+          "severity": "HIGH",
+          "confidence": 0.95
+        },
+        {
+          "file": "src/config/secrets.ts",
+          "line": 6,
+          "type": "HARDCODED_SECRET",
+          "secret_type": "GITHUB_TOKEN",
+          "pattern": "ghp_[a-zA-Z0-9]{36}",
+          "severity": "HIGH",
+          "confidence": 0.95
+        },
+        {
+          "file": "src/config/secrets.ts",
+          "line": 7,
+          "type": "HARDCODED_SECRET",
+          "secret_type": "SENDGRID_API_KEY",
+          "pattern": "SG\\.[a-zA-Z0-9_-]+\\.[a-zA-Z0-9_-]+",
+          "severity": "HIGH",
+          "confidence": 0.95
+        }
+      ]
+    },
+    "iac_scanner": {
+      "expected_findings": [
+        {
+          "file": "infrastructure/main.tf",
+          "line": 16,
+          "type": "IAC_OPEN_ACCESS",
+          "message": "Security group allows all traffic from 0.0.0.0/0 on all ports",
+          "severity": "CRITICAL",
+          "framework": "terraform",
+          "check_id": "CKV_AWS_123"
+        },
+        {
+          "file": "infrastructure/main.tf",
+          "line": 33,
+          "type": "IAC_OVERPERMISSIVE_IAM",
+          "message": "IAM role has AdministratorAccess policy attached",
+          "severity": "HIGH",
+          "framework": "terraform",
+          "check_id": "CKV_AWS_456"
+        }
+      ]
+    },
+    "dockerfile_scanner": {
+      "expected_findings": [
+        {
+          "file": "Dockerfile",
+          "line": 3,
+          "type": "DOCKERUSER_ROOT",
+          "message": "Dockerfile runs as root user",
+          "severity": "MEDIUM"
+        },
+        {
+          "file": "Dockerfile",
+          "line": 9,
+          "type": "DOCKER_PERMISSIVE_CHMOD",
+          "message": "chmod 777 grants world-read/write/execute permissions",
+          "severity": "HIGH"
+        }
+      ]
+    },
+    "behavioral_analysis": {
+      "note": "Behavioral analysis runs on high-value functions from semantic_lifting + semgrep findings. For toy-vulnerable-app, the MISSING_AUTH on /admin/delete-user should be deep-analyzed for exploitation chain.",
+      "expected_deep_analysis": [
+        {
+          "file": "src/routes/auth.ts",
+          "line": 5,
+          "finding_type": "MISSING_AUTH",
+          "exploitation_chain": "unauthenticated_user -> POST /admin/delete-user -> arbitrary user deletion",
+          "impact": "Any unauthenticated attacker can delete any user account including admins",
+          "recommended_fix": "Apply authMiddleware to this route, or use requireAdmin middleware"
+        }
+      ]
+    }
+  },
+  "total_expected_findings_by_severity": {
+    "CRITICAL": 5,
+    "HIGH": 7,
+    "MEDIUM": 3
+  },
+  "notes": {
+    "MISSING_AUTH": "auth.ts route /admin/delete-user is NOT mounted with authMiddleware in app.ts, making it fully unauthenticated",
+    "MISSING_RATE_LIMIT": "login.ts route /login has no rate limiting middleware applied in app.ts",
+    "IDOR": "orders.ts uses req.body.orderId directly in ORM query without ownership validation",
+    "SECRETS": "secrets.ts exports 6 hardcoded secrets — no .env loading, no secret manager",
+    "IAC": "main.tf has two issues: open ingress rule and overprivileged IAM role",
+    "DOCKER": "Dockerfile uses USER root and chmod 777"
+  }
+}

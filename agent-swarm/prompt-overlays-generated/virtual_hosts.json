@@ -1,0 +1,35 @@
+{
+  "source": "PayloadsAllTheThings",
+  "exploit_type": "virtual_hosts",
+  "original_category": "Virtual Hosts",
+  "payloads": [
+    {
+      "category": "Methodology",
+      "escalation": "baseline",
+      "lines": [
+        "GET / HTTP/1.1",
+        "Host: example.com",
+        "<VirtualHost *:80>",
+        "ServerName site-a.com",
+        "DocumentRoot /var/www/a",
+        "</VirtualHost>",
+        "<VirtualHost *:80>",
+        "ServerName site-b.com",
+        "DocumentRoot /var/www/b",
+        "</VirtualHost>",
+        "GET / HTTP/1.1",
+        "Host: site-a.com",
+        "GET / HTTP/1.1",
+        "Host: site-b.com"
+      ]
+    },
+    {
+      "category": "Fingerprinting VHOSTs",
+      "escalation": "baseline",
+      "lines": [
+        "curl -H \"Host: admin.example.com\" http://10.10.10.10/"
+      ]
+    }
+  ],
+  "converted_at": "2026-04-03T07:48:28.865Z"
+}

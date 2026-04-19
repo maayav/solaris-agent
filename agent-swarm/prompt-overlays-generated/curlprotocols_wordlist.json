@@ -1,0 +1,46 @@
+{
+  "source": "SecLists",
+  "type": "wordlist",
+  "name": "curl-protocols",
+  "payloads": [
+    {
+      "category": "curl-protocols",
+      "escalation": "baseline",
+      "lines": [
+        "dict",
+        "file",
+        "ftp",
+        "ftps",
+        "gopher",
+        "gophers",
+        "http",
+        "https",
+        "imap",
+        "imaps",
+        "ldap",
+        "ldaps",
+        "mqtt",
+        "pop3",
+        "pop3s",
+        "rtmp",
+        "rtmpe",
+        "rtmps",
+        "rtmpt",
+        "rtmpte",
+        "rtmpts",
+        "rtsp",
+        "scp",
+        "sftp",
+        "smb",
+        "smbs",
+        "smtp",
+        "smtps",
+        "telnet",
+        "tftp",
+        "ws",
+        "wss"
+      ]
+    }
+  ],
+  "converted_at": "2026-04-03T07:48:29.055Z"
+}

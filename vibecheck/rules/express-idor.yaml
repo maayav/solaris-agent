@@ -1,0 +1,215 @@
+# IDOR (Insecure Direct Object Reference) Detection Rules
+# Detects when UserId or similar identifiers come from request body/params without ownership verification
+
+rules:
+  # Pattern 1: req.body.UserId used in where clause without authentication check
+  - id: express-idor-body-userid
+    languages:
+      - typescript
+      - javascript
+    message: >-
+      IDOR vulnerability: UserId from req.body used in database query without
+      verifying the authenticated user owns this resource. Any user can access
+      other users' data by changing the UserId in the request body.
+    severity: CRITICAL
+    metadata:
+      cwe: "CWE-639: Authorization Bypass Through User-Controlled Key"
+      confidence: HIGH
+    patterns:
+      - pattern-either:
+          - pattern: |
+              $MODEL.findOne({ where: { UserId: $REQ.body.UserId } })
+          - pattern: |
+              $MODEL.findAll({ where: { UserId: $REQ.body.UserId } })
+          - pattern: |
+              $MODEL.findOne({ where: { id: $REQ.params.id, UserId: $REQ.body.UserId } })
+          - pattern: |
+              $MODEL.update({ ... }, { where: { UserId: $REQ.body.UserId } })
+          - pattern: |
+              $MODEL.destroy({ where: { UserId: $REQ.body.UserId } })
+          - pattern: |
+              $MODEL.create({ UserId: $REQ.body.UserId, ... })
+      - metavariable-regex:
+          metavariable: $REQ
+          regex: ^req$
+
+  # Pattern 2: Generic IDOR - user-controlled ID in where clause
+  - id: express-idor-user-controlled-id
+    languages:
+      - typescript
+      - javascript
+    message: >-
+      Potential IDOR: User-controlled identifier used in database query.
+      Verify that the authenticated user is authorized to access this resource.
+    severity: HIGH
+    metadata:
+      cwe: "CWE-639: Authorization Bypass Through User-Controlled Key"
+      confidence: MEDIUM
+    patterns:
+      - pattern-either:
+          - pattern: |
+              $MODEL.findOne({ where: { $FIELD: $REQ.$SOURCE.$ID } })
+          - pattern: |
+              $MODEL.findAll({ where: { $FIELD: $REQ.$SOURCE.$ID } })
+      - metavariable-regex:
+          metavariable: $SOURCE
+          regex: ^(body|params|query)$
+      - metavariable-regex:
+          metavariable: $FIELD
+          regex: (?i)(userid|user_id|owner|ownerid|accountid|customerid)
+
+  # Pattern 3: Basket/Order access without ownership check
+  - id: express-idor-basket-order
+    languages:
+      - typescript
+      - javascript
+    message: >-
+      IDOR vulnerability: Accessing basket/order by ID from URL params without
+      verifying the authenticated user owns this resource.
+    severity: CRITICAL
+    metadata:
+      cwe: "CWE-639: Authorization Bypass Through User-Controlled Key"
+      confidence: HIGH
+    patterns:
+      - pattern-either:
+          - pattern: |
+              BasketModel.findOne({ where: { id: req.params.id } })
+          - pattern: |
+              OrderModel.findOne({ where: { id: req.params.id } })
+          - pattern: |
+              BasketModel.findByPk(req.params.id)
+          - pattern: |
+              OrderModel.findByPk(req.params.id)
+
+  # Pattern 4: Mass assignment via spread operator with req.body
+  - id: express-mass-assignment-spread
+    languages:
+      - typescript
+      - javascript
+    message: >-
+      Mass Assignment vulnerability: Spreading req.body directly into model
+      creation/update allows attackers to set protected fields like UserId,
+      role, or isAdmin.
+    severity: HIGH
+    metadata:
+      cwe: "CWE-915: Improperly Controlled Modification of Dynamically-Determined Object Attributes"
+      confidence: HIGH
+    patterns:
+      - pattern-either:
+          - pattern: $MODEL.create({ ...req.body, ... })
+          - pattern: $MODEL.update({ ...req.body, ... })
+          - pattern: $MODEL.create({ ...req.body })
+          - pattern: $MODEL.update({ ...req.body })
+
+  # Pattern 5: Missing cookie security flags
+  - id: express-insecure-cookie
+    languages:
+      - typescript
+      - javascript
+    message: >-
+      Insecure cookie: Cookie set without httpOnly flag is vulnerable to XSS
+      theft. Without secure flag, it can be sent over HTTP connections.
+    severity: HIGH
+    metadata:
+      cwe: "CWE-1004: Sensitive Cookie Without 'HttpOnly' Flag"
+      confidence: HIGH
+    patterns:
+      - pattern-either:
+          - pattern: |
+              res.cookie($NAME, $VALUE)
+          - pattern: |
+              res.cookie($NAME, $VALUE, { ... })
+      - pattern-not: |
+          res.cookie($NAME, $VALUE, { ... httpOnly: true ... })
+      - pattern-not-inside: |
+          res.cookie($NAME, $VALUE, { ... httpOnly: true ... })
+
+  # Pattern 6: NoSQL $where injection
+  - id: express-nosql-where-injection
+    languages:
+      - typescript
+      - javascript
+    message: >-
+      NoSQL Injection: $where operator with string concatenation allows
+      arbitrary JavaScript execution in MongoDB. Attackers can inject
+      malicious expressions to bypass authentication or extract data.
+    severity: CRITICAL
+    metadata:
+      cwe: "CWE-943: Improper Neutralization of Special Elements in Data Query Logic"
+      confidence: HIGH
+    patterns:
+      - pattern-either:
+          - pattern: |
+              $DB.find({ $where: $EXPR + $USERINPUT })
+          - pattern: |
+              $DB.find({ $where: `$EXPR${$USERINPUT}` })
+          - pattern: |
+              $DB.find({ $where: "..." + $VAR + "..." })
+      - metavariable-regex:
+          metavariable: $USERINPUT
+          regex: (?i)(req\.|params|body|query)
+
+  # Pattern 7: JSON.parse with req.params in where clause (operator injection)
+  - id: express-orm-operator-injection
+    languages:
+      - typescript
+      - javascript
+    message: >-
+      ORM Operator Injection: JSON.parse on user input passed directly to
+      where clause allows MongoDB/Sequelize operators like {$gt: 0} or
+      {$ne: null} to bypass authentication checks.
+    severity: CRITICAL
+    metadata:
+      cwe: "CWE-943: Improper Neutralization of Special Elements in Data Query Logic"
+      confidence: HIGH
+    patterns:
+      - pattern-either:
+          - pattern: |
+              $MODEL.findOne({ where: JSON.parse(req.params.$PARAM) })
+          - pattern: |
+              $MODEL.find({ where: JSON.parse(req.params.$PARAM) })
+          - pattern: |
+              $DB.findOne(JSON.parse(req.params.$PARAM))
+          - pattern: |
+              $DB.find(JSON.parse(req.params.$PARAM))
+
+  # Pattern 8: Math.random used for secrets/tokens
+  - id: express-weak-random-secret
+    languages:
+      - typescript
+      - javascript
+    message: >-
+      Cryptographically weak secret: Math.random() is not cryptographically
+      secure and should not be used for JWT secrets, API keys, or session
+      tokens. Use crypto.randomBytes() or similar instead.
+    severity: HIGH
+    metadata:
+      cwe: "CWE-338: Use of Cryptographically Weak Pseudo-Random Number Generator (PRNG)"
+      confidence: HIGH
+    patterns:
+      - pattern-either:
+          - pattern: jwt.sign(..., '' + Math.random(), ...)
+          - pattern: jwt.sign(..., String(Math.random()), ...)
+          - pattern: expressJwt({ secret: '' + Math.random() })
+          - pattern: expressJwt({ secret: String(Math.random()) })
+          - pattern: >-
+              secret: Math.random()
+
+  # Pattern 9: Host header injection
+  - id: express-host-header-injection
+    languages:
+      - typescript
+      - javascript
+    message: >-
+      Host Header Injection: Using req.get('host') or req.headers.host for
+      URL construction can be manipulated by attackers to generate malicious
+      links or poison caches.
+    severity: MEDIUM
+    metadata:
+      cwe: "CWE-641: Improper Restriction of Names for Files and Other Resources"
+      confidence: MEDIUM
+    patterns:
+      - pattern-either:
+          - pattern: req.get('host')
+          - pattern: req.headers.host
+          - pattern: req.header('host')

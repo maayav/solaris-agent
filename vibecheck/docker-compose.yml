@@ -1,0 +1,113 @@
+version: "3.9"
+
+services:
+  # FalkorDB - Graph Database for Knowledge Graph
+  # Redis-compatible protocol, used for storing code entities and relationships
+  falkordb:
+    image: falkordb/falkordb:latest
+    container_name: vibecheck-falkordb
+    ports:
+      - "6379:6379"
+    volumes:
+      - falkordb_data:/data
+    environment:
+      - FALKORDB_ARGS=--save 60 1 --loglevel warning
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # Qdrant - Vector Database for Code Embeddings
+  # High-performance vector search for semantic code retrieval
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: vibecheck-qdrant
+    ports:
+      - "6333:6333"  # REST API
+      - "6334:6334"  # gRPC API
+    volumes:
+      - qdrant_data:/qdrant/storage
+    environment:
+      - QDRANT__LOG_LEVEL=INFO
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:6333/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # Redis - Message Bus for Agent Communication
+  # Redis Streams for A2A messaging and task queues
+  # Note: Using port 6380 to avoid conflict with FalkorDB on 6379
+  redis:
+    image: redis:7-alpine
+    container_name: vibecheck-redis
+    ports:
+      - "6380:6379"
+    command: redis-server --appendonly yes --loglevel warning
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # Juice Shop - Test target for swarm missions
+  # OWASP Juice Shop vulnerable app for testing Red Team agents
+  # Using port 8080 to avoid conflict with frontend on port 3000
+  juiceshop:
+    image: bkimminich/juice-shop:latest
+    container_name: vibecheck-juiceshop
+    ports:
+      - "8080:3000"
+    environment:
+      - NODE_ENV=production
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    restart: unless-stopped
+
+  # FastAPI Application (optional - for containerized deployment)
+  # Uncomment when ready to deploy the API in Docker
+  # api:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   container_name: vibecheck-api
+  #   ports:
+  #     - "8000:8000"
+  #   environment:
+  #     - SUPABASE_URL=${SUPABASE_URL}
+  #     - SUPABASE_ANON_KEY=${SUPABASE_ANON_KEY}
+  #     - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+  #     - OLLAMA_BASE_URL=http://host.docker.internal:11434
+  #     - FALKORDB_URL=redis://falkordb:6379
+  #     - QDRANT_URL=http://qdrant:6333
+  #     - REDIS_URL=redis://redis:6379
+  #   depends_on:
+  #     falkordb:
+  #       condition: service_healthy
+  #     qdrant:
+  #       condition: service_healthy
+  #     redis:
+  #       condition: service_healthy
+  #   restart: unless-stopped
+
+volumes:
+  falkordb_data:
+    driver: local
+  qdrant_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  default:
+    name: vibecheck-network

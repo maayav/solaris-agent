@@ -1,0 +1,37 @@
+# VibeCheck - Red Team + Blue Team Integration
+# Python Dependencies
+
+# Core async and networking
+asyncio>=3.4.3
+redis>=5.0.0
+httpx>=0.25.0
+requests>=2.31.0
+
+# LLM clients
+openai>=1.0.0
+ollama>=0.1.0
+
+# LangGraph / LangChain
+langgraph>=0.0.50
+langchain>=0.1.0
+
+# Data validation
+pydantic>=2.5.0
+pydantic-settings>=2.1.0
+
+# Docker client
+docker>=6.1.0
+
+# YAML parsing
+pyyaml>=6.0.1
+
+# Environment variables
+python-dotenv>=1.0.0
+
+# Blue Team specific
+falkordb>=1.6.0
+qdrant-client>=1.7.0
+supabase>=2.0.0
+
+# Utilities
+numpy>=1.26.0

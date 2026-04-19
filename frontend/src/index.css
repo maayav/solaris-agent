@@ -1,0 +1,146 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Playfair Display", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --color-primary: #ffffff;
+}
+
+:root {
+  --background: #050505;
+  --foreground: #ffffff;
+  --primary: #ffffff;
+  --muted: #18181b;
+  color-scheme: dark;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Fluid typography utilities */
+@layer utilities {
+  .text-fluid-xs {
+    font-size: clamp(0.7rem, 0.5vw + 0.5rem, 0.8rem);
+  }
+
+  .text-fluid-sm {
+    font-size: clamp(0.8rem, 0.5vw + 0.6rem, 0.95rem);
+  }
+
+  .text-fluid-base {
+    font-size: clamp(0.9rem, 0.6vw + 0.7rem, 1.125rem);
+  }
+
+  .text-fluid-lg {
+    font-size: clamp(1.1rem, 1vw + 0.7rem, 1.5rem);
+  }
+
+  .text-fluid-xl {
+    font-size: clamp(1.5rem, 2vw + 1rem, 2.5rem);
+  }
+
+  .text-fluid-2xl {
+    font-size: clamp(2rem, 3vw + 1rem, 3.5rem);
+  }
+
+  .text-fluid-hero {
+    font-size: clamp(2.5rem, 5vw + 1rem, 5rem);
+  }
+}
+
+/* GPU-friendly glow pulse (replaces animate-ping) */
+@keyframes glow-pulse {
+
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes glow-breathe {
+
+  0%,
+  100% {
+    opacity: 0.15;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.4;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes tubelight-bar-x {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-10px);
+  }
+
+  /* Approximate movement, actual animation handled by Framer Motion layoutId */
+}
+
+@keyframes pulse-glow {
+
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(45, 255, 179, 0.3);
+  }
+
+  50% {
+    box-shadow: 0 0 40px rgba(45, 255, 179, 0.6);
+  }
+}
+
+@layer utilities {
+  .animate-glow-pulse {
+    animation: glow-pulse 2.5s ease-in-out infinite;
+  }
+
+  .animate-glow-breathe {
+    animation: glow-breathe 4s ease-in-out infinite alternate;
+  }
+
+  .animate-pulse-glow {
+    animation: pulse-glow 2.5s ease-in-out infinite;
+  }
+}
+
+/* Hide Native Scrollbar */
+@layer base {
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  * {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+}
+
+/* Respect user preference for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

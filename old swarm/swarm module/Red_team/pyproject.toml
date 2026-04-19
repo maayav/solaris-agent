@@ -1,0 +1,14 @@
+[project]
+name = "vibecheck-redteam"
+version = "0.1.0"
+description = "Autonomous Red Team Agent Swarm — Project VibeCheck"
+requires-python = ">=3.10"
+readme = "README.md"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 100

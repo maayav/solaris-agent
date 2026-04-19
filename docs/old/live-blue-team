@@ -1,0 +1,81 @@
+Given your work on **Vibecheck** and **Solaris-Agent**, here's a battle-tested breakdown of the most impactful things you can add to a blue team — organized by layer.
+
+***
+
+## Core Detection Stack
+
+The foundation of any effective blue team is a solid **SIEM + EDR** combo. These work in tandem: EDR (like CrowdStrike Falcon or Wazuh) detects suspicious endpoint activity, while SIEM (Splunk, Elastic Security, or Microsoft Sentinel) correlates logs and raises alerts across the entire environment. Feeding EDR-generated IoCs directly into SIEM correlation rules is one of the highest-leverage improvements you can make. [linkedin](https://www.linkedin.com/posts/arya-chowkekar-145882252_blueteam-cybersecurity-socanalyst-activity-7354770563053105154-TI2z)
+
+- **Wazuh** – Open-source SIEM with continuous threat detection, great for self-hosted setups [linkedin](https://www.linkedin.com/posts/vistasec_blueteam-threathunting-cyberdefense-activity-7394746860034392064-eDOf)
+- **Elastic Security** – Combines SIEM, endpoint protection, and threat hunting in one stack [linkedin](https://www.linkedin.com/posts/vistasec_blueteam-threathunting-cyberdefense-activity-7394746860034392064-eDOf)
+- **Microsoft Sentinel** – Cloud-native SIEM with AI-assisted analytics, ideal if you're in Azure [cybernx](https://www.cybernx.com/blue-team-tools/)
+- **CrowdStrike Falcon** – Industry-leading EDR with MITRE ATT&CK mapping built in [hackthebox](https://www.hackthebox.com/blog/soc-analyst-tools-essentials-for-blue-teams)
+
+***
+
+## Network Visibility
+
+Blind spots in network traffic are where attackers live the longest. You need full packet capture and intrusion detection layered together. [tryhackme](https://tryhackme.com/resources/blog/blue-team-best-practices)
+
+- **Security Onion** – All-in-one network monitoring suite (IDS + PCAP + log analysis) [linkedin](https://www.linkedin.com/posts/vistasec_blueteam-threathunting-cyberdefense-activity-7394746860034392064-eDOf)
+- **Arkime** – Full packet capture and indexing for deep session forensics [linkedin](https://www.linkedin.com/posts/vistasec_blueteam-threathunting-cyberdefense-activity-7394746860034392064-eDOf)
+- **Suricata / Snort** – Real-time IDS/IPS for detecting network-level attack signatures [linkedin](https://www.linkedin.com/posts/arya-chowkekar-145882252_blueteam-cybersecurity-socanalyst-activity-7354770563053105154-TI2z)
+- **RITA** – Uses ML to detect beaconing and C2 communication patterns that rule-based tools miss [linkedin](https://www.linkedin.com/posts/vistasec_blueteam-threathunting-cyberdefense-activity-7394746860034392064-eDOf)
+- **Maltrail** – Suspicious traffic detection using known bad IPs/domains [linkedin](https://www.linkedin.com/posts/vistasec_blueteam-threathunting-cyberdefense-activity-7394746860034392064-eDOf)
+
+***
+
+## Endpoint & Host Forensics
+
+Getting deep visibility into what's happening on individual hosts is critical for both detection and IR. [securonix](https://www.securonix.com/blog/improving-blue-team-threat-detection-with-enhanced-siem-telemetry/)
+
+- **Sysmon** – Deep Windows event logging; massively increases fidelity for SIEM rules [linkedin](https://www.linkedin.com/posts/vistasec_blueteam-threathunting-cyberdefense-activity-7394746860034392064-eDOf)
+- **Velociraptor** – Endpoint visibility and live digital forensics at scale [linkedin](https://www.linkedin.com/posts/vistasec_blueteam-threathunting-cyberdefense-activity-7394746860034392064-eDOf)
+- **Falco** – Runtime security for containers and cloud workloads, essential if you're running Docker/K8s [linkedin](https://www.linkedin.com/posts/vistasec_blueteam-threathunting-cyberdefense-activity-7394746860034392064-eDOf)
+- **Volatility / Autopsy** – Memory and disk forensics for post-incident reconstruction [cybernx](https://www.cybernx.com/blue-team-tools/)
+
+***
+
+## Threat Intelligence & Hunting
+
+Reactive detection isn't enough — proactive hunting closes the gap on dwell time. [tryhackme](https://tryhackme.com/resources/blog/blue-team-best-practices)
+
+- **OpenCTI** – Centralized threat intelligence platform to correlate IOCs across campaigns [linkedin](https://www.linkedin.com/posts/vistasec_blueteam-threathunting-cyberdefense-activity-7394746860034392064-eDOf)
+- **MITRE ATT&CK Navigator** – Visualize your detection coverage against real-world TTP maps [linkedin](https://www.linkedin.com/posts/vistasec_blueteam-threathunting-cyberdefense-activity-7394746860034392064-eDOf)
+- **HELK (Hunting ELK)** – Enhances your ELK stack specifically for threat hunting workflows [linkedin](https://www.linkedin.com/posts/vistasec_blueteam-threathunting-cyberdefense-activity-7394746860034392064-eDOf)
+
+***
+
+## Vulnerability Management
+
+You can't fix what you can't see — continuous scanning beats periodic audits. [penti](https://penti.ai/blog/team-blue)
+
+- **OpenVAS / Nessus** – Network and host vulnerability scanning [youtube](https://www.youtube.com/watch?v=cZk2S6mgU0o)
+- **Loki** – IOC scanner for live systems and network artifacts [linkedin](https://www.linkedin.com/posts/vistasec_blueteam-threathunting-cyberdefense-activity-7394746860034392064-eDOf)
+- **Purple Teaming** – Running red team exercises *with* your blue team to surface missed detection gaps is consistently the fastest way to harden detection logic [tryhackme](https://tryhackme.com/resources/blog/blue-team-best-practices)
+
+***
+
+## AI-Augmented Detection
+
+AI tooling is now a genuine force multiplier for small teams. [youtube](https://www.youtube.com/watch?v=TzDBtIEes5Q)
+
+| Capability | Tool/Approach |
+|---|---|
+| Log triage & alert analysis | Microsoft Copilot for Security, CrowdStrike Charlotte AI  [youtube](https://www.youtube.com/watch?v=TzDBtIEes5Q) |
+| Semantic vuln detection | Custom models (relevant to your Vibecheck work) |
+| UEBA baselining | Adaptive SIEM rules to cut false positives  [exabeam](https://www.exabeam.com/explainers/siem/siem-vs-edr-key-features-differences-and-how-to-choose/) |
+| Query language | KQL (for Sentinel/Elastic) for fast custom hunting  [linkedin](https://www.linkedin.com/posts/vistasec_blueteam-threathunting-cyberdefense-activity-7394746860034392064-eDOf) |
+
+***
+
+## Process Improvements (Often Overlooked)
+
+Tools alone won't save you — process is where most teams leak. [hackthebox](https://www.hackthebox.com/blog/soc-analyst-tools-essentials-for-blue-teams)
+
+- Build a **SOAR** playbook layer (using tools like Shuffle or Cortex XSOAR) to automate repetitive response actions
+- Establish **detection engineering** as a practice: write, test, and version-control detection rules like code
+- Regularly review **incident handling methodologies** — HackTheBox research shows ~30% of SOC analysts rank this as the single most important knowledge domain [hackthebox](https://www.hackthebox.com/blog/soc-analyst-tools-essentials-for-blue-teams)
+- Run **tabletop exercises** simulating ransomware or supply chain attacks to stress-test your runbooks [tryhackme](https://tryhackme.com/resources/blog/blue-team-best-practices)
+
+Given that you're building Vibecheck for semantic vulnerability detection, integrating your detections directly into a Wazuh or Elastic pipeline with custom rule feeds would be a natural and powerful combination.

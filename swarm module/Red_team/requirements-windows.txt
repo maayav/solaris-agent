@@ -1,0 +1,32 @@
+# VibeCheck Red Team - Windows Requirements
+# These packages have pre-built wheels and don't require Visual C++ Build Tools
+
+# Core dependencies
+pydantic>=2.0
+pydantic-settings>=2.0
+httpx>=0.28
+pyyaml>=6.0
+redis>=5.0
+docker>=7.0
+
+# Web framework
+fastapi>=0.115
+uvicorn>=0.32
+
+# LangChain & LangGraph
+langchain-core>=0.3.35
+langchain>=0.3.19
+langchain-openai>=0.2.14
+langgraph>=0.2.48
+langgraph-checkpoint>=2.0.4
+
+# LLM clients
+openai>=1.0
+ollama>=0.4
+
+# Utilities
+colorama>=0.4
+
+# Testing (optional)
+pytest>=8.0
+pytest-asyncio>=0.24

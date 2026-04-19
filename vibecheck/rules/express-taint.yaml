@@ -1,0 +1,544 @@
+rules:
+  # ============================================================
+  # SHARED SOURCES (referenced inline per rule)
+  # Sources: req.params, req.query, req.body, req.headers,
+  #          req.cookies, req.get(), req.url, req.path,
+  #          req.hostname, req.ip, req.file (multer)
+  # ============================================================
+
+  - id: taint-express-sqli
+    mode: taint
+    pattern-sources:
+      - pattern: req.params.$X
+      - pattern: req.query.$X
+      - pattern: req.body.$X
+      - pattern: req.body
+      - pattern: req.headers[$X]
+      - pattern: req.headers.$X
+      - pattern: req.cookies.$X
+      - pattern: req.cookies[$X]
+      - pattern: req.get($X)
+      - pattern: req.url
+      - pattern: req.path
+    pattern-sinks:
+      # Raw query methods
+      - pattern: $DB.query($SINK, ...)
+      - pattern: $DB.execute($SINK, ...)
+      - pattern: sequelize.query($SINK, ...)
+      - pattern: sequelize.query($SINK)
+      # Knex raw
+      - pattern: knex.raw($SINK, ...)
+      - pattern: knex($SINK)
+      # Mongoose raw command
+      - pattern: mongoose.connection.db.command({$SINK})
+      # Note: template literal taint (e.g. `SELECT ... ${req.body.x}`)
+      # is propagated automatically by Semgrep taint mode — no explicit patterns needed.
+      # Explicit `...` patterns inside backticks are invalid semgrep syntax
+      # and will cause parse errors that silently disable the rule.
+    message: "Possible SQL injection: user input flows into raw query"
+    languages: [javascript, typescript]
+    severity: ERROR
+
+  # ============================================================
+
+  - id: taint-express-nosqli
+    mode: taint
+    pattern-sources:
+      - pattern: req.params.$X
+      - pattern: req.query.$X
+      - pattern: req.body.$X
+      - pattern: req.body
+      - pattern: req.headers[$X]
+      - pattern: req.headers.$X
+      - pattern: req.cookies.$X
+      - pattern: req.cookies[$X]
+      - pattern: req.get($X)
+    pattern-sinks:
+      # Generic model methods — top-level arg tainted
+      - pattern: $MODEL.find($SINK)
+      - pattern: $MODEL.find($SINK, ...)
+      - pattern: $MODEL.findOne($SINK)
+      - pattern: $MODEL.findAll($SINK)
+      - pattern: $MODEL.findById($SINK)
+      - pattern: $MODEL.where($SINK)
+      - pattern: $MODEL.update($SINK, ...)
+      - pattern: $MODEL.updateOne($SINK, ...)
+      - pattern: $MODEL.updateMany($SINK, ...)
+      - pattern: $MODEL.deleteOne($SINK, ...)
+      - pattern: $MODEL.deleteMany($SINK, ...)
+      - pattern: $MODEL.aggregate($SINK)
+      - pattern: $MODEL.create($SINK)
+      - pattern: $MODEL.upsert($SINK, ...)
+      - pattern: $MODEL.replaceOne($SINK, ...)
+      # Sequelize where-clause operator injection — ONLY flag when entire where is user-controlled
+      # These patterns explicitly match req.body/params/query as the whole where value
+      # Scalar lookups like {where: {id: req.params.id}} are SAFE — Sequelize parameterizes them
+      - pattern: "$MODEL.findOne({where: req.body})"
+      - pattern: "$MODEL.findOne({where: req.params})"
+      - pattern: "$MODEL.findOne({where: req.query})"
+      - pattern: "$MODEL.findAll({where: req.body})"
+      - pattern: "$MODEL.findAll({where: req.params})"
+      - pattern: "$MODEL.findAll({where: req.query})"
+      - pattern: "$MODEL.findOne({where: $VAR})"
+        metavariable-pattern:
+          metavariable: $VAR
+          pattern: req.body
+      - pattern: "$MODEL.findAll({where: $VAR})"
+        metavariable-pattern:
+          metavariable: $VAR
+          pattern: req.body
+    message: "Possible NoSQL injection: user input flows into ORM query"
+    languages: [javascript, typescript]
+    severity: ERROR
+
+  # ============================================================
+
+  - id: taint-express-path-traversal
+    mode: taint
+    pattern-sources:
+      - pattern: req.params.$X
+      - pattern: req.query.$X
+      - pattern: req.body.$X
+      - pattern: req.cookies.$X
+      - pattern: req.headers[$X]
+      - pattern: req.headers.$X
+      - pattern: req.url
+      - pattern: req.path
+      # Multer file upload — originalname/filename/path are attacker-controlled
+      - pattern: req.file.originalname
+      - pattern: req.file.filename
+      - pattern: req.file.path
+      - pattern: req.files.$X.originalname
+      - pattern: req.files.$X.filename
+    pattern-sinks:
+      # fs read
+      - pattern: fs.readFile($SINK, ...)
+      - pattern: fs.readFileSync($SINK, ...)
+      - pattern: fs.open($SINK, ...)
+      - pattern: fs.createReadStream($SINK, ...)
+      - pattern: fs.stat($SINK, ...)
+      - pattern: fs.statSync($SINK, ...)
+      - pattern: fs.existsSync($SINK)
+      - pattern: fs.access($SINK, ...)
+      # fs write / delete
+      - pattern: fs.writeFile($SINK, ...)
+      - pattern: fs.writeFileSync($SINK, ...)
+      - pattern: fs.createWriteStream($SINK, ...)
+      - pattern: fs.unlink($SINK, ...)
+      - pattern: fs.unlinkSync($SINK, ...)
+      - pattern: fs.rename($SINK, ...)
+      - pattern: fs.copyFile($SINK, ...)
+      # path construction
+      - pattern: path.join(..., $SINK, ...)
+      - pattern: path.resolve($SINK, ...)
+      - pattern: path.resolve(..., $SINK)
+      # Express file serving (logfileServer.ts / keyServer.ts pattern)
+      - pattern: res.sendFile($SINK, ...)
+      - pattern: res.sendFile($SINK)
+      - pattern: res.download($SINK, ...)
+      # Dynamic require
+      - pattern: require($SINK)
+      # yaml/json file reads (vulnCodeSnippet.ts pattern)
+      - pattern: yaml.load(fs.readFileSync($SINK, ...))
+      - pattern: JSON.parse(fs.readFileSync($SINK, ...))
+    message: "Possible path traversal: user input flows into file system call"
+    languages: [javascript, typescript]
+    severity: ERROR
+
+  # ============================================================
+
+  - id: taint-express-cmdi
+    mode: taint
+    pattern-sources:
+      - pattern: req.params.$X
+      - pattern: req.query.$X
+      - pattern: req.body.$X
+      - pattern: req.headers[$X]
+      - pattern: req.headers.$X
+      - pattern: req.cookies.$X
+      # Multer — filename used in shell commands is a classic cmdi vector
+      - pattern: req.file.originalname
+      - pattern: req.file.filename
+      - pattern: req.files.$X.originalname
+    pattern-sinks:
+      - pattern: exec($SINK, ...)
+      - pattern: execSync($SINK, ...)
+      - pattern: execFile($SINK, ...)
+      - pattern: execFileSync($SINK, ...)
+      - pattern: spawn($SINK, ...)
+      - pattern: spawnSync($SINK, ...)
+      - pattern: child_process.exec($SINK, ...)
+      - pattern: child_process.execSync($SINK, ...)
+      - pattern: child_process.spawn($SINK, ...)
+      - pattern: child_process.spawnSync($SINK, ...)
+      # shell.js — explicit named import only, NOT $SHELL.exec which would
+      # match RegExp.exec(), db.exec(), statement.exec() etc. (high FP rate)
+      - pattern: shell.exec($SINK, ...)
+    message: "Possible command injection: user input flows into shell execution"
+    languages: [javascript, typescript]
+    severity: ERROR
+
+  # ============================================================
+
+  - id: taint-express-ssrf
+    mode: taint
+    pattern-sources:
+      - pattern: req.params.$X
+      - pattern: req.query.$X
+      - pattern: req.body.$X
+      - pattern: req.headers[$X]
+      - pattern: req.headers.$X
+      - pattern: req.hostname
+      - pattern: req.url
+    pattern-sinks:
+      # fetch API
+      - pattern: fetch($SINK, ...)
+      - pattern: fetch($SINK)
+      # axios
+      - pattern: axios($SINK)
+      - pattern: axios($SINK, ...)
+      - pattern: axios.get($SINK, ...)
+      - pattern: axios.post($SINK, ...)
+      - pattern: axios.put($SINK, ...)
+      - pattern: axios.delete($SINK, ...)
+      - pattern: "axios.request({url: $SINK, ...})"
+      # got
+      - pattern: got($SINK, ...)
+      - pattern: got.get($SINK, ...)
+      - pattern: got.post($SINK, ...)
+      - pattern: got.stream($SINK, ...)
+      # superagent
+      - pattern: superagent.get($SINK)
+      - pattern: superagent.post($SINK)
+      # needle
+      - pattern: needle($METHOD, $SINK, ...)
+      # Node built-ins
+      - pattern: http.get($SINK, ...)
+      - pattern: http.request($SINK, ...)
+      - pattern: https.get($SINK, ...)
+      - pattern: https.request($SINK, ...)
+      # URL construction — only a prep step but flagged for analyst review.
+      # Expect some false positives here (e.g. redirect URL building);
+      # LLM verifier will filter cases where the URL is never fetched.
+      - pattern: new URL($SINK)
+      - pattern: new URL($SINK, ...)
+      # request (deprecated but still common in legacy codebases)
+      - pattern: request($SINK, ...)
+      - pattern: request.get($SINK, ...)
+    message: "Possible SSRF: user input flows into outbound HTTP request"
+    languages: [javascript, typescript]
+    severity: ERROR
+
+  # ============================================================
+
+  - id: taint-express-open-redirect
+    mode: taint
+    pattern-sources:
+      - pattern: req.params.$X
+      - pattern: req.query.$X
+      - pattern: req.body.$X
+      - pattern: req.headers[$X]
+      - pattern: req.headers.$X
+    pattern-sinks:
+      - pattern: res.redirect($SINK)
+      - pattern: res.redirect($CODE, $SINK)
+      - pattern: res.location($SINK)
+    message: "Possible open redirect: user input used in redirect"
+    languages: [javascript, typescript]
+    severity: WARNING
+
+  # ============================================================
+
+  - id: taint-express-xss
+    mode: taint
+    pattern-sources:
+      - pattern: req.params.$X
+      - pattern: req.query.$X
+      - pattern: req.body.$X
+      - pattern: req.cookies.$X
+      - pattern: req.headers[$X]
+      - pattern: req.headers.$X
+      - pattern: req.url
+    pattern-sinks:
+      # Direct response output — raw string echo only
+      - pattern: res.send($SINK)
+      - pattern: res.write($SINK)
+      - pattern: res.end($SINK)
+      # Note: res.json($SINK) intentionally excluded — JSON responses use
+      # Content-Type: application/json which browsers will not execute as HTML.
+      # Including it produces very high false positive volume with near-zero
+      # true XSS findings.
+      # Template engine rendering with user input as template string
+      - pattern: res.render($VIEW, $SINK)
+      # DOM sinks (SSR / JSDOM contexts)
+      - pattern: innerHTML = $SINK
+      - pattern: outerHTML = $SINK
+      - pattern: document.write($SINK)
+    message: "Possible XSS: user input flows into response without sanitization"
+    languages: [javascript, typescript]
+    severity: ERROR
+
+  # ============================================================
+
+  - id: taint-express-template-injection
+    mode: taint
+    pattern-sources:
+      - pattern: req.params.$X
+      - pattern: req.query.$X
+      - pattern: req.body.$X
+      - pattern: req.headers[$X]
+      - pattern: req.headers.$X
+    pattern-sinks:
+      # Template engines — user input as the TEMPLATE string (not just data).
+      # res.render(view, data) is intentionally excluded — passing data to a
+      # fixed template is safe. These patterns catch the dangerous inverse:
+      # user input controlling the template string itself.
+      - pattern: ejs.render($SINK, ...)
+      - pattern: ejs.renderFile($SINK, ...)
+      - pattern: pug.render($SINK, ...)
+      - pattern: pug.compile($SINK)
+      - pattern: handlebars.compile($SINK)
+      - pattern: nunjucks.renderString($SINK, ...)
+      - pattern: swig.render($SINK, ...)
+      - pattern: _.template($SINK)
+      # eval and dynamic code execution — direct RCE (userProfile.ts pattern)
+      - pattern: eval($SINK)
+      - pattern: new Function($SINK)
+      - pattern: new Function(..., $SINK)
+      - pattern: vm.runInThisContext($SINK)
+      - pattern: vm.runInNewContext($SINK, ...)
+    message: "Possible template/code injection: user input flows into template engine or eval — potential RCE"
+    languages: [javascript, typescript]
+    severity: ERROR
+
+  # ============================================================
+
+  - id: taint-express-mass-assignment
+    mode: taint
+    pattern-sources:
+      - pattern: req.body
+      - pattern: req.body.$X
+    pattern-sinks:
+      # ORM create/build from whole body object
+      - pattern: $MODEL.create($SINK)
+      - pattern: $MODEL.build($SINK)
+      - pattern: $MODEL.upsert($SINK, ...)
+      - pattern: new $MODEL($SINK)
+      # Object spread/assign into model or config object
+      - pattern: Object.assign($OBJ, $SINK)
+      - pattern: Object.assign($OBJ, ..., $SINK)
+      # Lodash assign variants
+      - pattern: _.extend($OBJ, $SINK)
+      - pattern: _.assign($OBJ, $SINK)
+    message: "Possible mass assignment: req.body spread directly into model — attacker may set privileged fields (e.g. isAdmin, role)"
+    languages: [javascript, typescript]
+    severity: ERROR
+
+  # ============================================================
+
+  - id: taint-express-prototype-pollution
+    mode: taint
+    pattern-sources:
+      - pattern: req.body.$X
+      - pattern: req.query.$X
+      - pattern: req.params.$X
+    pattern-sinks:
+      # Dynamic key assignment — only fires when the KEY itself is tainted,
+      # not when the value is tainted. Catches obj[req.query.key] = val patterns.
+      - pattern: $OBJ[$SINK] = $VAL
+      # Deep merge functions — primary prototype pollution vectors.
+      # All of these will merge __proto__ or constructor keys if present in input.
+      - pattern: _.merge($OBJ, $SINK)
+      - pattern: _.mergeWith($OBJ, $SINK, ...)
+      - pattern: _.defaultsDeep($OBJ, $SINK)
+      - pattern: deepmerge($OBJ, $SINK)
+      - pattern: deepmerge.all([$SINK, ...])
+      - pattern: merge($OBJ, $SINK)
+      - pattern: Object.assign($OBJ, $SINK)
+    message: "Possible prototype pollution: user input used as object key or in deep merge — attacker may inject __proto__ keys"
+    languages: [javascript, typescript]
+    severity: ERROR
+
+  # ============================================================
+
+  - id: taint-express-jwt-secret
+    mode: taint
+    pattern-sources:
+      - pattern: req.body.$X
+      - pattern: req.query.$X
+      - pattern: req.headers[$X]
+      - pattern: req.headers.$X
+      - pattern: req.params.$X
+      - pattern: req.cookies.$X
+    pattern-sinks:
+      # User-controlled value used as JWT signing secret
+      - pattern: jwt.sign($PAYLOAD, $SINK, ...)
+      # User-controlled value used as JWT verification secret
+      # (allows attacker to forge tokens with a known key)
+      - pattern: jwt.verify($TOKEN, $SINK, ...)
+      # User-controlled algorithm — enables alg:none or RS256→HS256 confusion
+      - pattern: "jwt.sign($PAYLOAD, $SECRET, {algorithm: $SINK, ...})"
+      - pattern: "jwt.verify($TOKEN, $SECRET, {algorithms: $SINK, ...})"
+      # express-jwt middleware with user-controlled secret
+      - pattern: "expressJwt({secret: $SINK, ...})"
+      - pattern: "expressJwt({secret: $SINK})"
+    message: "Possible JWT algorithm confusion or secret injection: user-controlled value used as JWT secret or algorithm — attacker may forge tokens"
+    languages: [javascript, typescript]
+    severity: ERROR
+
+  # ============================================================
+
+  - id: taint-express-idor-userid
+    mode: taint
+    pattern-sources:
+      - pattern: req.body.UserId
+      - pattern: req.body.userId
+      - pattern: req.body.user_id
+      - pattern: req.body.ownerId
+      - pattern: req.body.owner_id
+      - pattern: req.body.customerId
+      - pattern: req.params.id
+      - pattern: req.body.id
+    pattern-sinks:
+      # Database queries with user-controlled ID in where clause
+      - pattern: "$MODEL.findOne({ where: { UserId: $SINK } })"
+      - pattern: "$MODEL.findAll({ where: { UserId: $SINK } })"
+      - pattern: "$MODEL.findOne({ where: { id: $SINK, UserId: $SINK2 } })"
+      - pattern: "$MODEL.findByPk($SINK)"
+      - pattern: "$MODEL.update({ ... }, { where: { UserId: $SINK } })"
+      - pattern: "$MODEL.destroy({ where: { UserId: $SINK } })"
+      - pattern: "$MODEL.create({ UserId: $SINK, ... })"
+      # MongoDB/NoSQL patterns
+      - pattern: "$DB.findOne({ userId: $SINK })"
+      - pattern: "$DB.find({ userId: $SINK })"
+      - pattern: "$DB.findOne({ UserId: $SINK })"
+      - pattern: "$DB.find({ UserId: $SINK })"
+    message: "IDOR vulnerability: UserId from request body/params used in database query without ownership verification — any user can access other users' data"
+    languages: [javascript, typescript]
+    severity: ERROR
+
+  # ============================================================
+
+  - id: taint-express-nosql-where-injection
+    mode: taint
+    pattern-sources:
+      - pattern: req.params.$X
+      - pattern: req.query.$X
+      - pattern: req.body.$X
+      - pattern: req.body
+    pattern-sinks:
+      # MongoDB $where with string concatenation
+      - pattern: "$DB.find({ $where: $EXPR })"
+      - pattern: "$DB.findOne({ $where: $EXPR })"
+      - pattern: "$DB.find({ $where: $SINK + $REST })"
+      - pattern: "$DB.findOne({ $where: $SINK + $REST })"
+      - pattern: "$DB.find({ $where: `$SINK${$REST}` })"
+      - pattern: "$DB.findOne({ $where: \"$PRE\" + $SINK + \"$POST\" })"
+      # String concatenation patterns in $where
+      - pattern: >
+          $WHERE.this.product == '" + $SINK
+      - pattern: >
+          $WHERE.this.product == " + $SINK
+      - pattern: >
+          this.product == '" + $SINK
+      - pattern: >
+          this.product == " + $SINK
+    message: "NoSQL Injection via $where: User input concatenated into JavaScript expression for MongoDB $where — allows arbitrary code execution in database query"
+    languages: [javascript, typescript]
+    severity: ERROR
+
+  # ============================================================
+
+  - id: taint-express-orm-operator-injection
+    mode: taint
+    pattern-sources:
+      - pattern: req.params.$X
+      - pattern: req.query.$X
+      - pattern: req.body.$X
+    pattern-sinks:
+      # JSON.parse result used directly in where clause
+      - pattern: "$MODEL.findOne({ where: JSON.parse($SINK) })"
+      - pattern: "$MODEL.findAll({ where: JSON.parse($SINK) })"
+      - pattern: "$MODEL.find({ where: JSON.parse($SINK) })"
+      - pattern: "$DB.findOne(JSON.parse($SINK))"
+      - pattern: "$DB.find(JSON.parse($SINK))"
+      - pattern: "$DB.findOne({ $where: JSON.parse($SINK) })"
+      # Raw JSON parsing in query
+      - pattern: "$MODEL.findOne(JSON.parse($SINK))"
+      - pattern: "$MODEL.findAll(JSON.parse($SINK))"
+    message: "ORM Operator Injection: JSON.parse on user input passed directly to where clause — allows MongoDB/Sequelize operators like {$gt: 0} or {$ne: null} to bypass authentication"
+    languages: [javascript, typescript]
+    severity: ERROR
+
+  # ============================================================
+
+  - id: taint-express-insecure-cookie
+    mode: taint
+    pattern-sources:
+      - pattern: res.cookie
+    pattern-sinks:
+      # Cookie without httpOnly flag
+      - pattern: "res.cookie($NAME, $VALUE)"
+      - pattern: "res.cookie($NAME, $VALUE, { ... })"
+      # Cookie with httpOnly: false explicitly
+      - pattern: "res.cookie($NAME, $VALUE, { httpOnly: false, ... })"
+      # Pattern removed - Semgrep doesn't support { ... prop: val ... } syntax
+      # The patterns above already cover:
+      #   - No options object (line 481)
+      #   - Options object present (line 482)
+      #   - httpOnly: false at start (line 484)
+    message: "Insecure cookie: Cookie set without httpOnly flag — vulnerable to XSS theft. Use { httpOnly: true, secure: true, sameSite: 'strict' }"
+    languages: [javascript, typescript]
+    severity: WARNING
+    metadata:
+      cwe: "CWE-1004: Sensitive Cookie Without 'HttpOnly' Flag"
+
+  # ============================================================
+
+  - id: taint-express-weak-random-secret
+    mode: taint
+    pattern-sources:
+      - pattern: Math.random()
+      - pattern: "'' + Math.random()"
+      - pattern: String(Math.random())
+    pattern-sinks:
+      # JWT signing with weak random
+      - pattern: "jwt.sign($PAYLOAD, $SINK, ...)"
+      - pattern: "jwt.verify($TOKEN, $SINK, ...)"
+      - pattern: "expressJwt({ secret: $SINK, ... })"
+      - pattern: "expressJwt({ secret: $SINK })"
+      - pattern: "jwt.sign(..., $SINK, ...)"
+      # Generic secret usage
+      - pattern: "secret: $SINK"
+      - pattern: "SECRET: $SINK"
+      - pattern: "JWT_SECRET: $SINK"
+      - pattern: "{ secret: $SINK }"
+    message: "Cryptographically weak secret: Math.random() used for JWT secret or token generation — not cryptographically secure. Use crypto.randomBytes() or crypto.randomUUID()"
+    languages: [javascript, typescript]
+    severity: ERROR
+    metadata:
+      cwe: "CWE-338: Use of Cryptographically Weak Pseudo-Random Number Generator (PRNG)"
+
+  # ============================================================
+
+  - id: taint-express-basket-order-idor
+    mode: taint
+    pattern-sources:
+      - pattern: req.params.id
+      - pattern: req.params.basketId
+      - pattern: req.params.orderId
+      - pattern: req.body.id
+    pattern-sinks:
+      # Basket access without ownership check
+      - pattern: "BasketModel.findOne({ where: { id: $SINK } })"
+      - pattern: BasketModel.findByPk($SINK)
+      - pattern: "BasketModel.findAll({ where: { id: $SINK } })"
+      # Order access without ownership check  
+      - pattern: "OrderModel.findOne({ where: { id: $SINK } })"
+      - pattern: OrderModel.findByPk($SINK)
+      - pattern: "OrderModel.findAll({ where: { id: $SINK } })"
+      # Generic order/basket patterns
+      - pattern: "$MODEL.findOne({ where: { id: $SINK } })"
+    message: "IDOR vulnerability: Accessing basket/order by ID from URL params without verifying ownership — any user can access other users' baskets/orders"
+    languages: [javascript, typescript]
+    severity: ERROR
